@@ -164,8 +164,10 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
         if (index < numberOfContainers) {
 
           final FlickManager currentFlickManager = FlickManager(
-            videoPlayerController: VideoPlayerController.asset(
-              'assets/videos/file_example_MP4_480_1_5MG.mp4',
+            videoPlayerController: VideoPlayerController.networkUrl(
+                Uri.parse(
+                    'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4'
+                )
             ),
           );
 
@@ -322,10 +324,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
                       flickManager: currentFlickManager,
                     )
                 )
-                // You can use Image.asset or Image.network to load an image
-                // Image.asset('post_image.png'),
-                // Image.network('https://example.com/post_image.jpg'),
-                // Add additional content like comments, like button, etc
+                // Add additional content
               ],
             ),
           );
