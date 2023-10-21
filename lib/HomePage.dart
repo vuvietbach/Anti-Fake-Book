@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'HomePageTab/HomePage.dart';
-import 'HomePageTab/FriendPage.dart';
-import 'HomePageTab/Menu.dart';
-import 'HomePageTab/Notification.dart';
-import 'HomePageTab/VideoPage.dart';
-import 'HomePageTab/ShopPage.dart';
+import 'screen/HomePage.dart';
+import 'screen/FriendPage.dart';
+import 'screen/Menu.dart';
+import 'screen/Notification.dart';
+import 'screen/VideoPage.dart';
+import 'screen/ShopPage.dart';
 
 
 class HomePage extends StatelessWidget {
