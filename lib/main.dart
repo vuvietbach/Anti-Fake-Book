@@ -12,6 +12,6 @@ void main() {
   ], supportedLocales: [
     Locale('en', ''),
     Locale('vi', ''), // Vietnamese locale
-  ], debugShowCheckedModeBanner: false, 
+  ], debugShowCheckedModeBanner: false,
   home: SafeArea(child: WelcomeScreen())));
 }
