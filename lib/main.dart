@@ -1,4 +1,4 @@
-import 'package:anti_fake_book/page.dart';
+// import 'package:anti_fake_book/HomePage.dart';
 import 'package:anti_fake_book/HomePage.dart';
 import 'package:anti_fake_book/test.dart';
 import "SignIn.dart";
@@ -9,13 +9,13 @@ import 'package:intl/intl.dart'; // Import the intl package
 import 'package:intl/date_symbols.dart'; // Import date symbols for Vietnamese
 
 void main() {
-  runApp(MaterialApp(localizationsDelegates: const [
+  runApp(const MaterialApp(localizationsDelegates: [
     GlobalMaterialLocalizations.delegate,
     GlobalWidgetsLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
 
-  ], supportedLocales: const [
+  ], supportedLocales: [
     Locale('en', ''),
     Locale('vi', ''), // Vietnamese locale
-  ], debugShowCheckedModeBanner: false, home: const SignUp()));
+  ], debugShowCheckedModeBanner: false, home: HomePage()));
 }
