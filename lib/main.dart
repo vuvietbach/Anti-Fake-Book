@@ -1,7 +1,7 @@
 import 'package:anti_fake_book/layout/Empty.dart';
 import 'package:anti_fake_book/screen/HomeFake.dart';
 import 'package:anti_fake_book/HomePage.dart';
-import 'package:anti_fake_book/screen/SignIn.dart';1
+import 'package:anti_fake_book/screen/signIn/SignIn.dart';
 import 'package:anti_fake_book/screen/SignUp/SignUp.dart';
 import 'package:flutter/material.dart';
 import 'package:anti_fake_book/screen/CreatePost.dart';

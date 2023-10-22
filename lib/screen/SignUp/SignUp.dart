@@ -13,21 +13,14 @@ class SignUp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {},
-            color: Colors.black,
-          ),
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-        ),
-        body: Padding(
-          padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+    return Template(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              buildHeading(),
+              Text(
+                "Tham gia Anti-Fakebook",
+                style: CustomTextStyle.titleStyle
+              ),
               const SizedBox(
                 height: 20,
               ),
@@ -51,7 +44,6 @@ class SignUp extends StatelessWidget {
               ),
               buildHadAccountButton(),
             ],
-          ),
         ));
   }
 
@@ -102,30 +94,23 @@ class Template extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        child: Scaffold(
-            resizeToAvoidBottomInset: false, 
-            appBar: AppBar(
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                color: Colors.black,
-              ),
-              elevation: 0,
-              backgroundColor: Colors.transparent,
-            ),
-            body: Padding(
-              padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-              child: child,
-            )),
-      ),
-    );
+    return Scaffold(
+        resizeToAvoidBottomInset: false, 
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            color: Colors.black,
+          ),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+          child: child,
+        ));
   }
 }
 
