@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../styles.dart';
+import '../../styles.dart';
 
 // SignUp
 //  SignUpName
