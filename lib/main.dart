@@ -1,3 +1,6 @@
+import 'package:anti_fake_book/HomePage.dart';
+import 'package:anti_fake_book/test.dart';
+import "SignIn.dart";
 import 'SignUp/SignUp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
