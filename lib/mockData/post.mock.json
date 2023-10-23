@@ -1,0 +1,57 @@
+{
+  "code": "1234566",
+  "message": "message",
+  "data": {
+    "id": "1234",
+    "name": "1234",
+    "created": "2023-10-19 12:00:00",
+    "described": "Nội dung bài viết",
+    "modified": "2023-10-19 14:30:00",
+    "kudos": "100",
+    "disappointed": "20",
+    "fake": "10",
+    "trust": "30",
+    "is_rated": "true",
+    "is_marked": "false",
+    "image": [
+      {
+        "id": "1",
+        "url": "https://example.com/image1.jpg"
+      },
+      {
+        "id": "2",
+        "url": "https://example.com/image2.jpg"
+      }
+    ],
+    "video": [
+      {
+        "thumb": "https://example.com/video1_thumb.jpg",
+        "url": "https://example.com/video1.mp4"
+      },
+      {
+        "thumb": "https://example.com/video2_thumb.jpg",
+        "url": "https://example.com/video2.mp4"
+      }
+    ],
+    "author": {
+      "id": "10",
+      "name": "Cau be lmao",
+      "avatar": "https://example.com/avatar.jpg",
+      "coins": "500",
+      "listing": ["1001", "1002"]
+    },
+    "category": {
+      "id": "5",
+      "name": "Tên danh mục",
+      "has_name": "true"
+    },
+    "state": "active",
+    "is_blocked": "false",
+    "can_edit": "true",
+    "banned": "3",
+    "can_mark": "true",
+    "can_rate": "true",
+    "url": "https://example.com/post1234",
+    "messages": ["message1", "message2"]
+  }
+}
