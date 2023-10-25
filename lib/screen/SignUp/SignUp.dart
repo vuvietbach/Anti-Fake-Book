@@ -1,6 +1,6 @@
 import 'package:anti_fake_book/widgets/buttons.dart';
-import 'package:anti_fake_book/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import '../../styles.dart';
 
@@ -10,6 +10,18 @@ import '../../styles.dart';
 //  SignUpEmail
 //  PasswordSignUp
 //  AcceptSignUp
+const prefix = "/sign-up";
+final Map<String, String> nextPage = {
+  "begin": "name",
+  "name": "age",
+  "age": "email",
+  "email": "password",
+  "password": "verify",
+  "policy": "verify",
+  "verify": "save-info",
+}.map((key, value) => MapEntry(key, "$prefix/$value"));
+
+
 class SignUp extends StatelessWidget {
   const SignUp({super.key});
 
@@ -37,31 +49,13 @@ class SignUp extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              ContinueButton(
-                  context: context,
-                  nextPage: const SignUpName(),
-                  text: "Bắt đầu"),
+              NavPrimaryButton(nextPage: nextPage['begin'], text: "Bắt đầu"),
               const SizedBox(
                 height: 10,
               ),
               buildHadAccountButton(),
             ],
         ));
-  }
-
-  Widget buildBeginButton(BuildContext context) {
-    return SizedBox(
-      height: 40.0,
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const SignUpName()));
-        },
-        style: CustomButtonStyle.roundBorderButton(30.0),
-        child: const Text("Bắt đầu"),
-      ),
-    );
   }
 
   Widget buildHadAccountButton() {
@@ -97,23 +91,26 @@ class Template extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        resizeToAvoidBottomInset: false, 
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            color: Colors.black,
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+          resizeToAvoidBottomInset: false, 
+          appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              color: Colors.black,
+            ),
+            elevation: 0,
+            backgroundColor: Colors.transparent,
           ),
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-        ),
-        body: Padding(
-          padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-          child: child,
-        ));
+          body: Padding(
+            padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+            child: child,
+          )),
+    );
   }
 }
 
@@ -163,24 +160,24 @@ class SignUpName extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          ContinueButton(context: context, nextPage: const SignUpBirthday())
+          NavPrimaryButton(nextPage: nextPage['name'], text: "Tiếp tục"),
         ],
       ),
     );
   }
 }
 
-class SignUpBirthday extends StatefulWidget {
-  const SignUpBirthday({super.key});
+class SignUpAge extends StatefulWidget {
+  const SignUpAge({super.key});
   static const message =
       "Chọn ngày sinh của bạn. Bạn luôn có thể đặt thông tin này ở chế độ riêng tư vào lúc khác.";
   static const message2 = "Tại sao tôi cần cung cấp ngày sinh của mình?";
 
   @override
-  State<SignUpBirthday> createState() => _SignUpBirthdayState();
+  State<SignUpAge> createState() => _SignUpAgeState();
 }
 
-class _SignUpBirthdayState extends State<SignUpBirthday> {
+class _SignUpAgeState extends State<SignUpAge> {
   DateTime selectedDate = DateTime.now();
 
   @override
@@ -194,9 +191,9 @@ class _SignUpBirthdayState extends State<SignUpBirthday> {
           const SizedBox(
             height: 10,
           ),
-          Text(SignUpBirthday.message,
+          Text(SignUpAge.message,
             style: CustomTextStyle.normalStyle),
-          Text(SignUpBirthday.message2,
+          Text(SignUpAge.message2,
             style: CustomTextStyle.normalStyle),
           const SizedBox(
             height: 10,
@@ -205,7 +202,7 @@ class _SignUpBirthdayState extends State<SignUpBirthday> {
           const SizedBox(
             height: 10,
           ),
-          ContinueButton(context: context, nextPage: const SignUpEmail())
+          NavPrimaryButton(nextPage: nextPage['age'], text: "Tiếp tục"),
         ],
       ),
     );
@@ -304,15 +301,15 @@ class SignUpEmail extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          ContinueButton(context: context, nextPage: const PasswordSignUp())
+          NavPrimaryButton(nextPage: nextPage['email'], text: "Tiếp tục"),
         ],
       ),
     );
   }
 }
 
-class PasswordSignUp extends StatelessWidget {
-  const PasswordSignUp({super.key});
+class SignUpPassword extends StatelessWidget {
+  const SignUpPassword({super.key});
   static const message =
       "Tạo mật khẩu gồm ít nhất 6 chữ cái hoặc chữ số. Bạn nên chọn mật khẩu thật khó đoán.";
   @override
@@ -350,7 +347,7 @@ class PasswordSignUp extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          ContinueButton(context: context)
+          NavPrimaryButton(nextPage: nextPage['password'], text: "Tiếp tục"),
         ],
       ),
     );
@@ -395,14 +392,14 @@ Widget SecondaryButton(
   );
 }
 
-class SaveSignInInfo extends StatelessWidget {
-  const SaveSignInInfo({super.key});
+class SaveInfo extends StatelessWidget {
+  const SaveInfo({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
             Text(
@@ -417,11 +414,11 @@ class SaveSignInInfo extends StatelessWidget {
               style: CustomTextStyle.normalStyle,
             ),
             const Spacer(),
-            const PrimaryNavButton(nextPage: SaveSignInInfo(), text: "Tiếp tục"),
+            const NavPrimaryButton(nextPage: "/", text: "Tiếp tục"),
             const SizedBox(
               height: 10,
             ),
-            const SecondaryNavButton(nextPage: SaveSignInInfo(), text: "Để sau"),
+            const NavSecondaryButton(nextPage: "/", text: "Để sau"),
           ],
         ),
       ),
@@ -451,24 +448,25 @@ class VerifyAccount extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          PrimaryNavButton(nextPage: Placeholder(), text: "Xác nhận"),
+          const NavPrimaryButton(nextPage: '/', text: "Xác nhận"),
           const SizedBox(
             height: 10,
           ),
-          SecondaryNavButton(nextPage: Placeholder(), text: "Gửi lại mã"),
+          const NavSecondaryButton(nextPage: '/', text: "Gửi lại mã"),
         ],
       )
     );
   }
   Widget buildCodeField() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
+    return Container(
+      width: 120.0,
       child: TextField(
         // controller: _controller,
         keyboardType: TextInputType.number,
         maxLength: 6, // Adjust to the desired code length
+        
         decoration: const InputDecoration(
-          hintText: 'Enter Verification Code',
+          border: OutlineInputBorder(),
           counterText: '', // To hide the character count
         ),
         onChanged: (value) {
@@ -478,6 +476,11 @@ class VerifyAccount extends StatelessWidget {
             // print('Verification Code: $value');
           }
         },
+        maxLines: 1,
+        style: const TextStyle(
+          fontSize: 20.0,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }

@@ -1,8 +1,8 @@
-import 'package:anti_fake_book/screen/SignUp/SignUp.dart';
-import 'package:anti_fake_book/screen/signIn/SignIn.dart';
 import 'package:anti_fake_book/screen/signIn/widgets.dart';
+import 'package:anti_fake_book/utils.dart';
 import 'package:anti_fake_book/widgets/buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -21,7 +21,7 @@ class WelcomeScreen extends StatelessWidget {
             AccountCard(name: testAcc.name, avatarUrl: testAcc.avatarUrl),
             AccountCard(name: testAcc.name, avatarUrl: testAcc.avatarUrl),
             const SizedBox(height: 10),
-            const SecondaryNavButton(nextPage: SignIn(), text: "Sign In With Other Account"),
+            const NavSecondaryButton(nextPage: "/sign-in", text: "Sign In With Other Account"),
             const Spacer(),
             buildCreateAccountButton(context),
             const Padding(
@@ -36,10 +36,7 @@ class WelcomeScreen extends StatelessWidget {
   }
   Widget buildCreateAccountButton(BuildContext context) {
     return TextButton(
-      onPressed: () {
-        Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const SignUp()));
-      },
+      onPressed: () => context.go('/sign-up'),
       child: const Text("Create Account"));
   } 
 }
