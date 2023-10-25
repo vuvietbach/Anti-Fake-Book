@@ -3,7 +3,7 @@ import 'package:anti_fake_book/screen/HomeFake.dart';
 import 'package:flutter/material.dart';
 import 'package:anti_fake_book/screen/CreatePost.dart';
 import 'package:go_router/go_router.dart';
-import 'HomePage.dart';
+import 'layout/HomePage.dart';
 
 final GoRouter _router = GoRouter(routes: [
   GoRoute(
