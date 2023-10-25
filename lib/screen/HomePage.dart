@@ -71,7 +71,8 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
 
   @override
   Widget build(BuildContext context) {
-    List<GlobalKey> _menuButtonKeys = List.generate(numberOfContainers, (index) => GlobalKey());
+    List<GlobalKey> _menuButtonKeys =
+        List.generate(numberOfContainers, (index) => GlobalKey());
 
     int kudosCount = 4200;
     int disappointedCount = 10000;
@@ -87,13 +88,14 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
     } else if (timeDifference.inHours < 24) {
       timeAgo = "${timeDifference.inHours} giờ trước";
     } else if (timeDifference.inDays < 365 / 12) {
-      timeAgo = "${timeDifference.inDays } ngày trước";
+      timeAgo = "${timeDifference.inDays} ngày trước";
     } else {
       timeAgo = "${timeDifference.inDays ~/ 365} năm trước";
     }
 
     // Post content (text)
-    final postContent = '#flutterno1\n 😀😀😀😀😀😀😀😀😀 \nThis is the post content. This is the post content. This is the post content. This is the post content. \nThis is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content.\nLink1: https://www.tutorialspoint.com/index.htm \nLink2: https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+    final postContent =
+        '#flutterno1\n 😀😀😀😀😀😀😀😀😀 \nThis is the post content. This is the post content. This is the post content. This is the post content. \nThis is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content.\nLink1: https://www.tutorialspoint.com/index.htm \nLink2: https://www.youtube.com/watch?v=dQw4w9WgXcQ';
     final List<InlineSpan> textSpans = [];
 
     // Tách nội dung bài viết thành các phần dựa trên khoảng trắng
@@ -162,13 +164,9 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
       itemCount: numberOfContainers + 1,
       itemBuilder: (BuildContext context, int index) {
         if (index < numberOfContainers) {
-
           final FlickManager currentFlickManager = FlickManager(
-            videoPlayerController: VideoPlayerController.networkUrl(
-                Uri.parse(
-                    'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4'
-                )
-            ),
+            videoPlayerController: VideoPlayerController.networkUrl(Uri.parse(
+                'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4')),
           );
 
           return Container(
@@ -216,10 +214,14 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
                       key: _menuButtonKeys[index],
                       icon: Icon(Icons.more_horiz),
                       onPressed: () {
-                        final RenderBox buttonBox = _menuButtonKeys[index].currentContext?.findRenderObject() as RenderBox;
-                        final Offset offset = buttonBox.localToGlobal(Offset.zero);
+                        final RenderBox buttonBox = _menuButtonKeys[index]
+                            .currentContext
+                            ?.findRenderObject() as RenderBox;
+                        final Offset offset =
+                            buttonBox.localToGlobal(Offset.zero);
 
-                        final Size screenSize = window.physicalSize / window.devicePixelRatio;
+                        final Size screenSize =
+                            window.physicalSize / window.devicePixelRatio;
                         final double menuHeight = menuOptions.length * 56.0;
 
                         showMenu(
@@ -234,7 +236,8 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
                             return PopupMenuItem(
                               value: option['title'],
                               child: ListTile(
-                                contentPadding: EdgeInsets.all(0), // Xóa khoảng cách bên trong
+                                contentPadding: EdgeInsets.all(
+                                    0), // Xóa khoảng cách bên trong
                                 leading: Icon(option['icon']),
                                 title: Text(option['title']),
                               ),
@@ -248,9 +251,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
                 SizedBox(height: 10),
                 // Post content (text)
                 RichText(
-                  text: TextSpan(
-                      children: textSpans
-                  ),
+                  text: TextSpan(children: textSpans),
                 ),
                 SizedBox(height: 10),
                 Row(
@@ -302,13 +303,17 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => PhotoViewGallery(
-                              pageController: PageController(initialPage: index),
+                              pageController:
+                                  PageController(initialPage: index),
                               pageOptions: imageAssets
-                                  .map((imageAsset) => PhotoViewGalleryPageOptions(
-                                imageProvider: AssetImage(imageAsset),
-                                minScale: PhotoViewComputedScale.contained,
-                                maxScale: PhotoViewComputedScale.covered * 2,
-                              ))
+                                  .map((imageAsset) =>
+                                      PhotoViewGalleryPageOptions(
+                                        imageProvider: AssetImage(imageAsset),
+                                        minScale:
+                                            PhotoViewComputedScale.contained,
+                                        maxScale:
+                                            PhotoViewComputedScale.covered * 2,
+                                      ))
                                   .toList(),
                             ),
                           ),
@@ -319,11 +324,10 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
                   },
                 ),
                 AspectRatio(
-                    aspectRatio: 16/9,
+                    aspectRatio: 16 / 9,
                     child: FlickVideoPlayer(
                       flickManager: currentFlickManager,
-                    )
-                )
+                    ))
                 // Add additional content
               ],
             ),

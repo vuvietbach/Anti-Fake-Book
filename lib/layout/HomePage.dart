@@ -7,7 +7,6 @@ import '../screen/Notification.dart';
 import '../screen/VideoPage.dart';
 import '../screen/ShopPage.dart';
 
-
 class HomePage extends StatelessWidget {
   const HomePage({Key? key});
 
@@ -17,7 +16,8 @@ class HomePage extends StatelessWidget {
         length: 6, // The number of tabs
         child: Scaffold(
           appBar: AppBar(
-            title: Text("AntiFakebook", style: TextStyle(color: Colors.blue.shade900)),
+            title: Text("AntiFakebook",
+                style: TextStyle(color: Colors.blue.shade900)),
             backgroundColor: Colors.white,
             actions: [
               IconButton(
@@ -65,7 +65,6 @@ class HomePage extends StatelessWidget {
               ],
             ),
           ),
-        )
-    );
+        ));
   }
 }
