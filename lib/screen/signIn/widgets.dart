@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AccountCard extends StatelessWidget {
-  final name;
-  final avatarUrl;
-  const AccountCard({super.key, required this.name, this.avatarUrl});
+  final String name;
+  final String avatarUrl;
+  const AccountCard({super.key, required this.name, required this.avatarUrl});
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,7 @@
 import 'package:anti_fake_book/screen/SignUp/SignUp.dart';
 import 'package:anti_fake_book/widgets/buttons.dart';
+import 'package:anti_fake_book/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:anti_fake_book/styles.dart';
 
 import 'widgets.dart';
@@ -154,6 +154,33 @@ class SignInWithAccount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: const TransparentAppBar(),
+      body: Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: Column(
+          children: [
+            const SizedBox(height: 100),
+            const SizedBox(height: 40, child: Image(image: AssetImage('assets/images/logo.jpeg'))),
+            const SizedBox(height: 100),
+            Text("Vu Viet Bach", style: CustomTextStyle.normalStyle,),
+            const SizedBox(height: 10),
+            TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Password',
+              ),
+            ), 
+            const SizedBox(height: 10),
+            const PrimaryNavButton(nextPage: SignInWithAccount(), text: "Sign In"),
+            const ForgotPasswordButton(),
+          ],
+        ),
+      ),
+      
+    );
   }
 }
+
+
+

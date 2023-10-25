@@ -1,3 +1,5 @@
+import 'package:anti_fake_book/widgets/buttons.dart';
+import 'package:anti_fake_book/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../styles.dart';
@@ -90,7 +92,8 @@ class SignUp extends StatelessWidget {
 
 class Template extends StatelessWidget {
   final Widget child;
-  const Template({required this.child, super.key});
+  final bool hasBackButton;
+  const Template({required this.child, super.key, this.hasBackButton = true});
 
   @override
   Widget build(BuildContext context) {
@@ -391,3 +394,143 @@ Widget SecondaryButton(
     ),
   );
 }
+
+class SaveSignInInfo extends StatelessWidget {
+  const SaveSignInInfo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: EdgeInsets.all(10.0),
+        child: Column(
+          children: [
+            Text(
+              "Lưu thông tin đăng nhập của bạn",
+              style: CustomTextStyle.titleStyle,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "Lần tới khi đăng nhập vào điện thoại này, bạn chỉ cấn nhấn vào ảnh đại diện thay vì nhập mật khẩu. Bạn có thể tắt tính năng này bất cứ lúc nào trong phần cài đặt",
+              style: CustomTextStyle.normalStyle,
+            ),
+            const Spacer(),
+            const PrimaryNavButton(nextPage: SaveSignInInfo(), text: "Tiếp tục"),
+            const SizedBox(
+              height: 10,
+            ),
+            const SecondaryNavButton(nextPage: SaveSignInInfo(), text: "Để sau"),
+          ],
+        ),
+      ),
+    );
+  }
+}
+class VerifyAccount extends StatelessWidget {
+  const VerifyAccount({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Template(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Xác nhận tài khoản", 
+            style: CustomTextStyle.titleStyle),
+          const SizedBox(
+            height: 10,
+          ),
+          Text("Chúng tôi đã gửi mã xác nhận tới email của bạn. Vui lòng kiểm tra email và nhập mã gồm 6 chữ số vào đây.",
+              style: CustomTextStyle.normalStyle),
+          const SizedBox(
+            height: 10,
+          ),
+          buildCodeField(),
+          const SizedBox(
+            height: 10,
+          ),
+          PrimaryNavButton(nextPage: Placeholder(), text: "Xác nhận"),
+          const SizedBox(
+            height: 10,
+          ),
+          SecondaryNavButton(nextPage: Placeholder(), text: "Gửi lại mã"),
+        ],
+      )
+    );
+  }
+  Widget buildCodeField() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: TextField(
+        // controller: _controller,
+        keyboardType: TextInputType.number,
+        maxLength: 6, // Adjust to the desired code length
+        decoration: const InputDecoration(
+          hintText: 'Enter Verification Code',
+          counterText: '', // To hide the character count
+        ),
+        onChanged: (value) {
+          // Handle verification code input here
+          if (value.length == 6) {
+            // // The code is complete; you can perform verification here
+            // print('Verification Code: $value');
+          }
+        },
+      ),
+    );
+  }
+}
+
+// void main() {
+//   runApp(MyApp());
+// }
+
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       home: Scaffold(
+//         appBar: AppBar(
+//           title: Text('Verification Code Input'),
+//         ),
+//         body: Center(
+//           child: VerificationCodeInput(),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// class VerificationCodeInput extends StatefulWidget {
+//   @override
+//   _VerificationCodeInputState createState() => _VerificationCodeInputState();
+// }
+
+// class _VerificationCodeInputState extends State<VerificationCodeInput> {
+//   final TextEditingController _controller = TextEditingController();
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.all(16.0),
+//       child: TextField(
+//         controller: _controller,
+//         keyboardType: TextInputType.number,
+//         maxLength: 6, // Adjust to the desired code length
+//         decoration: InputDecoration(
+//           hintText: 'Enter Verification Code',
+//           counterText: '', // To hide the character count
+//         ),
+//         onChanged: (value) {
+//           // Handle verification code input here
+//           if (value.length == 6) {
+//             // The code is complete; you can perform verification here
+//             print('Verification Code: $value');
+//           }
+//         },
+//       ),
+//     );
+//   }
+// }

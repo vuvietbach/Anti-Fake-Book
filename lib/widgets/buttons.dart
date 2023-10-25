@@ -44,3 +44,15 @@ class SecondaryNavButton extends StatelessWidget {
     );
   }
 }
+
+class ForgotPasswordButton extends StatelessWidget {
+  const ForgotPasswordButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const TextButton(
+      onPressed: null,
+      child: Text('Forgot Password'),
+    );
+  }
+}
