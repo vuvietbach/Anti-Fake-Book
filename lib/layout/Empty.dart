@@ -7,9 +7,10 @@ class EmptyLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // Giao diện của widget cha
-      child: child, // Thêm widget con vào đây
+    return SafeArea(
+      child: Container(
+        child: child,
+      ), // Thêm widget con vào đây
     );
   }
 }
