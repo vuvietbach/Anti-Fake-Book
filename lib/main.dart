@@ -33,7 +33,7 @@ void main() {
   runApp(MaterialApp.router(localizationsDelegates: const [
     GlobalMaterialLocalizations.delegate,
     GlobalWidgetsLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
+    Gl  obalCupertinoLocalizations.delegate,
   ], supportedLocales: const [
     Locale('en', ''),
     Locale('vi', ''),
