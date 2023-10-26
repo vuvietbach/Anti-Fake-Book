@@ -7,11 +7,13 @@ name: Dart
 
 on:
   push:
-    branches-ignore:
-      - 'test'
+    branches:
+      - "main"
+      - "dev"
   pull_request:
-    branches-ignore:
-      - 'test'
+    branches:
+      - "main"
+      - "dev"
 
 jobs:
   build:
