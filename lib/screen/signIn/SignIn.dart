@@ -1,55 +1,54 @@
-import 'package:anti_fake_book/screen/SignUp/SignUp.dart';
 import 'package:anti_fake_book/widgets/buttons.dart';
+import 'package:anti_fake_book/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:anti_fake_book/styles.dart';
 
 import 'widgets.dart';
+
+
 class SignIn extends StatelessWidget {
-  const SignIn({Key? key});
+  const SignIn({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        child: Scaffold(
-          resizeToAvoidBottomInset: false, 
-          appBar: AppBar(
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                color: Colors.black,
-              ),
-              elevation: 0,
-              backgroundColor: Colors.transparent,
+    return GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false, 
+        appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              color: Colors.black,
             ),
-          body: Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            child: Column(children: [
-              const SizedBox(height: 100),
-              const SizedBox(height: 40, child: Image(image: AssetImage('assets/images/logo.jpeg'))),
-              const SizedBox(height: 100),
-              buildEmailField(),
-              const SizedBox(height: 10),
-              buildPasswordField(),
-              const SizedBox(height: 10),
-              buildSignInButton(),
-              const SizedBox(height: 5),
-              buildForgotPasswordButton(),
-              const Spacer(),
-              buildCreateAccountButton(),
-              const Padding(
-                padding: EdgeInsets.all(12.0),
-                child: Text("Anti Fake Book", style: TextStyle(color: Colors.grey)),
-              )
-            ],),
-          )
-        ),
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+          ),
+        body: Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          child: Column(children: [
+            const SizedBox(height: 100),
+            const SizedBox(height: 40, child: Image(image: AssetImage('assets/images/logo.jpeg'))),
+            const SizedBox(height: 100),
+            buildEmailField(),
+            const SizedBox(height: 10),
+            buildPasswordField(),
+            const SizedBox(height: 10),
+            buildSignInButton(),
+            const SizedBox(height: 5),
+            buildForgotPasswordButton(),
+            const Spacer(),
+            buildCreateAccountButton(),
+            const Padding(
+              padding: EdgeInsets.all(12.0),
+              child: Text("Anti Fake Book", style: TextStyle(color: Colors.grey)),
+            )
+          ],),
+        )
       ),
     );
   }
@@ -104,18 +103,14 @@ class SignIn extends StatelessWidget {
     );
   }
 }
-class Account {
-  final String name;
-  final String avatarUrl;
-  const Account({required this.name, required this.avatarUrl});
-}
 
-class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({super.key});
-  static const testAcc = Account(name: "Vu Viet Bach", avatarUrl: "https://t3.ftcdn.net/jpg/03/46/83/96/240_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg");
+class SignInWithAccount extends StatelessWidget {
+  const SignInWithAccount({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const TransparentAppBar(),
       body: Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: Column(
@@ -123,37 +118,22 @@ class WelcomeScreen extends StatelessWidget {
             const SizedBox(height: 100),
             const SizedBox(height: 40, child: Image(image: AssetImage('assets/images/logo.jpeg'))),
             const SizedBox(height: 100),
-            AccountCard(name: testAcc.name, avatarUrl: testAcc.avatarUrl),
-            AccountCard(name: testAcc.name, avatarUrl: testAcc.avatarUrl),
-            AccountCard(name: testAcc.name, avatarUrl: testAcc.avatarUrl),
+            Text("Vu Viet Bach", style: CustomTextStyle.normalStyle,),
             const SizedBox(height: 10),
-            const SecondaryNavButton(nextPage: SignIn(), text: "Sign In With Other Account"),
-            const Spacer(),
-            buildCreateAccountButton(context),
-            const Padding(
-              padding: EdgeInsets.only(bottom: 12.0), 
-              child: Text("Anti Fake Book", style: TextStyle(color: Colors.grey)),
-            )
+            const TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Password',
+              ),
+            ), 
+            const SizedBox(height: 10),
+            const NavPrimaryButton(nextPage: '/', text: "Sign In"),
+            const ForgotPasswordButton(),
           ],
         ),
       ),
       
     );
   }
-  Widget buildCreateAccountButton(BuildContext context) {
-    return TextButton(
-      onPressed: () {
-        Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const SignUp()));
-      },
-      child: const Text("Create Account"));
-  } 
 }
-class SignInWithAccount extends StatelessWidget {
-  const SignInWithAccount({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
