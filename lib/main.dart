@@ -31,8 +31,6 @@ final GoRouter _router = GoRouter(routes: [
       ]
     ),
 ]);
-
-
 void main() {
   runApp(MaterialApp.router(
     localizationsDelegates: const [

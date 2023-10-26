@@ -15,6 +15,7 @@ import 'package:go_router/go_router.dart';
 class NavPrimaryButton extends NavButton {
   const NavPrimaryButton({super.key, super.nextPage, required super.text});
 
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -56,4 +57,5 @@ class ForgotPasswordButton extends StatelessWidget {
       child: Text('Forgot Password'),
     );
   }
+
 }

@@ -21,7 +21,6 @@ final Map<String, String> nextPage = {
   "verify": "save-info",
 }.map((key, value) => MapEntry(key, "$prefix/$value"));
 
-
 class SignUp extends StatelessWidget {
   const SignUp({super.key});
 
@@ -57,7 +56,6 @@ class SignUp extends StatelessWidget {
             ],
         ));
   }
-
   Widget buildHadAccountButton() {
     return SizedBox(
       height: 40.0,

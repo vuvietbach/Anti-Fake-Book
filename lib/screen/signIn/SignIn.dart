@@ -137,5 +137,3 @@ class SignInWithAccount extends StatelessWidget {
   }
 }
 
-
-
