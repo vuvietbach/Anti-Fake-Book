@@ -8,10 +8,11 @@ name: Dart
 on:
   push:
     branches-ignore:
-      - '*'
+      - 'test'
   pull_request:
     branches-ignore:
-      - '*'
+      - 'test'
+
 
 jobs:
   build:
