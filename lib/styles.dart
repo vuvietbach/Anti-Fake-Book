@@ -3,16 +3,17 @@ import 'package:flutter/material.dart';
 class CustomButtonStyle {
   static const mediumButtonHeight = 40.0;
   static ButtonStyle roundBorderButton(double radius) => ButtonStyle(
-    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-      RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(radius),
-      ),
-    ),
-  );
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(radius),
+          ),
+        ),
+      );
   // static final ButtonStyle unstyledButton = ButtonStyle(
 
   // )
 }
+
 class CustomTextStyle {
   static TextStyle titleStyle = const TextStyle(
     fontSize: 25.0,
@@ -23,15 +24,16 @@ class CustomTextStyle {
     fontSize: 16.0,
   );
 }
+
 class CustomText {
   static Text titleText(String text) => Text(
-    text,
-    style: CustomTextStyle.titleStyle,
-  );
+        text,
+        style: CustomTextStyle.titleStyle,
+      );
   static Text normalText(String text) => Text(
-    text,
-    style: CustomTextStyle.normalStyle,
-  );
+        text,
+        style: CustomTextStyle.normalStyle,
+      );
 }
 
 class LeftAlign extends StatelessWidget {
