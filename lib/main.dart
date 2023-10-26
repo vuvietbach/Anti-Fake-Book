@@ -1,5 +1,4 @@
 import 'package:anti_fake_book/layout/Empty.dart';
-import 'package:anti_fake_book/screen/HomeFake.dart';
 import 'package:flutter/material.dart';
 import 'package:anti_fake_book/screen/CreatePost.dart';
 import 'package:go_router/go_router.dart';
