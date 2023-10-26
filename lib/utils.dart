@@ -6,8 +6,9 @@ class CustomRoute {
   const CustomRoute({required this.path, required this.widget});
 }
 
-class Account {
+   class Account {
   final String name;
   final String avatarUrl;
   const Account({required this.name, required this.avatarUrl});
 }
+
