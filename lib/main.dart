@@ -1,11 +1,11 @@
 import 'package:anti_fake_book/screen/CreatePost.dart';
-import 'package:anti_fake_book/screen/HomeFake.dart';
 import 'package:anti_fake_book/screen/SignUp/routes.dart';
 import 'package:anti_fake_book/screen/signIn/routes.dart';
 import 'package:anti_fake_book/screen/welcomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'layout/HomePage.dart';
 import 'package:anti_fake_book/layout/Empty.dart';
 
 
@@ -13,7 +13,7 @@ final GoRouter _router = GoRouter(routes: [
   GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState stage) {
-        return const EmptyLayout(child: WelcomeScreen());
+        return const EmptyLayout(child: HomePage());
       },
       routes: [
         GoRoute(
@@ -37,10 +37,10 @@ void main() {
       GlobalMaterialLocalizations.delegate,
       GlobalWidgetsLocalizations.delegate,
       GlobalCupertinoLocalizations.delegate,
-    ], 
+    ],
     supportedLocales: const [
       Locale('en', ''),
-      Locale('vi', ''),], 
+      Locale('vi', ''),],
     debugShowCheckedModeBanner: false,
     routerConfig: _router
   ));
