@@ -5,7 +5,6 @@ class AccountCard extends StatelessWidget {
   final String avatarUrl;
   const AccountCard({super.key, required this.name, required this.avatarUrl});
 
-
   @override
   Widget build(BuildContext context) {
     return Card(

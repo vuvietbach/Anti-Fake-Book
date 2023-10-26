@@ -8,7 +8,6 @@ import 'package:go_router/go_router.dart';
 import 'layout/HomePage.dart';
 import 'package:anti_fake_book/layout/Empty.dart';
 
-
 final GoRouter _router = GoRouter(routes: [
   GoRoute(
       path: '/',
@@ -28,20 +27,15 @@ final GoRouter _router = GoRouter(routes: [
         ),
         signInRoutes,
         signUpRoutes,
-      ]
-    ),
+      ]),
 ]);
 void main() {
-  runApp(MaterialApp.router(
-    localizationsDelegates: const [
-      GlobalMaterialLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate,
-      GlobalCupertinoLocalizations.delegate,
-    ],
-    supportedLocales: const [
-      Locale('en', ''),
-      Locale('vi', ''),],
-    debugShowCheckedModeBanner: false,
-    routerConfig: _router
-  ));
+  runApp(MaterialApp.router(localizationsDelegates: const [
+    GlobalMaterialLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+  ], supportedLocales: const [
+    Locale('en', ''),
+    Locale('vi', ''),
+  ], debugShowCheckedModeBanner: false, routerConfig: _router));
 }

@@ -2,7 +2,7 @@ import 'package:anti_fake_book/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
- class NavButton extends StatelessWidget {
+class NavButton extends StatelessWidget {
   final String? nextPage;
   final String text;
   const NavButton({super.key, this.nextPage, required this.text});
@@ -12,9 +12,9 @@ import 'package:go_router/go_router.dart';
     return const Placeholder();
   }
 }
+
 class NavPrimaryButton extends NavButton {
   const NavPrimaryButton({super.key, super.nextPage, required super.text});
-
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,8 @@ class NavPrimaryButton extends NavButton {
 }
 
 class NavSecondaryButton extends NavButton {
-  const NavSecondaryButton({super.key, required super.nextPage, required super.text});
+  const NavSecondaryButton(
+      {super.key, required super.nextPage, required super.text});
 
   @override
   Widget build(BuildContext context) {
@@ -57,5 +58,4 @@ class ForgotPasswordButton extends StatelessWidget {
       child: Text('Forgot Password'),
     );
   }
-
 }

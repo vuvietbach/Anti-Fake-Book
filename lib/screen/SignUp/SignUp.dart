@@ -27,35 +27,33 @@ class SignUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Template(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Tham gia Anti-Fakebook",
-                style: CustomTextStyle.titleStyle
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              const Image(image: AssetImage("assets/images/community.avif")),
-              const SizedBox(
-                height: 20,
-              ),
-              const Text(
-                "Tạo tài khoản để kết nối với bạn bè, người thân và cộng đồng có chung sở thích",
-                style: TextStyle(fontSize: 16.0),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              NavPrimaryButton(nextPage: nextPage['begin'], text: "Bắt đầu"),
-              const SizedBox(
-                height: 10,
-              ),
-              buildHadAccountButton(),
-            ],
-        ));
+        child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Tham gia Anti-Fakebook", style: CustomTextStyle.titleStyle),
+        const SizedBox(
+          height: 20,
+        ),
+        const Image(image: AssetImage("assets/images/community.avif")),
+        const SizedBox(
+          height: 20,
+        ),
+        const Text(
+          "Tạo tài khoản để kết nối với bạn bè, người thân và cộng đồng có chung sở thích",
+          style: TextStyle(fontSize: 16.0),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        NavPrimaryButton(nextPage: nextPage['begin'], text: "Bắt đầu"),
+        const SizedBox(
+          height: 10,
+        ),
+        buildHadAccountButton(),
+      ],
+    ));
   }
+
   Widget buildHadAccountButton() {
     return SizedBox(
       height: 40.0,
@@ -92,7 +90,7 @@ class Template extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-          resizeToAvoidBottomInset: false, 
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
@@ -189,10 +187,8 @@ class _SignUpAgeState extends State<SignUpAge> {
           const SizedBox(
             height: 10,
           ),
-          Text(SignUpAge.message,
-            style: CustomTextStyle.normalStyle),
-          Text(SignUpAge.message2,
-            style: CustomTextStyle.normalStyle),
+          Text(SignUpAge.message, style: CustomTextStyle.normalStyle),
+          Text(SignUpAge.message2, style: CustomTextStyle.normalStyle),
           const SizedBox(
             height: 10,
           ),
@@ -205,6 +201,7 @@ class _SignUpAgeState extends State<SignUpAge> {
       ),
     );
   }
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -242,8 +239,9 @@ class _SignUpAgeState extends State<SignUpAge> {
                 ),
                 Text(
                   DateFormat.yMMMMd('vi_VI').format(selectedDate),
-                  style: CustomTextStyle.normalStyle.merge(const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                ),            
+                  style: CustomTextStyle.normalStyle.merge(const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20)),
+                ),
               ],
             ),
           ),
@@ -287,14 +285,10 @@ class SignUpEmail extends StatelessWidget {
             height: 10,
           ),
           RichText(
-            text: const TextSpan(children: [
+              text: const TextSpan(children: [
+            TextSpan(text: message2, style: TextStyle(color: Colors.grey)),
             TextSpan(
-              text: message2,
-              style: TextStyle(color: Colors.grey)
-            ),
-            TextSpan(
-              text: "Tìm hiểu thêm", 
-              style: TextStyle(color: Colors.blue))
+                text: "Tìm hiểu thêm", style: TextStyle(color: Colors.blue))
           ])),
           const SizedBox(
             height: 10,
@@ -423,38 +417,39 @@ class SaveInfo extends StatelessWidget {
     );
   }
 }
+
 class VerifyAccount extends StatelessWidget {
   const VerifyAccount({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Template(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Xác nhận tài khoản", 
-            style: CustomTextStyle.titleStyle),
-          const SizedBox(
-            height: 10,
-          ),
-          Text("Chúng tôi đã gửi mã xác nhận tới email của bạn. Vui lòng kiểm tra email và nhập mã gồm 6 chữ số vào đây.",
-              style: CustomTextStyle.normalStyle),
-          const SizedBox(
-            height: 10,
-          ),
-          buildCodeField(),
-          const SizedBox(
-            height: 10,
-          ),
-          const NavPrimaryButton(nextPage: '/', text: "Xác nhận"),
-          const SizedBox(
-            height: 10,
-          ),
-          const NavSecondaryButton(nextPage: '/', text: "Gửi lại mã"),
-        ],
-      )
-    );
+        child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Xác nhận tài khoản", style: CustomTextStyle.titleStyle),
+        const SizedBox(
+          height: 10,
+        ),
+        Text(
+            "Chúng tôi đã gửi mã xác nhận tới email của bạn. Vui lòng kiểm tra email và nhập mã gồm 6 chữ số vào đây.",
+            style: CustomTextStyle.normalStyle),
+        const SizedBox(
+          height: 10,
+        ),
+        buildCodeField(),
+        const SizedBox(
+          height: 10,
+        ),
+        const NavPrimaryButton(nextPage: '/', text: "Xác nhận"),
+        const SizedBox(
+          height: 10,
+        ),
+        const NavSecondaryButton(nextPage: '/', text: "Gửi lại mã"),
+      ],
+    ));
   }
+
   Widget buildCodeField() {
     return Container(
       width: 120.0,
@@ -462,7 +457,7 @@ class VerifyAccount extends StatelessWidget {
         // controller: _controller,
         keyboardType: TextInputType.number,
         maxLength: 6, // Adjust to the desired code length
-        
+
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
           counterText: '', // To hide the character count

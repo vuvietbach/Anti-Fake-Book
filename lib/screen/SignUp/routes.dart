@@ -20,8 +20,10 @@ final GoRoute signUpRoutes = GoRoute(
   builder: (BuildContext context, GoRouterState state) {
     return const EmptyLayout(child: SignUp());
   },
-  routes: _routes.map((route) => GoRoute(
-    path: route.path,
-    builder: (context, state) => EmptyLayout(child: route.widget),  
-  )).toList(),
+  routes: _routes
+      .map((route) => GoRoute(
+            path: route.path,
+            builder: (context, state) => EmptyLayout(child: route.widget),
+          ))
+      .toList(),
 );
