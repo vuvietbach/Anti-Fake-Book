@@ -57,7 +57,7 @@ class SignIn extends StatelessWidget {
   }
 
   Widget buildEmailField() {
-    return TextField(
+    return const TextField(
       decoration: InputDecoration(
         border: OutlineInputBorder(),
         labelText: 'Email',
@@ -66,7 +66,7 @@ class SignIn extends StatelessWidget {
   }
 
   Widget buildPasswordField() {
-    return TextField(
+    return const TextField(
       decoration: InputDecoration(
         border: OutlineInputBorder(),
         labelText: 'Password',

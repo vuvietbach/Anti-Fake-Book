@@ -8,8 +8,11 @@ class EmptyLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Container(
-        child: child,
+      child: GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Container(
+          child: child,
+        ),
       ), // Thêm widget con vào đây
     );
   }
