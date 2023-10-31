@@ -26,7 +26,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   UserInfo userInfo = UserInfo(
     name: 'Nguyễn Minh Tuấn',
-    avatarUrl: 'https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg',
+    avatarUrl:
+        'https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg',
   );
 
   @override
@@ -126,7 +127,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 'Lấy ảnh',
                 style: TextStyle(
                   color: Colors.black, // Đặt màu chữ thành màu đen
-                ),),
+                ),
+              ),
             ),
           ),
         ],
