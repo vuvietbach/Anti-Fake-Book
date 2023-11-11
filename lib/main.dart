@@ -1,11 +1,11 @@
-import 'package:anti_fake_book/layout/HomePage.dart';
+import 'package:anti_fake_book/firebase_options.dart';
 import 'package:anti_fake_book/screen/CreatePost.dart';
-import 'package:anti_fake_book/screen/SignUp/routes.dart';
-import 'package:anti_fake_book/screen/profile/profile.dart';
+import 'package:anti_fake_book/screen/sign_up/routes.dart';
 import 'package:anti_fake_book/screen/profile/routes.dart';
-import 'package:anti_fake_book/screen/searchPage.dart';
-import 'package:anti_fake_book/screen/signIn/routes.dart';
+import 'package:anti_fake_book/screen/sign_in/routes.dart';
 import 'package:anti_fake_book/screen/welcome_screen.dart';
+import 'package:anti_fake_book/states/auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
