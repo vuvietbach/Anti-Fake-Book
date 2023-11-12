@@ -1,5 +1,7 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:device_info/device_info.dart';
 
 class CustomRoute {
   final Widget widget;
@@ -82,3 +84,38 @@ const customJsonSerializable = JsonSerializable(
     CustomStringConvert()
   ],
 );
+String? validatePassword(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Mật khẩu không được để trống';
+  } else if (value.length < 6 || value.length > 10) {
+    return 'Mật khẩu phải có độ dài từ 6 đến 10 ký tự';
+  } else if (value.contains(" ")) {
+    return 'Mật khẩu không được chứa khoảng trắng';
+  } else {
+    return null;
+  }
+}
+
+String? validateEmail(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Email không được để trống';
+  } else if (!EmailValidator.validate(value)) {
+    return 'Email không hợp lệ';
+  } else {
+    return null;
+  }
+}
+
+Future<String> getDeviceId(BuildContext context) async {
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+  return androidInfo.androidId;
+}
+
+
+
+Future<String> getDeviceId(BuildContext context) async {
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+  return androidInfo.androidId;
+}
