@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../screen/HomePage.dart';
-import '../screen/FriendPage.dart';
-import '../screen/Menu.dart';
-import '../screen/Notification.dart';
-import '../screen/VideoPage.dart';
-import '../screen/ShopPage.dart';
+import '../screen/HomePage/news_feed_tab.dart';
+import '../screen/HomePage/friend_tab.dart';
+import '../screen/HomePage/menu_tab.dart';
+import '../screen/HomePage/notification_tab.dart';
+import '../screen/HomePage/watch_tab.dart';
+import '../screen/HomePage/market_place_tab.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key});
