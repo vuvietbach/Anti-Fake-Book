@@ -1,14 +1,10 @@
-import 'package:anti_fake_book/constants/constants.dart';
 import 'package:anti_fake_book/screen/sign_in/widgets.dart';
 import 'package:anti_fake_book/services/services.dart';
 import 'package:anti_fake_book/utils.dart';
-import 'package:anti_fake_book/widgets/buttons.dart';
 import 'package:anti_fake_book/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:anti_fake_book/styles.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -83,7 +79,8 @@ class _SignInState extends State<SignIn> {
                       const SizedBox(height: 10),
                       PasswordField(
                         isEnable: !_isSubmitting,
-                        validator: _validatePassword,
+                        validator: (value) =>
+                            validatePassword(value, emailController.text),
                         textEditingController: passwordController,
                       ),
                       const SizedBox(height: 10),
@@ -111,17 +108,6 @@ class _SignInState extends State<SignIn> {
         }));
   }
 
-  String? _validatePassword(String? value) {
-    String? result = validatePassword(value);
-    if (result != null) {
-      return result;
-    } else if (value == emailController.text) {
-      return 'Mật khẩu không được trùng với email';
-    } else {
-      return null;
-    }
-  }
-
   Widget signInButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
@@ -136,36 +122,11 @@ class _SignInState extends State<SignIn> {
                   setState(() {
                     _isSubmitting = true;
                   });
-                  String uuid = await getDeviceId(context);
-                  email = emailController.text;
-                  password = passwordController.text;
-                  var response = await signIn(email, password, uuid);
-                  // TODO: handle request time out or no internet connection
-                  // TODO: handle wrong password. But there is not error code for wrong password
-                  // TODO: make sure error code for wrong email is 9995
-                  // handle succes
+                  await handleSignIn(
+                      emailController.text, passwordController.text, context);
                   setState(() {
                     _isSubmitting = false;
                   });
-                  if (response.code == "1000") {
-                    // ignore: use_build_context_synchronously
-                    context.go("/");
-                  } else if (response.code == "9995") {
-                    // ignore: use_build_context_synchronously
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) => AlertDialog(
-                              title: const Text("Email không tồn tại"),
-                              content: const Text("Vui lòng kiểm tra lại email"),
-                              actions: [
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text("Đóng"))
-                              ],
-                            ));
-                  }
                 }
               },
         child: const Text('Đăng nhập'),
@@ -186,40 +147,117 @@ class _SignInState extends State<SignIn> {
   }
 }
 
-class SignInWithAccount extends StatelessWidget {
+class SignInWithAccount extends StatefulWidget {
   const SignInWithAccount({super.key});
+
+  @override
+  State<SignInWithAccount> createState() => _SignInWithAccountState();
+}
+
+class _SignInWithAccountState extends State<SignInWithAccount> {
+  final _formKey = GlobalKey<FormState>();
+  final passwordController = TextEditingController();
+  // TODO: How to get email for current login user
+  static const String fakeEmail = "bach@gmail.com";
+  bool _isSubmitting = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _isSubmitting = false;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: const TransparentAppBar(),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 10, right: 10),
-        child: Column(
-          children: [
-            const CircleAvatar(
-              radius: 60.0,
-              backgroundImage: AssetImage('assets/images/avatar.jpeg'),
-            ),
-            const SizedBox(
-              height: 15.0,
-            ),
-            const Text(
-              "Vu Viet Bach",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-            ),
-            const SizedBox(height: 10),
-            const PasswordField(),
-            const SizedBox(height: 10),
-            const NavPrimaryButton(nextPage: '/', text: "Đăng nhập"),
-            TextButton(
-              onPressed: () {},
-              child: const Text('Forgot Password'),
-            ),
-          ],
+      body: Form(
+        key: _formKey,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          child: Column(
+            children: [
+              const CircleAvatar(
+                radius: 60.0,
+                backgroundImage: AssetImage('assets/images/avatar.jpeg'),
+              ),
+              const SizedBox(
+                height: 15.0,
+              ),
+              const Text(
+                "Vu Viet Bach",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+              ),
+              const SizedBox(height: 10),
+              PasswordField(
+                isEnable: !_isSubmitting,
+                validator: (value) => validatePassword(value, fakeEmail),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                height: 40.0,
+                child: ElevatedButton(
+                  style: CustomButtonStyle.roundBorderButton(40.0),
+                  onPressed: _isSubmitting
+                      ? null
+                      : () async {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          if (_formKey.currentState!.validate()) {
+                            setState(() {
+                              _isSubmitting = true;
+                            });
+                            await handleSignIn(
+                                fakeEmail, passwordController.text, context);
+                            setState(() {
+                              _isSubmitting = false;
+                            });
+                          }
+                        },
+                  child: const Text("Đăng nhập"),
+                ),
+              ),
+              TextButton(
+                onPressed: () {},
+                child: const Text('Forgot Password'),
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+}
+
+Future handleSignIn(String email, String password, BuildContext context) async {
+  // TODO: handle request time out or no internet connection
+  // TODO: handle wrong password. But there is not error code for wrong password
+  // TODO: make sure error code for wrong email is 9995
+  // * CASE 1: handle succes
+  // * CASE 2: handle wrong email
+  // * CASE 3: handle wrong password
+  // ? What is the error code for wrong password
+  // * CASE 4: handle request time out or no internet connection
+  String uuid = await getDeviceId(context);
+  var response = await signIn(email, password, uuid);
+  if (response.code == "1000") {
+    // ignore: use_build_context_synchronously
+    context.go("/");
+  } else if (response.code == "9995") {
+    // ignore: use_build_context_synchronously
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+              title: const Text("Email chưa được đăng ký"),
+              content: const Text("Vui lòng kiểm tra lại email"),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("Đóng"))
+              ],
+            ));
   }
 }

@@ -87,10 +87,12 @@ const customJsonSerializable = JsonSerializable(
 String? validatePassword(String? value) {
   if (value == null || value.isEmpty) {
     return 'Mật khẩu không được để trống';
-  } else if (value.length < 6 || value.length > 10) {
+  } else if (password.length < 6 || password.length > 10) {
     return 'Mật khẩu phải có độ dài từ 6 đến 10 ký tự';
-  } else if (value.contains(" ")) {
+  } else if (password.contains(" ")) {
     return 'Mật khẩu không được chứa khoảng trắng';
+  } else if (password == email) {
+    return 'Mật khẩu không được trùng với email';
   } else {
     return null;
   }
@@ -112,10 +114,4 @@ Future<String> getDeviceId(BuildContext context) async {
   return androidInfo.androidId;
 }
 
-
-
-Future<String> getDeviceId(BuildContext context) async {
-  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-  AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-  return androidInfo.androidId;
 }
