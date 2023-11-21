@@ -1,5 +1,7 @@
 import 'package:anti_fake_book/constants/common/Color.dart';
+import 'package:anti_fake_book/store/state/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:go_router/go_router.dart';
 
 class HomeFake extends StatelessWidget {
@@ -8,28 +10,52 @@ class HomeFake extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Green Button Demo',
-      theme: ThemeData(
-        primaryColor: lightBlueColor, // Màu chủ đạo
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Home page demo'),
+        title: 'Green Button Demo',
+        theme: ThemeData(
+          primaryColor: lightBlueColor, // Màu chủ đạo
         ),
-        body: Center(
-          child: ElevatedButton(
-            onPressed: () {
-              context.go('/post/create');
-            },
-            child: const Text(
-              'Đăng bài',
-              style: TextStyle(
-                fontSize: 20.0,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+        home: StoreConnector<AntiFakeBookState, _View>(
+            converter: (store) => _View('f', () {
+                  store.dispatch('');
+                }),
+            builder: (BuildContext context, _View vm) {
+              return Scaffold(
+                appBar: AppBar(
+                  title: Text(vm.state),
+                ),
+                body: Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      vm.onClick();
+                    },
+                    child: const Text(
+                      'Đăng bài',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                      ),
+                    ),
+                  ),
+                ),
+                floatingActionButton: Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      context.go('/post/create');
+                    },
+                    child: const Text(
+                      'next',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }));
   }
+}
+
+class _View {
+  final String state;
+  final void Function() onClick;
+  _View(this.state, this.onClick);
 }

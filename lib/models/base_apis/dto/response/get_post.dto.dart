@@ -36,7 +36,7 @@ class PostPayloadDTO {
   int? canRate;
   String? url;
   String? messages;
-  PostPayloadDTO(this.images, this.video);
+  PostPayloadDTO({this.images = const [], this.video = const []});
   factory PostPayloadDTO.fromJson(Map<String, dynamic> json) =>
       _$PostPayloadDTOFromJson(json);
   Map<String, dynamic> toJson() => _$PostPayloadDTOToJson(this);
