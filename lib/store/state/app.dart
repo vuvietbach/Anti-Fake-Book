@@ -1,5 +1,6 @@
+import 'package:anti_fake_book/constants/constants.dart';
+
 class AppState {
-  bool isLoading;
-  bool isError;
-  AppState({this.isError = false, this.isLoading = false});
+  AppStatus status = AppStatus.loaded;
+  AppState.initState();
 }
