@@ -21,7 +21,7 @@ class SearchPage extends StatelessWidget {
           // onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back, color: Colors.black),
         ),
-        title: const SearchFieldWithPlaceholder(),
+        title: const SearchBar(),
         bottom: const PreferredSize(
           preferredSize: Size.fromHeight(40.0), // Height of the divider
           child: Padding(
@@ -51,8 +51,8 @@ class SearchPage extends StatelessWidget {
   }
 }
 
-class SearchFieldWithPlaceholder extends StatelessWidget {
-  const SearchFieldWithPlaceholder({super.key});
+class SearchBar extends StatelessWidget {
+  const SearchBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +104,7 @@ class SearchResultPage extends StatelessWidget {
           // onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back, color: Colors.black),
         ),
-        title: const SearchFieldWithPlaceholder(),
+        title: const SearchBar(),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(40.0), // Height of the divider
           child:TabBar(

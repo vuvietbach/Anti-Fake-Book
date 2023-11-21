@@ -5,3 +5,4 @@ enum AppStatus {
   loaded,
   error,
 }
+const changePhotoButtonSize = 40.0;

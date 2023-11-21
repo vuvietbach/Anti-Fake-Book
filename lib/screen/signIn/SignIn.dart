@@ -3,7 +3,6 @@ import 'package:anti_fake_book/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:anti_fake_book/styles.dart';
 
-import 'widgets.dart';
 
 class SignIn extends StatelessWidget {
   const SignIn({super.key});
