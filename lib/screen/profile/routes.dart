@@ -1,7 +1,7 @@
 import 'package:anti_fake_book/layout/Empty.dart';
-import 'package:anti_fake_book/screen/profile/friendList.dart';
+import 'package:anti_fake_book/screen/profile/friend_list.dart';
 import 'package:anti_fake_book/screen/profile/profile.dart';
-import 'package:anti_fake_book/screen/profile/profileSetting.dart';
+import 'package:anti_fake_book/screen/profile/profile_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

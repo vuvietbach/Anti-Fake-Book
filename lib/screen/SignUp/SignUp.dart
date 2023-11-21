@@ -49,21 +49,17 @@ class SignUp extends StatelessWidget {
         const SizedBox(
           height: 10,
         ),
-        buildHadAccountButton(),
+        SizedBox(
+          height: 40.0,
+          width: double.infinity,
+          child: OutlinedButton(
+            onPressed: () => Navigator.of(context).pop(),
+            style: CustomButtonStyle.roundBorderButton(30.0),
+            child: const Text("Tôi có tài khoản rồi"),
+          ),
+        ),
       ],
     ));
-  }
-
-  Widget buildHadAccountButton() {
-    return SizedBox(
-      height: 40.0,
-      width: double.infinity,
-      child: OutlinedButton(
-        onPressed: () {},
-        style: CustomButtonStyle.roundBorderButton(30.0),
-        child: const Text("Tôi có tài khoản rồi"),
-      ),
-    );
   }
 
   Widget buildHeading() {
@@ -451,7 +447,7 @@ class VerifyAccount extends StatelessWidget {
   }
 
   Widget buildCodeField() {
-    return Container(
+    return SizedBox(
       width: 120.0,
       child: TextField(
         // controller: _controller,

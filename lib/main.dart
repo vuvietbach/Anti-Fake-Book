@@ -5,7 +5,7 @@ import 'package:anti_fake_book/screen/profile/profile.dart';
 import 'package:anti_fake_book/screen/profile/routes.dart';
 import 'package:anti_fake_book/screen/searchPage.dart';
 import 'package:anti_fake_book/screen/signIn/routes.dart';
-import 'package:anti_fake_book/screen/welcomeScreen.dart';
+import 'package:anti_fake_book/screen/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
@@ -48,7 +48,7 @@ final GoRouter _router = GoRouter(routes: [
             return const EmptyLayout(child: WelcomeScreen());
           },
         ),
-        signInRoutes,
+        ...signInRoutes,
         signUpRoutes,
         profileRoutes,
       ]),
