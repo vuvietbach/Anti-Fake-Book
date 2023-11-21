@@ -1,9 +1,12 @@
 import 'dart:math';
 
+import 'package:anti_fake_book/provider.dart';
+import 'package:anti_fake_book/services/api.dart';
 import 'package:anti_fake_book/utils.dart';
 import 'package:anti_fake_book/widgets/buttons.dart';
 import 'package:anti_fake_book/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../styles.dart';
@@ -87,70 +90,6 @@ class _BeginSignUpState extends State<BeginSignUp> {
             fontWeight: FontWeight.w900,
           ),
         ));
-  }
-}
-
-class SignUp extends StatefulWidget {
-  const SignUp({super.key});
-
-  @override
-  State<SignUp> createState() => _SignUpState();
-}
-
-class _SignUpState extends State<SignUp> {
-  final PageController _pageController = PageController(initialPage: 0);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            appBar: AppBar(
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () {
-                  if (_pageController.page == 0) {
-                    Navigator.of(context).pop();
-                  } else {
-                    _pageController.previousPage(
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.ease);
-                  }
-                },
-                color: Colors.black,
-              ),
-              elevation: 0,
-              backgroundColor: Colors.transparent,
-            ),
-            body: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: PageView(
-                allowImplicitScrolling: false,
-                controller: _pageController,
-                children: [
-                  BeginSignUp(
-                    pageController: _pageController,
-                  ),
-                  SignUpName(
-                    pageController: _pageController,
-                  ),
-                  SignUpAge(
-                    pageController: _pageController,
-                  ),
-                  SignUpEmail(
-                    pageController: _pageController,
-                  ),
-                  SignUpPassword(
-                    pageController: _pageController,
-                  ),
-                  PolicyScreen(
-                    pageController: _pageController,
-                  ),
-                  const VerifyAccount(),
-                ],
-              ),
-            )));
   }
 }
 
@@ -382,7 +321,7 @@ class SignUpEmail extends StatefulWidget {
 }
 
 class _SignUpEmailState extends State<SignUpEmail> {
-  final emailController = TextEditingController();
+  late String email;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -404,13 +343,18 @@ class _SignUpEmailState extends State<SignUpEmail> {
           const SizedBox(
             height: 10,
           ),
-          TextFormField(
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Email',
-            ),
-            controller: emailController,
-            validator: validateEmail,
+          Consumer(
+            builder: (BuildContext context, WidgetRef ref, Widget? child) {
+              return TextFormField(
+                initialValue: ref.read(signUpStateProvider).email,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Email',
+                ),
+                validator: validateEmail,
+                onSaved: (value) => email = value ?? "",
+              );
+            },
           ),
           const SizedBox(
             height: 10,
@@ -426,19 +370,25 @@ class _SignUpEmailState extends State<SignUpEmail> {
           const SizedBox(
             height: 10,
           ),
-          ContinueButton(
-            onPressed: _onPressed,
+          Consumer(
+            builder: (BuildContext context, WidgetRef ref, Widget? child) {
+              return ContinueButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    FocusScope.of(context).unfocus();
+                    _formKey.currentState?.save();
+                    ref.read(signUpStateProvider).email = email;
+                    widget.pageController.nextPage(
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.ease);
+                  }
+                },
+              );
+            },
           )
         ],
       ),
     );
-  }
-
-  void _onPressed() {
-    if (_formKey.currentState!.validate()) {
-      widget.pageController.nextPage(
-          duration: const Duration(milliseconds: 500), curve: Curves.ease);
-    }
   }
 }
 
@@ -454,9 +404,8 @@ class SignUpPassword extends StatefulWidget {
 
 class _SignUpPasswordState extends State<SignUpPassword> {
   final _formKey = GlobalKey<FormState>();
-  static String fakeEmail = "bach@gmail.com";
-  final passwordController = TextEditingController();
-  final passwordController2 = TextEditingController();
+  late String? password1;
+  late String? password2;
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -475,39 +424,58 @@ class _SignUpPasswordState extends State<SignUpPassword> {
           const SizedBox(
             height: 10,
           ),
-          PasswordField(
-            validator: (value) => validatePassword(value, fakeEmail),
-            textEditingController: passwordController,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          PasswordField(
-            labelText: "Nhập lại mật khẩu",
-            validator: (value) {
-              if (value != passwordController.text) {
-                return "Mật khẩu không khớp";
-              }
-              return null;
+          Consumer(
+            builder: (BuildContext context, WidgetRef ref, Widget? child) {
+              password1 = ref.read(signUpStateProvider).password;
+              return PasswordField(
+                initialValue: ref.read(signUpStateProvider).password,
+                labelText: "Mật khẩu",
+                validator: (value) {
+                  String email = ref.read(signUpStateProvider).email;
+                  return validatePassword(value, email);
+                },
+                onChanged: (value) => password1 = value,
+              );
             },
-            textEditingController: passwordController2,
           ),
           const SizedBox(
             height: 10,
           ),
-          ContinueButton(
-            onPressed: _onPressed,
+          Consumer(
+              builder: (BuildContext context, WidgetRef ref, Widget? child) {
+            password2 = ref.read(signUpStateProvider).password;
+            return PasswordField(
+                initialValue: ref.read(signUpStateProvider).password,
+                labelText: "Nhập lại mật khẩu",
+                validator: (value) {
+                  if (value != password1) {
+                    return "Mật khẩu không khớp";
+                  }
+                  return null;
+                },
+                onChanged: (value) => password2 = value);
+          }),
+          const SizedBox(
+            height: 10,
           ),
+          Consumer(
+            builder: (BuildContext context, WidgetRef ref, Widget? child) {
+              return ContinueButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    FocusScope.of(context).unfocus();
+                    ref.read(signUpStateProvider).password = password1 ?? "";
+                    widget.pageController.nextPage(
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.ease);
+                  }
+                },
+              );
+            },
+          )
         ],
       ),
     );
-  }
-
-  void _onPressed() {
-    if (_formKey.currentState!.validate()) {
-      widget.pageController.nextPage(
-          duration: const Duration(milliseconds: 500), curve: Curves.ease);
-    }
   }
 }
 
@@ -545,8 +513,19 @@ class SaveInfo extends StatelessWidget {
   }
 }
 
-class VerifyAccount extends StatelessWidget {
+class VerifyAccount extends StatefulWidget {
   const VerifyAccount({super.key});
+
+  @override
+  State<VerifyAccount> createState() => _VerifyAccountState();
+}
+
+class _VerifyAccountState extends State<VerifyAccount> {
+  final _controller = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -567,9 +546,14 @@ class VerifyAccount extends StatelessWidget {
         const SizedBox(
           height: 10,
         ),
-        PrimaryButton(
-          onPressed: () => context.go("/"),
-          text: "Xác nhận",
+        Consumer(
+          builder: (BuildContext context, WidgetRef ref, Widget? child) {
+            String email = ref.read(signUpStateProvider).email;
+            return PrimaryButton(
+              onPressed: () => _onPressed(context, email),
+              text: "Xác nhận",
+            );
+          },
         ),
         const SizedBox(
           height: 10,
@@ -587,22 +571,34 @@ class VerifyAccount extends StatelessWidget {
     );
   }
 
+  void _onPressed(BuildContext context, String email) async {
+    String code = _controller.text;
+    var responseCode = await checkVerifyCode(email, code);
+    if (!isSuccessCode(responseCode)) {
+      // ignore: use_build_context_synchronously
+      await showErrorDialog(context, responseCode);
+      return;
+    }
+    // ignore: use_build_context_synchronously
+    context.go("/");
+  }
+
   Widget buildCodeField() {
     return Container(
       alignment: Alignment.center,
-      child: const SizedBox(
+      child: SizedBox(
         width: 120.0,
         child: TextField(
-          // controller: _controller,
+          controller: _controller,
           keyboardType: TextInputType.number,
           maxLength: 6, // Adjust to the desired code length
 
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             border: OutlineInputBorder(),
             counterText: '', // To hide the character count
           ),
           maxLines: 1,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 20.0,
             fontWeight: FontWeight.bold,
           ),
@@ -621,75 +617,40 @@ class PolicyScreen extends StatefulWidget {
 }
 
 class _PolicyScreenState extends State<PolicyScreen> {
-  late final WebViewController controller;
+  final bool _isSubmitting = false;
 
   @override
   void initState() {
     super.initState();
-    controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..addJavaScriptChannel("app",
-          onMessageReceived: (JavaScriptMessage message) {
-        context.go("/welcome");
-      })
-      ..loadFlutterAsset('assets/policy.html');
   }
 
   @override
   Widget build(BuildContext context) {
-    return WebViewWidget(
-      controller: controller,
+    return Consumer(
+      builder: (BuildContext context, WidgetRef ref, Widget? child) {
+        return WebViewWidget(
+            controller: WebViewController()
+              ..setJavaScriptMode(JavaScriptMode.unrestricted)
+              ..addJavaScriptChannel("app",
+                  onMessageReceived: (JavaScriptMessage message) async {
+                String email = ref.read(signUpStateProvider).email;
+                String password = ref.read(signUpStateProvider).password;
+                String deviceId = await getDeviceId(context);
+                var responseCode = await signUp(email, password, deviceId);
+                if (!isSuccessCode(responseCode)) {
+                  // ignore: use_build_context_synchronously
+                  await showErrorDialog(context, responseCode);
+                  return;
+                }
+                responseCode = await getVerifyCode(email);
+                if (!isSuccessCode(responseCode)) {
+                  // ignore: use_build_context_synchronously
+                  await showErrorDialog(context, responseCode);
+                  return;
+                }
+              })
+              ..loadFlutterAsset('assets/policy.html'));
+      },
     );
   }
 }
-// void main() {
-//   runApp(MyApp());
-// }
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: Scaffold(
-//         appBar: AppBar(
-//           title: Text('Verification Code Input'),
-//         ),
-//         body: Center(
-//           child: VerificationCodeInput(),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// class VerificationCodeInput extends StatefulWidget {
-//   @override
-//   _VerificationCodeInputState createState() => _VerificationCodeInputState();
-// }
-
-// class _VerificationCodeInputState extends State<VerificationCodeInput> {
-//   final TextEditingController _controller = TextEditingController();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.all(16.0),
-//       child: TextField(
-//         controller: _controller,
-//         keyboardType: TextInputType.number,
-//         maxLength: 6, // Adjust to the desired code length
-//         decoration: InputDecoration(
-//           hintText: 'Enter Verification Code',
-//           counterText: '', // To hide the character count
-//         ),
-//         onChanged: (value) {
-//           // Handle verification code input here
-//           if (value.length == 6) {
-//             // The code is complete; you can perform verification here
-//             print('Verification Code: $value');
-//           }
-//         },
-//       ),
-//     );
-//   }
-// }

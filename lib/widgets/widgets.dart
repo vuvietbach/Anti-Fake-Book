@@ -45,18 +45,34 @@ class CustomDivider extends StatelessWidget {
   }
 }
 
-class CustomSearchBar extends StatelessWidget {
+class CustomSearchBar extends StatefulWidget {
   final String placeholder;
-  const CustomSearchBar({super.key, this.placeholder = "Tìm kiếm"});
+  final Function? searchCallback;
+  final Function? onClear;
+  final bool readOnly;
+  const CustomSearchBar({super.key, this.placeholder = "Tìm kiếm", this.searchCallback, this.onClear, this.readOnly=false});
 
+  @override
+  State<CustomSearchBar> createState() => _CustomSearchBarState();
+}
+
+class _CustomSearchBarState extends State<CustomSearchBar> {
+  final TextEditingController _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return TextField(
+      readOnly: widget.readOnly,
+      onEditingComplete: () {
+        FocusScope.of(context).unfocus();
+        if(widget.searchCallback != null) {
+          widget.searchCallback!();
+        }
+      },
       style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.grey[200], // Grey background color
-        hintText: placeholder, // Text placeholder
+        hintText: widget.placeholder, // Text placeholder
         hintStyle: const TextStyle(color: Colors.grey),
         focusColor: Colors.transparent,
         hoverColor: Colors.transparent,
@@ -68,7 +84,12 @@ class CustomSearchBar extends StatelessWidget {
             const EdgeInsets.symmetric(horizontal: 16.0), // Adjust padding
         prefixIcon: const Icon(Icons.search, color: Colors.grey),
         suffixIcon: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            _controller.clear();
+            if(widget.onClear != null) {
+              widget.onClear!();
+            }
+          },
           icon: const Icon(Icons.clear, color: Colors.grey),
         ),
       ),
@@ -79,10 +100,12 @@ class CustomSearchBar extends StatelessWidget {
 class PasswordField extends StatefulWidget {
   final void Function(String?)? onSaved;
   final String? Function(String?)? validator;
+  final void Function(String?)? onChanged;
   // ignore: prefer_typing_uninitialized_variables
   final TextEditingController? textEditingController;
   final bool isEnable;
   final String labelText;
+  final String? initialValue;
   const PasswordField({
     super.key,
     this.onSaved,
@@ -90,6 +113,8 @@ class PasswordField extends StatefulWidget {
     this.textEditingController,
     this.isEnable = true,
     this.labelText = "Mật khẩu",
+    this.initialValue,
+    this.onChanged,
   });
 
   @override
@@ -108,7 +133,11 @@ class _PasswordFieldState extends State<PasswordField> {
 
   @override
   Widget build(BuildContext context) {
+    if(widget.initialValue != null && widget.initialValue!.isNotEmpty) {
+      _empty = false;
+    }
     return TextFormField(
+      initialValue: widget.initialValue,
       controller: widget.textEditingController,
       enabled: widget.isEnable,
       obscureText: _obscureText,
@@ -128,8 +157,7 @@ class _PasswordFieldState extends State<PasswordField> {
         setState(() {
           _empty = value.isEmpty;
         }),
-        // ignore: avoid_print
-        print("Empty: $_empty")
+        widget.onChanged?.call(value)
       },
       validator: widget.validator,
       onSaved: widget.onSaved,

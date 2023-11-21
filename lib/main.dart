@@ -1,4 +1,5 @@
 import 'package:anti_fake_book/screen/CreatePost.dart';
+import 'package:anti_fake_book/screen/search_page.dart';
 import 'package:anti_fake_book/screen/sign_up/routes.dart';
 import 'package:anti_fake_book/screen/profile/routes.dart';
 import 'package:anti_fake_book/screen/sign_in/routes.dart';
@@ -26,7 +27,7 @@ final GoRouter _router = GoRouter(routes: [
   GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState stage) {
-        return const EmptyLayout(child: WelcomeScreen());
+        return const EmptyLayout(child: SearchPage());
       },
       routes: [
         GoRoute(

@@ -43,4 +43,3 @@ class _EmailFieldState extends State<EmailField> {
     return const Placeholder();
   }
 }
-

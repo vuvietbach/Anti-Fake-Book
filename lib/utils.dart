@@ -115,3 +115,53 @@ Future<String> getDeviceId(BuildContext context) async {
 }
 
 }
+bool isSuccessCode(String code) {
+  return code == "1000";
+}
+
+Future<void> showErrorDialog(BuildContext context, String code,
+    [String? screenCode]) async {
+  if (screenCode == 'verify_code') {
+    /*
+      * 1000, OK
+      * 1004 || 9995, email chua duoc dang ky
+      * 1004 || 9996, email da duoc hoan tat dang ky
+    */
+  } else {
+    if (code == "9996" || code == "1010") {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+                title: const Text("Email đã được sử dụng"),
+                content: const Text("Vui lòng kiểm tra lại email"),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("Đóng"))
+                ],
+              ));
+    } else if (code == "1004") {
+      String title = "Thông tin không hợp lệ";
+      String content = "Vui lòng kiểm tra lại thông tin";
+      if (screenCode == "sign_up") {
+        title = "Thông tin không hợp lệ";
+        content = "Vui lòng kiểm tra lại email hoặc mật khẩu";
+      }
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+                title: Text(title),
+                content: Text(content),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("Đóng"))
+                ],
+              ));
+    }
+  }
+}
