@@ -32,7 +32,7 @@ final GoRouter _router = GoRouter(routes: [
               GoRoute(
                 path: 'emotions',
                 builder: (BuildContext context, GoRouterState stage) =>
-                    EmotionsList(),
+                    const EmotionsList(),
               )
             ]),
         GoRoute(
