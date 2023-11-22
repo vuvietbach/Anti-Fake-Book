@@ -5,7 +5,6 @@ import '../screen/HomePage/friend_tab.dart';
 import '../screen/HomePage/menu_tab.dart';
 import '../screen/HomePage/notification_tab.dart';
 import '../screen/HomePage/watch_tab.dart';
-import '../screen/HomePage/market_place_tab.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key});
@@ -13,7 +12,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 6, // The number of tabs
+        length: 5, // The number of tabs
         child: Scaffold(
           appBar: AppBar(
             title: Text("AntiFakebook",
@@ -41,9 +40,6 @@ class HomePage extends StatelessWidget {
                   icon: Icon(Icons.video_library, color: Colors.black),
                 ),
                 Tab(
-                  icon: Icon(Icons.shop, color: Colors.black),
-                ),
-                Tab(
                   icon: Icon(Icons.notifications, color: Colors.black),
                 ),
                 Tab(
@@ -59,7 +55,6 @@ class HomePage extends StatelessWidget {
                 PostHomePageContent(),
                 FriendPageContent(),
                 VideoPageContent(),
-                ShopPageContent(),
                 NotificationContent(),
                 MenuContent(),
               ],
