@@ -17,6 +17,8 @@ import 'package:anti_fake_book/screen/HomePage/HomeFake.dart';
 import 'package:anti_fake_book/store/reducers/index.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 
+import 'layout/home_page.dart';
+
 final GoRouter _router = GoRouter(routes: [
   GoRoute(
       path: '/',
@@ -43,6 +45,11 @@ final GoRouter _router = GoRouter(routes: [
         ),
         signInRoutes,
         signUpRoutes,
+        GoRoute(
+          path: 'home',
+          builder: (BuildContext context, GoRouterState state) =>
+              const HomePage(),
+        ),
       ]),
 ]);
 void main() async {
