@@ -1,4 +1,4 @@
-import 'package:anti_fake_book/constants/common/Color.dart';
+import 'package:anti_fake_book/constants/common/color_config.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -39,7 +39,7 @@ class HomeFake extends StatelessWidget {
                 floatingActionButton: Center(
                   child: ElevatedButton(
                     onPressed: () {
-                      context.go('/post/create');
+                      context.go('/create-post');
                     },
                     child: const Text(
                       'next',

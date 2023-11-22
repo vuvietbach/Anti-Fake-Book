@@ -1,4 +1,5 @@
 //Lib
+import 'package:anti_fake_book/screen/create_post/emotion_list.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,7 @@ import 'package:redux/redux.dart';
 import 'package:redux_future_middleware/redux_future_middleware.dart';
 
 //module
-import 'package:anti_fake_book/screen/create_post.dart';
+import 'package:anti_fake_book/screen/create_post/create_post.dart';
 import 'package:anti_fake_book/screen/SignUp/routes.dart';
 import 'package:anti_fake_book/screen/signIn/routes.dart';
 import 'package:anti_fake_book/screen/welcomeScreen.dart';
@@ -24,14 +25,14 @@ final GoRouter _router = GoRouter(routes: [
       },
       routes: [
         GoRoute(
-            path: 'post',
+            path: 'create-post',
             builder: (BuildContext context, GoRouterState stage) =>
-                CreatePostScreen(),
+                const CreatePostScreen(),
             routes: [
               GoRoute(
-                path: 'create',
+                path: 'emotions',
                 builder: (BuildContext context, GoRouterState stage) =>
-                    CreatePostScreen(),
+                    EmotionsList(),
               )
             ]),
         GoRoute(

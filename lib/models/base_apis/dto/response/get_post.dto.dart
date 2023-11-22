@@ -1,85 +1,101 @@
 import 'package:anti_fake_book/global_type/user/user_summary.entity.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/response.dto.dart';
 import 'package:anti_fake_book/utils.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 part 'get_post.dto.g.dart';
+part 'get_post.dto.freezed.dart';
 
-@customJsonSerializable
-class GetPostResponseDTO extends ResponseDTO {
-  PostPayloadDTO data;
-  GetPostResponseDTO(this.data) : super();
+@unfreezed
+class GetPostResponseDTO with _$GetPostResponseDTO {
+  @customJsonSerializable
+  factory GetPostResponseDTO({
+    required PostPayloadDTO data,
+  }) = _GetPostResponseDTO;
+
   factory GetPostResponseDTO.fromJson(Map<String, dynamic> json) =>
       _$GetPostResponseDTOFromJson(json);
-  Map<String, dynamic> toJson() => _$GetPostResponseDTOToJson(this);
 }
 
-@customJsonSerializable
-class PostPayloadDTO {
-  String? id;
-  String? name;
-  DateTime? created;
-  DateTime? modified;
-  int? fake;
-  int? trust;
-  int? kudos;
-  int? disappointed;
-  bool? isRated;
-  bool? isMarked;
-  List<ImagePayloadDTO> images;
-  List<VideoPayloadDTO> video;
-  AuthorPostPayloadDTO? author;
-  PostCategory? category;
-  int? state;
-  bool? isBlock;
-  bool? canEdit;
-  bool? banned;
-  int? canMark;
-  int? canRate;
-  String? url;
-  String? messages;
-  PostPayloadDTO({this.images = const [], this.video = const []});
+@freezed
+class PostPayloadDTO with _$PostPayloadDTO {
+  @customJsonSerializable
+  const factory PostPayloadDTO({
+    String? id,
+    String? name,
+    DateTime? created,
+    DateTime? modified,
+    int? fake,
+    int? trust,
+    int? kudos,
+    int? disappointed,
+    bool? isRated,
+    bool? isMarked,
+    @Default([]) List<ImagePayloadDTO> images,
+    @Default([]) List<VideoPayloadDTO> video,
+    AuthorPostPayloadDTO? author,
+    PostCategory? category,
+    int? state,
+    bool? isBlock,
+    bool? canEdit,
+    bool? banned,
+    int? canMark,
+    int? canRate,
+    String? url,
+    String? messages,
+  }) = _PostPayloadDTO;
+
   factory PostPayloadDTO.fromJson(Map<String, dynamic> json) =>
       _$PostPayloadDTOFromJson(json);
-  Map<String, dynamic> toJson() => _$PostPayloadDTOToJson(this);
 }
 
-@customJsonSerializable
-class PostCategory {
-  String? id;
-  String? name;
-  String? hasName;
-  PostCategory(this.id, this.name, this.hasName);
+@unfreezed
+class PostCategory with _$PostCategory {
+  @customJsonSerializable
+  factory PostCategory({
+    String? id,
+    String? name,
+    String? hasName,
+  }) = _PostCategory;
+
   factory PostCategory.fromJson(Map<String, dynamic> json) =>
       _$PostCategoryFromJson(json);
-  Map<String, dynamic> toJson() => _$PostCategoryToJson(this);
 }
 
-@customJsonSerializable
-class AuthorPostPayloadDTO extends UserSummaryEntity {
-  List<String> listing;
-  AuthorPostPayloadDTO(this.listing, String id, String name, int coins)
-      : super(id, name, coins);
+@unfreezed
+class AuthorPostPayloadDTO with _$AuthorPostPayloadDTO {
+  @customJsonSerializable
+  factory AuthorPostPayloadDTO({
+    required List<String> listing,
+    required String id,
+    required String name,
+    required int coins,
+  }) = _AuthorPostPayloadDTO;
+
   factory AuthorPostPayloadDTO.fromJson(Map<String, dynamic> json) =>
       _$AuthorPostPayloadDTOFromJson(json);
-  Map<String, dynamic> toJson() => _$AuthorPostPayloadDTOToJson(this);
 }
 
-@customJsonSerializable
-class ImagePayloadDTO {
-  String id;
-  String url;
-  ImagePayloadDTO(this.url, this.id);
+@unfreezed
+class ImagePayloadDTO with _$ImagePayloadDTO {
+  @customJsonSerializable
+  factory ImagePayloadDTO({
+    required String id,
+    required String url,
+  }) = _ImagePayloadDTO;
+
   factory ImagePayloadDTO.fromJson(Map<String, dynamic> json) =>
       _$ImagePayloadDTOFromJson(json);
-  Map<String, dynamic> toJson() => _$ImagePayloadDTOToJson(this);
 }
 
-@customJsonSerializable
-class VideoPayloadDTO {
-  String id;
-  String url;
-  String thumb;
-  VideoPayloadDTO(this.url, this.id, this.thumb);
+@unfreezed
+class VideoPayloadDTO with _$VideoPayloadDTO {
+  @customJsonSerializable
+  factory VideoPayloadDTO({
+    required String id,
+    required String url,
+    required String thumb,
+  }) = _VideoPayloadDTO;
+
   factory VideoPayloadDTO.fromJson(Map<String, dynamic> json) =>
       _$VideoPayloadDTOFromJson(json);
-  Map<String, dynamic> toJson() => _$VideoPayloadDTOToJson(this);
 }
