@@ -33,7 +33,7 @@ class WelcomeScreen extends StatelessWidget {
               height: 40.0,
               width: double.infinity,
               child: OutlinedButton(
-                  onPressed: () => context.go('/sign-up'), 
+                  onPressed: () => context.go('/sign-up'),
                   child: const Text("Tạo tài khoản mới")),
             ),
             const Padding(

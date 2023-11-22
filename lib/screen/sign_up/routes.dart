@@ -27,8 +27,8 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return Consumer(
         builder: (BuildContext context, WidgetRef ref, Widget? child) {
-          SignUpState signUpState = ref.watch(signUpStateProvider);
-          signUpState.reset();
+      SignUpState signUpState = ref.watch(signUpStateProvider);
+      signUpState.reset();
       return GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: Scaffold(

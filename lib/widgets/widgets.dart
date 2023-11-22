@@ -50,7 +50,12 @@ class CustomSearchBar extends StatefulWidget {
   final Function? searchCallback;
   final Function? onClear;
   final bool readOnly;
-  const CustomSearchBar({super.key, this.placeholder = "Tìm kiếm", this.searchCallback, this.onClear, this.readOnly=false});
+  const CustomSearchBar(
+      {super.key,
+      this.placeholder = "Tìm kiếm",
+      this.searchCallback,
+      this.onClear,
+      this.readOnly = false});
 
   @override
   State<CustomSearchBar> createState() => _CustomSearchBarState();
@@ -64,7 +69,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
       readOnly: widget.readOnly,
       onEditingComplete: () {
         FocusScope.of(context).unfocus();
-        if(widget.searchCallback != null) {
+        if (widget.searchCallback != null) {
           widget.searchCallback!();
         }
       },
@@ -86,7 +91,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
         suffixIcon: IconButton(
           onPressed: () {
             _controller.clear();
-            if(widget.onClear != null) {
+            if (widget.onClear != null) {
               widget.onClear!();
             }
           },
@@ -133,7 +138,7 @@ class _PasswordFieldState extends State<PasswordField> {
 
   @override
   Widget build(BuildContext context) {
-    if(widget.initialValue != null && widget.initialValue!.isNotEmpty) {
+    if (widget.initialValue != null && widget.initialValue!.isNotEmpty) {
       _empty = false;
     }
     return TextFormField(

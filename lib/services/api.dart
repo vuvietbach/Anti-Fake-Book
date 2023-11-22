@@ -1,4 +1,3 @@
-
 class SignInRespone {
   final String code;
   final String message;
@@ -50,4 +49,3 @@ Future<String> checkVerifyCode(String email, String code) async {
   */
   return "1000";
 }
-

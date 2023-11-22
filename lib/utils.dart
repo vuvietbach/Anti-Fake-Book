@@ -114,7 +114,6 @@ Future<String> getDeviceId(BuildContext context) async {
   return androidInfo.androidId;
 }
 
-
 bool isSuccessCode(String code) {
   return code == "1000";
 }

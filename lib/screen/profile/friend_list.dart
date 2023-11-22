@@ -75,7 +75,8 @@ class FriendList extends StatelessWidget {
                                 ListTile(
                                   leading: const Icon(Icons.block),
                                   title: const Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text("Chặn"),
                                       SizedBox(
@@ -90,7 +91,8 @@ class FriendList extends StatelessWidget {
                                 ListTile(
                                   leading: const Icon(Icons.person_remove),
                                   title: const Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text("Hủy kết bạn với"),
                                       SizedBox(
