@@ -51,11 +51,11 @@ class ApiModel {
 
   Future<GetPostResponseDTO> getPost(String id) async {
     final response = await _dio.post(PathName.getPost, data: {'id': id});
-    return GetPostResponseDTO(response.data);
+    return GetPostResponseDTO(data: response.data);
   }
 
   Future<GetPostResponseDTO> getUserInfo(String id) async {
     final response = await _dio.post(PathName.getUserInfo, data: {'id': id});
-    return GetPostResponseDTO(response.data);
+    return GetPostResponseDTO(data: response.data);
   }
 }
