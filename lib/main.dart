@@ -45,6 +45,11 @@ final GoRouter _router = GoRouter(routes: [
         ),
         signInRoutes,
         signUpRoutes,
+        GoRoute(
+          path: 'home',
+          builder: (BuildContext context, GoRouterState state) =>
+              const HomePage(),
+        ),
       ]),
 ]);
 void main() async {
