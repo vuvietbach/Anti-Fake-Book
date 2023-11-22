@@ -1,4 +1,4 @@
-import 'package:anti_fake_book/layout/Empty.dart';
+import 'package:anti_fake_book/layout/default_layer.dart';
 import 'package:anti_fake_book/screen/profile/friend_list.dart';
 import 'package:anti_fake_book/screen/profile/profile.dart';
 import 'package:anti_fake_book/screen/profile/profile_setting.dart';

@@ -84,8 +84,8 @@ const customJsonSerializable = JsonSerializable(
     CustomStringConvert()
   ],
 );
-String? validatePassword(String? value) {
-  if (value == null || value.isEmpty) {
+String? validatePassword(String? password, String? email) {
+  if (password == null || password.isEmpty) {
     return 'Mật khẩu không được để trống';
   } else if (password.length < 6 || password.length > 10) {
     return 'Mật khẩu phải có độ dài từ 6 đến 10 ký tự';
@@ -114,7 +114,7 @@ Future<String> getDeviceId(BuildContext context) async {
   return androidInfo.androidId;
 }
 
-}
+
 bool isSuccessCode(String code) {
   return code == "1000";
 }

@@ -9,12 +9,14 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'package:video_player/video_player.dart';
 
 class PostHomePageContent extends StatefulWidget {
+  const PostHomePageContent({super.key});
+
   @override
   _PostHomePageContentState createState() => _PostHomePageContentState();
 }
 
 class _PostHomePageContentState extends State<PostHomePageContent> {
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   int numberOfContainers = 3;
   bool isLoading = false;
   bool showAllText = false;
@@ -43,7 +45,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
       isLoading = true;
     });
 
-    Future.delayed(Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 5), () {
       setState(() {
         numberOfContainers += 3;
         isLoading = false;
@@ -68,7 +70,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
 
   @override
   Widget build(BuildContext context) {
-    List<GlobalKey> _menuButtonKeys =
+    List<GlobalKey> menuButtonKeys =
         List.generate(numberOfContainers, (index) => GlobalKey());
 
     int kudosCount = 4200;
@@ -91,7 +93,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
     }
 
     // Post content (text)
-    final postContent =
+    const postContent =
         '#flutterno1\n 😀😀😀😀😀😀😀😀😀 \nThis is the post content. This is the post content. This is the post content. This is the post content. \nThis is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content. This is the post content.\nLink1: https://www.tutorialspoint.com/index.htm \nLink2: https://www.youtube.com/watch?v=dQw4w9WgXcQ';
     final List<InlineSpan> textSpans = [];
 
@@ -102,8 +104,8 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
       if (part.startsWith('http') || part.startsWith('https')) {
         textSpans.add(
           TextSpan(
-            text: part + ' ',
-            style: TextStyle(color: Colors.blue),
+            text: '$part ',
+            style: const TextStyle(color: Colors.blue),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
                 // Open the link when tapped
@@ -115,8 +117,8 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
         // Handle Hashtags
         textSpans.add(
           TextSpan(
-            text: part + ' ',
-            style: TextStyle(color: Colors.blue),
+            text: '$part ',
+            style: const TextStyle(color: Colors.blue),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
                 // Handle when the user taps on hashtags
@@ -126,8 +128,8 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
       } else {
         textSpans.add(
           TextSpan(
-            text: part + ' ',
-            style: TextStyle(
+            text: '$part ',
+            style: const TextStyle(
               color: Colors.black,
               fontSize: 14,
             ),
@@ -142,7 +144,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
       displayedText = showAllText ? textSpans : textSpans.sublist(0, 30);
       if (!showAllText) {
         displayedText.add(
-          TextSpan(
+          const TextSpan(
             text: '...',
             style: TextStyle(color: Colors.black),
           ),
@@ -150,7 +152,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
         displayedText.add(
           TextSpan(
             text: 'Xem thêm',
-            style: TextStyle(color: Colors.grey),
+            style: const TextStyle(color: Colors.grey),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
                 setState(() {
@@ -163,7 +165,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
         displayedText.add(
           TextSpan(
             text: ' Thu gọn',
-            style: TextStyle(color: Colors.grey),
+            style: const TextStyle(color: Colors.grey),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
                 setState(() {
@@ -187,10 +189,10 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
     String formatCount(int count) {
       if (count >= 1000000) {
         double millionCount = count / 1000000.0;
-        return millionCount.toStringAsFixed(1) + 'M';
+        return '${millionCount.toStringAsFixed(1)}M';
       } else if (count >= 1000) {
         double thousandCount = count / 1000.0;
-        return thousandCount.toStringAsFixed(1) + 'K';
+        return '${thousandCount.toStringAsFixed(1)}K';
       } else {
         return count.toString();
       }
@@ -203,9 +205,9 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
             onPressed: () {
               GoRouter.of(context).go('/post/create');
             },
-            child: Text('Tạo bài viết'),
+            child: const Text('Tạo bài viết'),
           ),
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.height - 100,
             child: ListView.builder(
               controller: _scrollController,
@@ -222,22 +224,22 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
 
                   return Container(
                     color: Colors.white,
-                    margin: EdgeInsets.only(bottom: 10),
-                    padding: EdgeInsets.all(10),
+                    margin: const EdgeInsets.only(bottom: 10),
+                    padding: const EdgeInsets.all(10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
-                            CircleAvatar(
+                            const CircleAvatar(
                               radius: 20,
                               backgroundColor: Colors.deepPurple,
                             ),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   'User Name',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
@@ -245,13 +247,13 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
                                   children: [
                                     Text(
                                       '$timeAgo • ',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.normal,
                                         fontSize: 10,
                                       ),
                                     ),
-                                    SizedBox(height: 20),
-                                    Icon(
+                                    const SizedBox(height: 20),
+                                    const Icon(
                                       Icons.public_rounded,
                                       size: 10,
                                     ),
@@ -259,13 +261,13 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
                                 ),
                               ],
                             ),
-                            Spacer(),
+                            const Spacer(),
                             IconButton(
-                              key: _menuButtonKeys[index],
-                              icon: Icon(Icons.more_horiz),
+                              key: menuButtonKeys[index],
+                              icon: const Icon(Icons.more_horiz),
                               onPressed: () {
                                 final RenderBox buttonBox =
-                                    _menuButtonKeys[index]
+                                    menuButtonKeys[index]
                                         .currentContext
                                         ?.findRenderObject() as RenderBox;
                                 final Offset offset =
@@ -288,7 +290,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
                                     return PopupMenuItem(
                                       value: option['title'],
                                       child: ListTile(
-                                        contentPadding: EdgeInsets.all(0),
+                                        contentPadding: const EdgeInsets.all(0),
                                         leading: Icon(option['icon']),
                                         title: Text(option['title']),
                                       ),
@@ -299,32 +301,32 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         // Post content (text)
                         RichText(
                           text: TextSpan(children: displayedText),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Row(
                               children: [
-                                Icon(Icons.thumb_up, color: Colors.blue),
-                                SizedBox(width: 5),
+                                const Icon(Icons.thumb_up, color: Colors.blue),
+                                const SizedBox(width: 5),
                                 Text(
                                   'Kudos: ${formatCount(kudosCount)}',
-                                  style: TextStyle(fontSize: 16),
+                                  style: const TextStyle(fontSize: 16),
                                 ),
                               ],
                             ),
                             Row(
                               children: [
-                                Icon(Icons.thumb_down, color: Colors.red),
-                                SizedBox(width: 5),
+                                const Icon(Icons.thumb_down, color: Colors.red),
+                                const SizedBox(width: 5),
                                 Text(
                                   'Disappointed: ${formatCount(disappointedCount)}',
-                                  style: TextStyle(fontSize: 16),
+                                  style: const TextStyle(fontSize: 16),
                                 ),
                               ],
                             ),
@@ -333,22 +335,22 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
                         // Comment Count Section
                         Row(
                           children: [
-                            Icon(Icons.comment, color: Colors.green),
-                            SizedBox(width: 5),
+                            const Icon(Icons.comment, color: Colors.green),
+                            const SizedBox(width: 5),
                             Text(
                               'Comments: ${formatCount(commentCount)}',
-                              style: TextStyle(fontSize: 16),
+                              style: const TextStyle(fontSize: 16),
                             ),
                           ],
                         ),
                         GridView.builder(
                           gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                           ),
                           itemCount: imageAssets.length,
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: () {
@@ -389,7 +391,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
                     ),
                   );
                 } else if (isLoading) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else {
                   return Container();
                 }
@@ -403,10 +405,10 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
 }
 
 class PostHomePage extends StatelessWidget {
-  const PostHomePage({Key? key});
+  const PostHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return PostHomePageContent();
+    return const PostHomePageContent();
   }
 }
