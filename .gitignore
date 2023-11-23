@@ -2,8 +2,8 @@
 # See https://github.com/flutter/flutter/issues/128635 for more context.
 
 # Generate file
-*.g.dart\
-*.freezed.dart\
+*.g.dart
+*.freezed.dart
 
 # Miscellaneous
 *.env
