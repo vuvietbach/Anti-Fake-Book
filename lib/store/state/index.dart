@@ -3,18 +3,26 @@ import 'package:anti_fake_book/store/state/app.dart';
 import 'package:anti_fake_book/store/state/post.dart';
 import 'package:anti_fake_book/store/state/user.dart';
 import 'package:anti_fake_book/utils.dart';
+
+import 'package:freezed_annotation/freezed_annotation.dart';
+part 'index.freezed.dart';
 part 'index.g.dart';
 
-@customJsonSerializable
-class AntiFakeBookState {
-  late AppState appState;
-  late PostState postState;
-  late UserState userState;
+@freezed
+class AntiFakeBookState with _$AntiFakeBookState {
+  @customJsonSerializable
+  factory AntiFakeBookState({
+    required AppState appState,
+    required PostState postState,
+    required UserState userState,
+  }) = _AntiFakeBookState;
 
-  AntiFakeBookState.initState() {
-    postState = PostState.initState();
-    appState = AppState.initState();
-    userState = UserState.initState();
-  }
-  AntiFakeBookState({required this.appState, required this.postState, required this.userState});
+  factory AntiFakeBookState.initState() => AntiFakeBookState(
+        appState: AppState(),
+        postState: PostState(),
+        userState: UserState(),
+      );
+
+  factory AntiFakeBookState.fromJson(Map<String, dynamic> json) =>
+      _$AntiFakeBookStateFromJson(json);
 }

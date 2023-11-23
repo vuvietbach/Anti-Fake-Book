@@ -1,3 +1,4 @@
+//lib
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -5,16 +6,18 @@ import 'package:go_router/go_router.dart';
 import 'package:redux/redux.dart';
 import 'package:file_picker/file_picker.dart';
 
+//module
 import 'package:anti_fake_book/global_type/list_button_config.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/widgets/common/app_bar.dart';
 import 'package:anti_fake_book/widgets/common/chip_tags.dart';
 import 'package:anti_fake_book/widgets/common/list_button.dart';
 import 'package:anti_fake_book/store/actions/index.dart';
+import 'package:anti_fake_book/models/base_apis/dto/request/index.dart';
+import '../../widgets/common/text_button.dart';
 
-import '../constants/post.dart';
-import '../models/base_apis/dto/request/add_post.dto.dart';
-import '../widgets/common/text_button.dart';
+//constants
+import '../../constants/post.dart';
 
 class CreatePostScreen extends StatefulWidget {
   const CreatePostScreen({super.key});
@@ -56,13 +59,17 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     return _pickImages();
   }
 
-  void _getVideoOnPressed() {}
+  void _getEmotionOnPressed() {
+    context.go('/create-post/emotions');
+  }
 
   final List<ListButtonItemConfig> listButtonConfig = [];
   _CreatePostScreenState() : super() {
     listButtonConfig.addAll([
-      ListButtonItemConfig(_getImageOnPressed, 'Lấy ảnh'),
-      ListButtonItemConfig(_getVideoOnPressed, 'Lấy video')
+      ListButtonItemConfig(_getImageOnPressed, 'Lấy ảnh/Lấy video',
+          icon: 0xe332),
+      ListButtonItemConfig(_getEmotionOnPressed, 'Cảm xúc/Hoạt động',
+          icon: 0xe57d),
     ]);
   }
 
@@ -129,11 +136,30 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   ),
                   if (postData.image.isNotEmpty)
                     GridView.count(
-                      crossAxisCount: 3,
+                      crossAxisCount: 2,
                       shrinkWrap: true,
+                      mainAxisSpacing: 0.5,
+                      crossAxisSpacing: 0.5,
                       physics: const ScrollPhysics(),
                       children: postData.image.map((Uint8List file) {
-                        return Image.memory(file);
+                        return Stack(
+                          alignment: Alignment.topRight,
+                          children: <Widget>[
+                            Image.memory(file),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: IconButton(
+                                icon:
+                                    const Icon(Icons.close, color: Colors.red),
+                                onPressed: () {
+                                  setState(() {
+                                    postData.image.remove(file);
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        );
                       }).toList(),
                     )
                 ],

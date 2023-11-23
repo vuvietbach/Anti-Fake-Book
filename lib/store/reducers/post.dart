@@ -2,16 +2,15 @@ import '../actions/post.dart';
 import '../state/index.dart';
 
 AntiFakeBookState onCreatePostPending(
-    AntiFakeBookState state, PendingCreatePostAction action) {
+    AntiFakeBookState preState, PendingCreatePostAction action) {
   print('onCreatePostPending');
-  state.postState.isPosting = true;
-  return state;
+  AntiFakeBookState newState = preState.copyWith.postState(isPosting: true);
+  return newState;
 }
 
 AntiFakeBookState onCreatePostSuccess(
-    AntiFakeBookState state, SuccessCreatePostAction action) {
-  state.postState.isPosting = false;
-  state.userState.coins = action.payload.data.coins;
-  print(action.payload.data.id);
-  return state;
+    AntiFakeBookState preState, SuccessCreatePostAction action) {
+  print(preState.postState);
+  AntiFakeBookState newState = preState.copyWith.postState(isPosting: false);
+  return newState;
 }
