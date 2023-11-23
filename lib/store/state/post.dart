@@ -1,5 +1,6 @@
 import 'package:anti_fake_book/models/base_apis/dto/response/get_post.dto.dart';
 import 'package:anti_fake_book/store/state/template/bundle_state.dart';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'post.g.dart';
 part 'post.freezed.dart';

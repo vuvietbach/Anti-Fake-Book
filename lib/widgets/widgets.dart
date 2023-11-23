@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 class TransparentAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool hasBackButton;
-  const TransparentAppBar({super.key, this.hasBackButton = true});
+  final String title;
+  final Widget? backIcon;
+  const TransparentAppBar(
+      {super.key, this.hasBackButton = true, this.title = "", this.backIcon});
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +20,152 @@ class TransparentAppBar extends StatelessWidget implements PreferredSizeWidget {
             )
           : null,
       elevation: 0,
+      title: title != "" ? Text(title) : Container(),
+      actions: [
+        backIcon ?? Container(),
+      ],
       backgroundColor: Colors.transparent,
     );
   }
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class CustomDivider extends StatelessWidget {
+  const CustomDivider({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Divider(
+      height: 10.0,
+      thickness: 10.0,
+      color: Colors.grey,
+    );
+  }
+}
+
+class CustomSearchBar extends StatefulWidget {
+  final String placeholder;
+  final Function? searchCallback;
+  final Function? onClear;
+  final bool readOnly;
+  const CustomSearchBar(
+      {super.key,
+      this.placeholder = "Tìm kiếm",
+      this.searchCallback,
+      this.onClear,
+      this.readOnly = false});
+
+  @override
+  State<CustomSearchBar> createState() => _CustomSearchBarState();
+}
+
+class _CustomSearchBarState extends State<CustomSearchBar> {
+  final TextEditingController _controller = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      readOnly: widget.readOnly,
+      onEditingComplete: () {
+        FocusScope.of(context).unfocus();
+        if (widget.searchCallback != null) {
+          widget.searchCallback!();
+        }
+      },
+      style: const TextStyle(color: Colors.black),
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.grey[200], // Grey background color
+        hintText: widget.placeholder, // Text placeholder
+        hintStyle: const TextStyle(color: Colors.grey),
+        focusColor: Colors.transparent,
+        hoverColor: Colors.transparent,
+        border: OutlineInputBorder(
+          borderSide: BorderSide.none, // Remove border
+          borderRadius: BorderRadius.circular(30.0), // Adjust the border radius
+        ),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16.0), // Adjust padding
+        prefixIcon: const Icon(Icons.search, color: Colors.grey),
+        suffixIcon: IconButton(
+          onPressed: () {
+            _controller.clear();
+            if (widget.onClear != null) {
+              widget.onClear!();
+            }
+          },
+          icon: const Icon(Icons.clear, color: Colors.grey),
+        ),
+      ),
+    );
+  }
+}
+
+class PasswordField extends StatefulWidget {
+  final void Function(String?)? onSaved;
+  final String? Function(String?)? validator;
+  final void Function(String?)? onChanged;
+  // ignore: prefer_typing_uninitialized_variables
+  final TextEditingController? textEditingController;
+  final bool isEnable;
+  final String labelText;
+  final String? initialValue;
+  const PasswordField({
+    super.key,
+    this.onSaved,
+    this.validator,
+    this.textEditingController,
+    this.isEnable = true,
+    this.labelText = "Mật khẩu",
+    this.initialValue,
+    this.onChanged,
+  });
+
+  @override
+  State<PasswordField> createState() => _PasswordFieldState();
+}
+
+class _PasswordFieldState extends State<PasswordField> {
+  bool _obscureText = true; // Whether the password is obscured
+  bool _empty = true;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.initialValue != null && widget.initialValue!.isNotEmpty) {
+      _empty = false;
+    }
+    return TextFormField(
+      initialValue: widget.initialValue,
+      controller: widget.textEditingController,
+      enabled: widget.isEnable,
+      obscureText: _obscureText,
+      decoration: InputDecoration(
+        border: const OutlineInputBorder(),
+        hintText: widget.labelText,
+        suffixIcon: !_empty
+            ? IconButton(
+                icon: Icon(
+                  _obscureText ? Icons.visibility : Icons.visibility_off,
+                ),
+                onPressed: _togglePasswordVisibility,
+              )
+            : null,
+      ),
+      onChanged: (value) => {
+        setState(() {
+          _empty = value.isEmpty;
+        }),
+        widget.onChanged?.call(value)
+      },
+      validator: widget.validator,
+      onSaved: widget.onSaved,
+    );
+  }
 }
