@@ -15,8 +15,6 @@ class Friend {
 }
 
 class FriendPageContent extends StatefulWidget {
-  const FriendPageContent({super.key});
-
   @override
   _FriendPageContentState createState() => _FriendPageContentState();
 }
@@ -62,15 +60,15 @@ class _FriendPageContentState extends State<FriendPageContent> {
               child: ListView.builder(
                 itemCount:
                     friendRequests.length + 1, // 1 item là phần text trên cùng
-                itemBuilder: (BuildContext context, int indexOfListView) {
-                  int index = indexOfListView - 1;
+                itemBuilder: (BuildContext context, int index_of_list_view) {
+                  int index = index_of_list_view - 1;
                   if (index == -1) {
                     return Column(children: [
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text('Bạn bè',
+                          Text('Bạn bè',
                               style: TextStyle(
                                 fontSize: 30,
                                 fontWeight: FontWeight.bold,
@@ -87,12 +85,12 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                 child: ClipOval(
                                   child: IconButton(
                                     onPressed: () {},
-                                    icon: const Icon(Icons.search,
-                                        color: Colors.black),
+                                    icon:
+                                        Icon(Icons.search, color: Colors.black),
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 10),
+                              SizedBox(width: 10),
                             ],
                           ),
                         ],
@@ -114,7 +112,7 @@ class _FriendPageContentState extends State<FriendPageContent> {
                               ),
                               backgroundColor: Colors.grey[300],
                             ),
-                            child: const Text(
+                            child: Text(
                               'Gợi ý',
                               style: TextStyle(
                                 fontSize: 14,
@@ -122,7 +120,7 @@ class _FriendPageContentState extends State<FriendPageContent> {
                               ),
                             ),
                           ),
-                          const SizedBox(width: 10),
+                          SizedBox(width: 10),
                           ElevatedButton(
                             onPressed: () {
                               Navigator.push(
@@ -138,7 +136,7 @@ class _FriendPageContentState extends State<FriendPageContent> {
                               ),
                               backgroundColor: Colors.grey[300],
                             ),
-                            child: const Text(
+                            child: Text(
                               'Tất cả bạn bè',
                               style: TextStyle(
                                 fontSize: 14,
@@ -148,7 +146,7 @@ class _FriendPageContentState extends State<FriendPageContent> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10),
                       Divider(
                         thickness: 1,
                         color: Colors.grey[300],
@@ -156,7 +154,7 @@ class _FriendPageContentState extends State<FriendPageContent> {
                       Row(children: [
                         Text(
                           'Lời mời kết bạn: $totalFriendRequests',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
@@ -167,7 +165,7 @@ class _FriendPageContentState extends State<FriendPageContent> {
                     if (rejectInvite[index]) {
                       return Container(
                           color: Colors.white,
-                          margin: const EdgeInsets.only(
+                          margin: EdgeInsets.only(
                             top: 10,
                             left: 10,
                             right: 10,
@@ -183,8 +181,8 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                     backgroundImage: AssetImage(
                                         friendRequests[index].imageUrl),
                                   ),
-                                  const SizedBox(width: 14),
-                                  SizedBox(
+                                  SizedBox(width: 14),
+                                  Container(
                                       width: 270,
                                       child: Row(
                                         mainAxisAlignment:
@@ -198,15 +196,15 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                                 children: [
                                                   Text(
                                                     friendRequests[index].name,
-                                                    style: const TextStyle(
+                                                    style: TextStyle(
                                                         fontSize: 16,
                                                         fontWeight:
                                                             FontWeight.bold),
                                                   ),
                                                 ],
                                               ),
-                                              const SizedBox(height: 5),
-                                              const Row(
+                                              SizedBox(height: 5),
+                                              Row(
                                                 children: [
                                                   Text(
                                                     'Đã gỡ lời mời kết',
@@ -223,8 +221,7 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               IconButton(
-                                                icon: const Icon(
-                                                    Icons.more_horiz),
+                                                icon: Icon(Icons.more_horiz),
                                                 onPressed: () {
                                                   showModalBottomSheet(
                                                     context: context,
@@ -237,9 +234,9 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                                               MainAxisSize.min,
                                                           children: <Widget>[
                                                             ListTile(
-                                                              leading: const Icon(
+                                                              leading: Icon(
                                                                   Icons.delete),
-                                                              title: const Text(
+                                                              title: Text(
                                                                   'Bạn thấy sao về lời mời kết bạn này',
                                                                   style:
                                                                       TextStyle(
@@ -251,7 +248,7 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                                                   )),
                                                               subtitle: Text(
                                                                   '${friendRequests[index].name} sẽ không nhận được thông báo',
-                                                                  style: const TextStyle(
+                                                                  style: TextStyle(
                                                                       color: Colors
                                                                           .grey)),
                                                               onTap: () {
@@ -260,12 +257,12 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                                               },
                                                             ),
                                                             ListTile(
-                                                              leading: const Icon(
+                                                              leading: Icon(
                                                                   Icons.block),
                                                               title: Text(
                                                                   'Chặn ${friendRequests[index].name}',
                                                                   style:
-                                                                      const TextStyle(
+                                                                      TextStyle(
                                                                     color: Colors
                                                                         .black,
                                                                     fontWeight:
@@ -274,7 +271,7 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                                                   )),
                                                               subtitle: Text(
                                                                   '${friendRequests[index].name} sẽ không thể nhìn thấy bạn hoặc liên hệ với bạn qua AntiFakebook',
-                                                                  style: const TextStyle(
+                                                                  style: TextStyle(
                                                                       color: Colors
                                                                           .grey)),
                                                               onTap: () {
@@ -300,7 +297,7 @@ class _FriendPageContentState extends State<FriendPageContent> {
                     } else if (!acceptInvite[index] && !rejectInvite[index]) {
                       return Container(
                           color: Colors.white,
-                          margin: const EdgeInsets.only(
+                          margin: EdgeInsets.only(
                             top: 10,
                             left: 10,
                             right: 10,
@@ -316,13 +313,13 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                     backgroundImage: AssetImage(
                                         friendRequests[index].imageUrl),
                                   ),
-                                  const SizedBox(width: 14),
+                                  SizedBox(width: 14),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const SizedBox(height: 16),
-                                      SizedBox(
+                                      SizedBox(height: 16),
+                                      Container(
                                         width: 270,
                                         child: Row(
                                             mainAxisAlignment:
@@ -330,7 +327,7 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                             children: [
                                               Text(
                                                 friendRequests[index].name,
-                                                style: const TextStyle(
+                                                style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight:
                                                         FontWeight.bold),
@@ -345,7 +342,7 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                               ),
                                             ]),
                                       ),
-                                      const SizedBox(height: 5),
+                                      SizedBox(height: 5),
                                       Row(
                                         children: [
                                           ElevatedButton(
@@ -355,14 +352,12 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                                 builder:
                                                     (BuildContext context) {
                                                   return AlertDialog(
-                                                    title:
-                                                        const Text("Xác nhận"),
+                                                    title: Text("Xác nhận"),
                                                     content: Text(
                                                         "Bạn có đồng ý lời mời kết bạn của ${friendRequests[index].name}?"),
                                                     actions: [
                                                       TextButton(
-                                                        child: const Text(
-                                                            "Xác nhận"),
+                                                        child: Text("Xác nhận"),
                                                         onPressed: () {
                                                           setState(() {
                                                             acceptInvite[
@@ -373,8 +368,7 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                                         },
                                                       ),
                                                       TextButton(
-                                                        child:
-                                                            const Text("Hủy"),
+                                                        child: Text("Hủy"),
                                                         onPressed: () {
                                                           // Xử lý hủy
                                                           Navigator.of(context)
@@ -387,16 +381,16 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                               );
                                             },
                                             style: ElevatedButton.styleFrom(
-                                              minimumSize: const Size(130, 38),
+                                              minimumSize: Size(130, 38),
                                             ),
-                                            child: const Text(
+                                            child: Text(
                                               'Chấp nhận',
                                               style: TextStyle(
                                                 fontSize: 14,
                                               ),
                                             ),
                                           ),
-                                          const SizedBox(width: 10),
+                                          SizedBox(width: 10),
                                           ElevatedButton(
                                             onPressed: () {
                                               showDialog(
@@ -404,14 +398,12 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                                 builder:
                                                     (BuildContext context) {
                                                   return AlertDialog(
-                                                    title:
-                                                        const Text("Xác nhận"),
+                                                    title: Text("Xác nhận"),
                                                     content: Text(
                                                         "Bạn có đồng ý gỡ lời mời kết bạn của ${friendRequests[index].name}?"),
                                                     actions: [
                                                       TextButton(
-                                                        child: const Text(
-                                                            "Xác nhận"),
+                                                        child: Text("Xác nhận"),
                                                         onPressed: () {
                                                           setState(() {
                                                             rejectInvite[
@@ -422,8 +414,7 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                                         },
                                                       ),
                                                       TextButton(
-                                                        child:
-                                                            const Text("Hủy"),
+                                                        child: Text("Hủy"),
                                                         onPressed: () {
                                                           Navigator.of(context)
                                                               .pop();
@@ -435,10 +426,10 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                               );
                                             },
                                             style: ElevatedButton.styleFrom(
-                                              minimumSize: const Size(130, 38),
+                                              minimumSize: Size(130, 38),
                                               backgroundColor: Colors.grey[300],
                                             ),
-                                            child: const Text(
+                                            child: Text(
                                               'Xóa',
                                               style: TextStyle(
                                                 fontSize: 14,
@@ -457,7 +448,7 @@ class _FriendPageContentState extends State<FriendPageContent> {
                     } else if (acceptInvite[index]) {
                       return Container(
                           color: Colors.white,
-                          margin: const EdgeInsets.only(
+                          margin: EdgeInsets.only(
                             top: 10,
                             left: 10,
                             right: 10,
@@ -473,8 +464,8 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                     backgroundImage: AssetImage(
                                         friendRequests[index].imageUrl),
                                   ),
-                                  const SizedBox(width: 14),
-                                  SizedBox(
+                                  SizedBox(width: 14),
+                                  Container(
                                       width: 270,
                                       child: Row(
                                         mainAxisAlignment:
@@ -488,15 +479,15 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                                 children: [
                                                   Text(
                                                     friendRequests[index].name,
-                                                    style: const TextStyle(
+                                                    style: TextStyle(
                                                         fontSize: 16,
                                                         fontWeight:
                                                             FontWeight.bold),
                                                   ),
                                                 ],
                                               ),
-                                              const SizedBox(height: 5),
-                                              const Row(
+                                              SizedBox(height: 5),
+                                              Row(
                                                 children: [
                                                   Text(
                                                     'Đã chấp nhận lời mời kết',
@@ -516,7 +507,6 @@ class _FriendPageContentState extends State<FriendPageContent> {
                           ));
                     }
                   }
-                  return null;
                 },
               ),
             ),

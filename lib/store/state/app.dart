@@ -1,6 +1,5 @@
 import 'package:anti_fake_book/constants/constants.dart';
 import 'package:anti_fake_book/utils.dart';
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'app.freezed.dart';
