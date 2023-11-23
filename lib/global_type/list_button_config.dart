@@ -1,5 +1,6 @@
 class ListButtonItemConfig {
   Function() onPressed;
   String label;
-  ListButtonItemConfig(this.onPressed, this.label);
+  int? icon;
+  ListButtonItemConfig(this.onPressed, this.label, {this.icon});
 }
