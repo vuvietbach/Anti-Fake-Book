@@ -3,6 +3,7 @@
 
 # Generate file
 *.g.dart
+*.freezed.dart
 
 # Miscellaneous
 *.env

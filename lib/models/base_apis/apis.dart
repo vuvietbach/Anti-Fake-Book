@@ -21,7 +21,7 @@ class ApiModel {
         return handler.next(options);
       },
       onError: (DioException e, ErrorInterceptorHandler handler) {
-        final String? refreshToken = null;
+        const String? refreshToken = null;
         if (refreshToken != null &&
             e.response?.statusCode == HttpStatus.unauthorized) {
           //todo: retry call api
@@ -31,26 +31,31 @@ class ApiModel {
     ));
   }
 
+  static ApiModel api = ApiModel();
+
   Future<AddPostResponseDTO> addPost(AddPostRequestDTO addPostData) async {
+    //Chuyển addPostData thành FormData
     final formData = FormData.fromMap({
-      "image": addPostData.image.map((e) =>
-          MultipartFile.fromFileSync(e.path, filename: e.path.split('/').last)),
-      "video": addPostData.video.map((e) =>
-          MultipartFile.fromFileSync(e.path, filename: e.path.split('/').last)),
+      "image": addPostData.image
+          .map((e) => MultipartFile.fromBytes(e, filename: e.toString())),
+      "video": addPostData.video
+          .map((e) => MultipartFile.fromBytes(e, filename: e.toString())),
       "described": addPostData.described,
       "status": addPostData.status,
     });
     final response = await _dio.post(PathName.addPost, data: formData);
-    return AddPostResponseDTO.fromJson(response.data);
+    AddPostResponseDTO addPostResponseDTO =
+        AddPostResponseDTO.fromJson(response.data);
+    return addPostResponseDTO;
   }
 
   Future<GetPostResponseDTO> getPost(String id) async {
     final response = await _dio.post(PathName.getPost, data: {'id': id});
-    return GetPostResponseDTO(response.data);
+    return GetPostResponseDTO(data: response.data);
   }
 
   Future<GetPostResponseDTO> getUserInfo(String id) async {
     final response = await _dio.post(PathName.getUserInfo, data: {'id': id});
-    return GetPostResponseDTO(response.data);
+    return GetPostResponseDTO(data: response.data);
   }
 }
