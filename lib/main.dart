@@ -1,5 +1,4 @@
 //Lib
-import 'package:anti_fake_book/screen/create_post/emotion_list.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +8,7 @@ import 'package:redux_future_middleware/redux_future_middleware.dart';
 
 //module
 import 'package:anti_fake_book/screen/create_post/create_post.dart';
+import 'package:anti_fake_book/screen/create_post/emotion_list.dart';
 import 'package:anti_fake_book/screen/SignUp/routes.dart';
 import 'package:anti_fake_book/screen/signIn/routes.dart';
 import 'package:anti_fake_book/screen/welcomeScreen.dart';
@@ -16,6 +16,8 @@ import 'package:anti_fake_book/layout/default_layer.dart';
 import 'package:anti_fake_book/screen/HomePage/HomeFake.dart';
 import 'package:anti_fake_book/store/reducers/index.dart';
 import 'package:anti_fake_book/store/state/index.dart';
+
+import 'layout/home_page.dart';
 
 final GoRouter _router = GoRouter(routes: [
   GoRoute(
@@ -32,7 +34,7 @@ final GoRouter _router = GoRouter(routes: [
               GoRoute(
                 path: 'emotions',
                 builder: (BuildContext context, GoRouterState stage) =>
-                    EmotionsList(),
+                    const EmotionsList(),
               )
             ]),
         GoRoute(
@@ -43,6 +45,11 @@ final GoRouter _router = GoRouter(routes: [
         ),
         signInRoutes,
         signUpRoutes,
+        GoRoute(
+          path: 'home',
+          builder: (BuildContext context, GoRouterState state) =>
+              const HomePage(),
+        ),
       ]),
 ]);
 void main() async {
