@@ -23,7 +23,7 @@ final GoRouter _router = GoRouter(routes: [
   GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState stage) {
-        return const EmptyLayout(child: HomeFake());
+        return const EmptyLayout(child: HomePage());
       },
       routes: [
         GoRoute(
@@ -45,11 +45,6 @@ final GoRouter _router = GoRouter(routes: [
         ),
         signInRoutes,
         signUpRoutes,
-        GoRoute(
-          path: 'home',
-          builder: (BuildContext context, GoRouterState state) =>
-              const HomePage(),
-        ),
       ]),
 ]);
 void main() async {

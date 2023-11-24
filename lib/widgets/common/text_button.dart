@@ -7,6 +7,7 @@ Widget createTextButton(
     String title = '',
     bool isDisable = false,
     bool haveBoder = false,
+    Color textColor = Colors.black,
     Decoration? decoration}) {
   final defaultStyle = ElevatedButton.styleFrom(
       shadowColor: Colors.transparent,
@@ -28,8 +29,8 @@ Widget createTextButton(
       child: child ??
           Text(
             title,
-            style: const TextStyle(
-              color: Colors.black,
+            style: TextStyle(
+              color: textColor,
             ),
           ),
     ),

@@ -17,3 +17,8 @@ class CreatePostAction
 typedef PendingCreatePostAction = FuturePendingAction<CreatePostAction>;
 typedef SuccessCreatePostAction
     = FutureSucceededAction<CreatePostAction, AddPostResponseDTO>;
+
+class SetSelectedPostAction extends PostAction {
+  PostPayloadDTO post;
+  SetSelectedPostAction(this.post);
+}

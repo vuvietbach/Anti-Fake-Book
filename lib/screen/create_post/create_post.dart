@@ -1,4 +1,6 @@
 //lib
+import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -40,14 +42,19 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       List<PlatformFile> result = await FilePicker.platform
           .pickFiles(
         type: FileType.image,
-        allowMultiple: false,
+        allowMultiple: true,
       )
           .then((value) {
         return value != null ? value.files : [];
       });
       setState(() {
         result.forEach((element) {
-          postData.image.add(element.bytes!);
+          if (Platform.isAndroid) {
+            final file = File(element.path!);
+            postData.image.add(file.readAsBytesSync());
+          } else {
+            postData.image.add(element.bytes!);
+          }
         });
       });
     } on Exception catch (e) {
@@ -78,96 +85,117 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
     return StoreBuilder<AntiFakeBookState>(
         builder: (BuildContext context, Store<AntiFakeBookState> store) {
-      return Scaffold(
-        appBar: CommonAppBar(
-          title: 'Tạo bài đăng',
-          context: context,
-          actions: [
-            createTextButton(
-                isDisable: !isHaveContent,
-                onPressed: () {
-                  store.dispatch(CreatePostAction(postData));
-                  context.go('/');
-                },
-                title: 'Đăng'),
-          ],
-        ),
-        body: Column(children: [
-          Expanded(
-              child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundImage:
-                            NetworkImage(store.state.userState.avatar),
-                      ),
-                      const SizedBox(width: 8.0),
-                      Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              store.state.userState.username,
-                              style: const TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const ChipTags(list: visibilityPost),
-                          ])
-                    ],
-                  ),
-                  const SizedBox(height: 16.0),
-                  TextField(
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      labelText: 'Nội dung',
-                    ),
-                    maxLines: null,
-                    onChanged: (value) {
-                      setState(() {
-                        postData.described = value;
-                      });
-                    },
-                  ),
-                  if (postData.image.isNotEmpty)
-                    GridView.count(
-                      crossAxisCount: 2,
-                      shrinkWrap: true,
-                      mainAxisSpacing: 0.5,
-                      crossAxisSpacing: 0.5,
-                      physics: const ScrollPhysics(),
-                      children: postData.image.map((Uint8List file) {
-                        return Stack(
-                          alignment: Alignment.topRight,
-                          children: <Widget>[
-                            Image.memory(file),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: IconButton(
-                                icon:
-                                    const Icon(Icons.close, color: Colors.red),
-                                onPressed: () {
-                                  setState(() {
-                                    postData.image.remove(file);
-                                  });
-                                },
-                              ),
-                            ),
-                          ],
-                        );
-                      }).toList(),
-                    )
-                ],
-              ),
+      return WillPopScope(
+        onWillPop: () async {
+          final shouldPop = await showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Bạn có muốn thoát?'),
+              actions: [
+                TextButton(
+                  child: Text('Không'),
+                  onPressed: () => Navigator.of(context).pop(false),
+                ),
+                TextButton(
+                  child: Text('Có'),
+                  onPressed: () => Navigator.of(context).pop(true),
+                ),
+              ],
             ),
-          )),
-          ListButton(screenWidth, listButtonConfig)
-        ]),
+          );
+          return shouldPop ?? false;
+        },
+        child: Scaffold(
+          appBar: CommonAppBar(
+            title: 'Tạo bài đăng',
+            context: context,
+            actions: [
+              createTextButton(
+                  isDisable: !isHaveContent,
+                  onPressed: () {
+                    store.dispatch(CreatePostAction(postData));
+                    context.go('/');
+                  },
+                  title: 'Đăng'),
+            ],
+          ),
+          body: Column(children: [
+            Expanded(
+                child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundImage:
+                              NetworkImage(store.state.userState.avatar),
+                        ),
+                        const SizedBox(width: 8.0),
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                store.state.userState.username,
+                                style: const TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const ChipTags(list: visibilityPost),
+                            ])
+                      ],
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextField(
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        labelText: 'Nội dung',
+                      ),
+                      maxLines: null,
+                      onChanged: (value) {
+                        setState(() {
+                          postData.described = value;
+                        });
+                      },
+                    ),
+                    if (postData.image.isNotEmpty)
+                      GridView.count(
+                        crossAxisCount: 2,
+                        shrinkWrap: true,
+                        mainAxisSpacing: 0.5,
+                        crossAxisSpacing: 0.5,
+                        physics: const ScrollPhysics(),
+                        children: postData.image.map((Uint8List file) {
+                          return Stack(
+                            alignment: Alignment.topRight,
+                            children: <Widget>[
+                              Image.memory(file),
+                              Padding(
+                                padding: const EdgeInsets.all(0.0),
+                                child: IconButton(
+                                  icon: const Icon(Icons.close,
+                                      color: Colors.red),
+                                  onPressed: () {
+                                    setState(() {
+                                      postData.image.remove(file);
+                                    });
+                                  },
+                                ),
+                              ),
+                            ],
+                          );
+                        }).toList(),
+                      )
+                  ],
+                ),
+              ),
+            )),
+            ListButton(screenWidth, listButtonConfig)
+          ]),
+        ),
       );
     });
   }

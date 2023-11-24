@@ -14,3 +14,10 @@ AntiFakeBookState onCreatePostSuccess(
   AntiFakeBookState newState = preState.copyWith.postState(isPosting: false);
   return newState;
 }
+
+AntiFakeBookState onSetSellectedPost(
+    AntiFakeBookState preState, SetSelectedPostAction action) {
+  AntiFakeBookState newState =
+      preState.copyWith.postState(selected: action.post);
+  return newState;
+}

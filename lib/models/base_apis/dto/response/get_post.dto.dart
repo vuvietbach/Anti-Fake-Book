@@ -42,6 +42,7 @@ class PostPayloadDTO with _$PostPayloadDTO {
     int? canRate,
     String? url,
     String? messages,
+    String? status,
   }) = _PostPayloadDTO;
 
   factory PostPayloadDTO.fromJson(Map<String, dynamic> json) =>

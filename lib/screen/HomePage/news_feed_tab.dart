@@ -258,7 +258,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
                 if (index == -1) {
                   return ElevatedButton(
                     onPressed: () {
-                      GoRouter.of(context).go('/post/create');
+                      GoRouter.of(context).go('/create-post');
                     },
                     child: Text('Tạo bài viết'),
                   );

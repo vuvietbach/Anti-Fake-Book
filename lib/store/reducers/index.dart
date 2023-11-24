@@ -15,5 +15,6 @@ AntiFakeBookState failureCreatePostAction(
 final antiFakeBookReducers = combineReducers<AntiFakeBookState>([
   TypedReducer<AntiFakeBookState, PendingCreatePostAction>(onCreatePostPending),
   TypedReducer<AntiFakeBookState, SuccessCreatePostAction>(onCreatePostSuccess),
-  TypedReducer<AntiFakeBookState, FutureFailedAction>(failureCreatePostAction)
+  TypedReducer<AntiFakeBookState, FutureFailedAction>(failureCreatePostAction),
+  TypedReducer<AntiFakeBookState, SetSelectedPostAction>(onSetSellectedPost),
 ]);

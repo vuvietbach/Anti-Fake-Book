@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class PostStatus {
   String name;
   int icon;
