@@ -9,6 +9,8 @@ import 'package:video_player/video_player.dart';
 import 'package:faker/faker.dart';
 import 'dart:math';
 
+import '../../widgets/loading_widget.dart';
+
 final List<String> imageAssets = [
   "assets/images/PostImage_01.jpeg",
   "assets/images/PostImage_02.jpeg",
@@ -514,13 +516,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
           ),
         ],
       ),
-      if (isLoading)
-        Container(
-          color: Colors.black.withOpacity(0.5),
-          child: Center(
-            child: CircularProgressIndicator(),
-          ),
-        ),
+      if (isLoading) LoadingWidget(),
     ]);
   }
 }
