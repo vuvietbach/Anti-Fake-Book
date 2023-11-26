@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:anti_fake_book/constants/base_apis.dart';
+import 'package:anti_fake_book/models/base_apis/dto/request/sign_in.dto.dart';
+import 'package:anti_fake_book/models/base_apis/dto/response/sign_in.dto.dart';
 import 'package:dio/dio.dart';
 
 import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
@@ -57,5 +59,14 @@ class ApiModel {
   Future<GetPostResponseDTO> getUserInfo(String id) async {
     final response = await _dio.post(PathName.getUserInfo, data: {'id': id});
     return GetPostResponseDTO(data: response.data);
+  }
+
+  Future<SignInResponse> signIn(SignInRequestDTO data) async {
+    final response = await _dio.post(PathName.signIn, data: {
+      'email': data.email,
+      'password': data.password,
+    });
+    SignInResponse signInResponse = SignInResponse.fromJson(response.data);
+    return signInResponse;
   }
 }
