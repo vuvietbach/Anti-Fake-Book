@@ -54,7 +54,7 @@ class HomePage extends StatelessWidget {
               children: [
                 PostHomePageContent(),
                 FriendPageContent(),
-                VideoPageContent(),
+                WatchTabContent(),
                 NotificationContent(),
                 MenuContent(),
               ],

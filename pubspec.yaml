@@ -55,6 +55,8 @@ dependencies:
   multi_image_picker: ^4.8.01
   file_picker: ^5.2.10
   freezed_annotation: ^2.4.1
+  visibility_detector: ^0.2.0
+  battery: ^2.0.3
 
 dev_dependencies:
   flutter_test:

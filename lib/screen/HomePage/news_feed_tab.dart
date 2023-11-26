@@ -421,41 +421,6 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
                               TextSpan(children: listPost[index].displayedText),
                         ),
                         SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(Icons.thumb_up, color: Colors.blue),
-                                SizedBox(width: 5),
-                                Text(
-                                  'Kudos: ${formatCount(listPost[index].kudosCount)}',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Icon(Icons.comment, color: Colors.green),
-                                SizedBox(width: 5),
-                                Text(
-                                  'Comments: ${formatCount(listPost[index].commentCount)}',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Icon(Icons.thumb_down, color: Colors.red),
-                                SizedBox(width: 5),
-                                Text(
-                                  'Disappointed: ${formatCount(listPost[index].disappointedCount)}',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
                         // Comment Count Section
                         GridView.builder(
                           gridDelegate:
@@ -505,7 +470,43 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
                           child: FlickVideoPlayer(
                             flickManager: listPost[index].currentFlickManager,
                           ),
-                        )
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(Icons.thumb_up, color: Colors.blue),
+                                SizedBox(width: 5),
+                                Text(
+                                  'Kudos: ${formatCount(listPost[index].kudosCount)}',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Icon(Icons.comment, color: Colors.green),
+                                SizedBox(width: 5),
+                                Text(
+                                  'Comments: ${formatCount(listPost[index].commentCount)}',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Icon(Icons.thumb_down, color: Colors.red),
+                                SizedBox(width: 5),
+                                Text(
+                                  'Disappointed: ${formatCount(listPost[index].disappointedCount)}',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                         // Add additional content
                       ],
                     ),
