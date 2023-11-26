@@ -1,4 +1,5 @@
 //Lib
+import 'package:anti_fake_book/screen/sign_in/routes.dart';
 import 'package:anti_fake_book/screen/welcome_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
@@ -46,6 +47,7 @@ final GoRouter _router = GoRouter(routes: [
           builder: (BuildContext context, GoRouterState state) =>
               const HomePage(),
         ),
+        ...signInRoutes,
       ]),
 ]);
 void main() async {

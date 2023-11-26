@@ -7,11 +7,14 @@ part 'user.g.dart';
 class UserState with _$UserState {
   @customJsonSerializable
   factory UserState({
-    @Default(
-        'https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg')
-    String avatar,
-    @Default('Nguyen Minh Tuan') String username,
+    @Default("") String id,
+    @Default("") String username,
+    @Default("") String email,
+    @Default("") String token,
+    @Default("") String avatar,
+    @Default(0) int active,
     @Default(0) int coins,
+
   }) = _UserState;
 
   factory UserState.fromJson(Map<String, dynamic> json) =>
