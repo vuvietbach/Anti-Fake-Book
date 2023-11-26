@@ -14,7 +14,6 @@ class UserState with _$UserState {
     @Default("") String avatar,
     @Default(0) int active,
     @Default(0) int coins,
-
   }) = _UserState;
 
   factory UserState.fromJson(Map<String, dynamic> json) =>

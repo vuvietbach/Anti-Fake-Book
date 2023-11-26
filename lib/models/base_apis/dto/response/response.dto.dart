@@ -8,7 +8,9 @@ class ResponseDTO {
   static const String DEFAULT_MESSAGE = "";
   int code;
   String message;
-  ResponseDTO({this.code = ResponseDTO.DEFAULT_CODE, this.message = ResponseDTO.DEFAULT_MESSAGE});
+  ResponseDTO(
+      {this.code = ResponseDTO.DEFAULT_CODE,
+      this.message = ResponseDTO.DEFAULT_MESSAGE});
   factory ResponseDTO.fromJson(Map<String, dynamic> json) =>
       _$ResponseDTOFromJson(json);
   Map<String, dynamic> toJson() => _$ResponseDTOToJson(this);

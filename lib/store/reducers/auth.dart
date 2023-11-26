@@ -12,6 +12,7 @@ AntiFakeBookState onSignInSuccess(
         ResponseDTO(code: action.payload.code, message: action.payload.message),
   );
 }
+
 AntiFakeBookState onSignInPending(
     AntiFakeBookState state, PendingSignInAction action) {
   return state.copyWith(

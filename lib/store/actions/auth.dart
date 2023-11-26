@@ -5,7 +5,9 @@ import 'package:redux_future_middleware/redux_future_middleware.dart';
 
 class SignInAction extends FutureAction<SignInAction, SignInResponse> {
   final SignInRequestDTO data;
-  SignInAction(this.data):super(future: ApiModel.api.signIn(data));
+  SignInAction(this.data) : super(future: ApiModel.api.signIn(data));
 }
-typedef SuccessSignInAction = FutureSucceededAction<SignInAction, SignInResponse>;
-typedef PendingSignInAction = FuturePendingAction<SignInAction>; 
+
+typedef SuccessSignInAction
+    = FutureSucceededAction<SignInAction, SignInResponse>;
+typedef PendingSignInAction = FuturePendingAction<SignInAction>;

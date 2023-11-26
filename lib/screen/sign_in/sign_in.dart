@@ -40,98 +40,96 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return StoreBuilder(
-      builder: (BuildContext context, Store<AntiFakeBookState> store) {
-        AppStatus appStatus = store.state.appState.status;
-        if (appStatus == AppStatus.loading) {
-          showLoadingDialog(context);
-        } else if (appStatus == AppStatus.loaded) {
-          // TODO: how to know if user is login or not
-          int code = store.state.responseDTO.code;
-          if (isLogin(store.state)) {
-            context.go("/home");
-          } else if(isErrorCode(code)) {
-            showErrorDialog(context, code, pageType: PageType.signIn);
-            store.dispatch(ResetResponseAction());
-          }
+        builder: (BuildContext context, Store<AntiFakeBookState> store) {
+      AppStatus appStatus = store.state.appState.status;
+      if (appStatus == AppStatus.loading) {
+        showLoadingDialog(context);
+      } else if (appStatus == AppStatus.loaded) {
+        // TODO: how to know if user is login or not
+        int code = store.state.responseDTO.code;
+        if (isLogin(store.state)) {
+          context.go("/home");
+        } else if (isErrorCode(code)) {
+          showErrorDialog(context, code, pageType: PageType.signIn);
+          store.dispatch(ResetResponseAction());
         }
-        return Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                color: Colors.black,
-              ),
-              elevation: 0,
-              backgroundColor: Colors.transparent,
+      }
+      return Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              color: Colors.black,
             ),
-            body: LayoutBuilder(builder: (context, constraints) {
-              return SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: constraints.maxHeight,
-                  ),
-                  child: IntrinsicHeight(
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          const SizedBox(height: 100),
-                          const SizedBox(
-                              height: 40,
-                              child: Image(
-                                  image: AssetImage('assets/images/logo.jpeg'))),
-                          const SizedBox(height: 100),
-                          TextFormField(
-                            enabled: !_isSubmitting,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Email',
-                            ),
-                            validator: validateEmail,
-                            controller: emailController,
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+          ),
+          body: LayoutBuilder(builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight,
+                ),
+                child: IntrinsicHeight(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        const SizedBox(height: 100),
+                        const SizedBox(
+                            height: 40,
+                            child: Image(
+                                image: AssetImage('assets/images/logo.jpeg'))),
+                        const SizedBox(height: 100),
+                        TextFormField(
+                          enabled: !_isSubmitting,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Email',
                           ),
-                          const SizedBox(height: 10),
-                          PasswordField(
-                            isEnable: !_isSubmitting,
-                            validator: (value) =>
-                                validatePassword(value, emailController.text),
-                            textEditingController: passwordController,
-                          ),
-                          const SizedBox(height: 10),
-                          signInButton(context),
-                          const SizedBox(height: 5),
-                          TextButton(
-                            onPressed: () {},
-                            child: const Text('Quên mật khẩu?'),
-                          ),
-                          Expanded(
-                            child: Container(),
-                          ),
-                          _createNewAccountButton(context),
-                          const Padding(
-                            padding: EdgeInsets.all(12.0),
-                            child: Text("Anti Fake Book",
-                                style: TextStyle(color: Colors.grey)),
-                          ),
-                        ],
-                      ),
+                          validator: validateEmail,
+                          controller: emailController,
+                        ),
+                        const SizedBox(height: 10),
+                        PasswordField(
+                          isEnable: !_isSubmitting,
+                          validator: (value) =>
+                              validatePassword(value, emailController.text),
+                          textEditingController: passwordController,
+                        ),
+                        const SizedBox(height: 10),
+                        signInButton(context),
+                        const SizedBox(height: 5),
+                        TextButton(
+                          onPressed: () {},
+                          child: const Text('Quên mật khẩu?'),
+                        ),
+                        Expanded(
+                          child: Container(),
+                        ),
+                        _createNewAccountButton(context),
+                        const Padding(
+                          padding: EdgeInsets.all(12.0),
+                          child: Text("Anti Fake Book",
+                              style: TextStyle(color: Colors.grey)),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              );
-            }));
-      }
-    );
+              ),
+            );
+          }));
+    });
   }
 
   Widget signInButton(BuildContext context) {
     return StoreBuilder(
       builder: (BuildContext context, Store<AntiFakeBookState> store) {
-
         return SizedBox(
           width: double.infinity,
           height: 40.0,
@@ -248,5 +246,3 @@ class _SignInWithAccountState extends State<SignInWithAccount> {
     );
   }
 }
-
-
