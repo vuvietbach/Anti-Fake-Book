@@ -59,3 +59,19 @@ class ForgotPasswordButton extends StatelessWidget {
     );
   }
 }
+class PrimaryButton extends StatelessWidget {
+  const PrimaryButton({super.key, this.onPressed, this.text});
+  final Function? onPressed;
+  final String? text;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+        height: 40.0,
+        width: double.infinity,
+        child: ElevatedButton(
+            style: CustomButtonStyle.roundBorderButton(30.0),
+            onPressed: onPressed as void Function()?,
+            child: Text(text ?? "")));
+  }
+}
