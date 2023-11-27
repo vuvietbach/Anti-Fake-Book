@@ -56,7 +56,6 @@ final GoRouter _router = GoRouter(routes: [
       ]),
 ]);
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // SharedPreferences.setMockInitialValues({"email":"", "token":"", "username":""});

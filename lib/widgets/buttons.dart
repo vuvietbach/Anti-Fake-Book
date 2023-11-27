@@ -59,6 +59,7 @@ class ForgotPasswordButton extends StatelessWidget {
     );
   }
 }
+
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({super.key, this.onPressed, this.text});
   final Function? onPressed;
