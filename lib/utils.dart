@@ -212,9 +212,7 @@ Future<File> getLocalJsonFile(String fileName) async {
   final directory = await getApplicationDocumentsDirectory();
   return File('${directory.path}/$fileName');
 }
-
-Future<void> saveToJsonFile(
-    String fileName, Map<String, dynamic> jsonContent) async {
+Future<void> saveToJsonFile(String fileName, Map<String, dynamic> jsonContent) async {
   final file = await getLocalJsonFile(fileName);
   final jsonString = json.encode(jsonContent);
   await file.writeAsString(jsonString);
@@ -231,6 +229,7 @@ Future saveStateToDisk(AntiFakeBookState state) async {
   await prefs.setString("email", state.userState.email);
   await prefs.setString("token", state.userState.token);
   await prefs.setString("username", state.userState.username);
+
 }
 
 //Convert Uint8List to  MultipartFile.fromBytes(e, filename: e.toString()) recursively

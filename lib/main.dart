@@ -22,6 +22,7 @@ import 'package:anti_fake_book/layout/default_layer.dart';
 import 'package:anti_fake_book/store/reducers/index.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'layout/home_page.dart';
 
@@ -85,6 +86,7 @@ final GoRouter _router = GoRouter(routes: [
         signUpRoutes,
       ]),
 ]);
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
