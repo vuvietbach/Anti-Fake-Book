@@ -8,7 +8,9 @@ class SignInAction extends FutureAction<SignInAction, SignInResponse> {
   final Function? onSuccess;
   final Function? onPending;
   SignInAction({required this.data, this.onSuccess, this.onPending})
-      : super(future: ApiModel.api.signIn(data), extras: {'onSuccess': onSuccess, 'onPending': onPending});
+      : super(
+            future: ApiModel.api.signIn(data),
+            extras: {'onSuccess': onSuccess, 'onPending': onPending});
 }
 
 typedef SuccessSignInAction
