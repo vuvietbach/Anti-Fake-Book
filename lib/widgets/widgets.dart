@@ -1,4 +1,12 @@
+import 'dart:math';
+
+import 'package:anti_fake_book/screen/welcome_screen.dart';
+import 'package:anti_fake_book/store/state/index.dart';
+import 'package:anti_fake_book/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:go_router/go_router.dart';
+import 'package:redux/redux.dart';
 
 class TransparentAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool hasBackButton;

@@ -1,9 +1,15 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomRoute {
   final Widget widget;
@@ -183,4 +189,29 @@ bool isErrorCode(int code) {
 
 bool isLogin(AntiFakeBookState state) {
   return state.userState.token != "";
+}
+
+Future<File> getLocalJsonFile(String fileName) async {
+  final directory = await getApplicationDocumentsDirectory();
+  return File('${directory.path}/$fileName');
+}
+
+Future<void> saveToJsonFile(
+    String fileName, Map<String, dynamic> jsonContent) async {
+  final file = await getLocalJsonFile(fileName);
+  final jsonString = json.encode(jsonContent);
+  await file.writeAsString(jsonString);
+}
+
+Future<Map<String, dynamic>> readFromJsonFile(String fileName) async {
+  final jsonString = await rootBundle.loadString(fileName);
+  final jsonMap = json.decode(jsonString);
+  return jsonMap;
+}
+
+Future saveStateToDisk(AntiFakeBookState state) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString("email", state.userState.email);
+  await prefs.setString("token", state.userState.token);
+  await prefs.setString("username", state.userState.username);
 }

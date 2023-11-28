@@ -1,7 +1,6 @@
 import 'package:anti_fake_book/constants/constants.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/sign_in.dto.dart';
 import 'package:anti_fake_book/store/actions/auth.dart';
-import 'package:anti_fake_book/store/actions/common.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/utils.dart';
 import 'package:anti_fake_book/widgets/widgets.dart';
@@ -41,19 +40,6 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     return StoreBuilder(
         builder: (BuildContext context, Store<AntiFakeBookState> store) {
-      AppStatus appStatus = store.state.appState.status;
-      if (appStatus == AppStatus.loading) {
-        showLoadingDialog(context);
-      } else if (appStatus == AppStatus.loaded) {
-        // TODO: how to know if user is login or not
-        int code = store.state.responseDTO.code;
-        if (isLogin(store.state)) {
-          context.go("/home");
-        } else if (isErrorCode(code)) {
-          showErrorDialog(context, code, pageType: PageType.signIn);
-          store.dispatch(ResetResponseAction());
-        }
-      }
       return Scaffold(
           appBar: AppBar(
             leading: IconButton(
@@ -139,11 +125,18 @@ class _SignInState extends State<SignIn> {
                 ? null
                 : () async {
                     FocusManager.instance.primaryFocus?.unfocus();
-                    if (_formKey.currentState!.validate()) {
+                    if (_formKey.currentState!.validate() || true) {
                       SignInRequestDTO signInData = SignInRequestDTO(
                           email: emailController.text,
                           password: passwordController.text);
-                      store.dispatch(SignInAction(signInData));
+                      store.dispatch(SignInAction(
+                          data: signInData,
+                          onSuccess: () {
+                            context.go("/home");
+                          },
+                          onPending: () {
+                            showLoadingDialog(context);
+                          }));
                     }
                   },
             child: const Text('Đăng nhập'),

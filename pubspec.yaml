@@ -59,6 +59,10 @@ dependencies:
   battery: ^2.0.3
   email_validator: ^2.1.17
   device_info_plus: ^8.2.2
+  path_provider: ^2.1.1
+  webview_flutter: ^4.4.2
+  shared_preferences: ^2.2.2
+  logger: ^2.0.2+1
 
 dev_dependencies:
   flutter_test:
