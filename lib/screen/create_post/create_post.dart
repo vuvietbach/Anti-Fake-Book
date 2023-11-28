@@ -1,7 +1,8 @@
 //lib
 import 'dart:io';
-import 'dart:math';
 import 'dart:typed_data';
+import 'package:anti_fake_book/models/base_apis/dto/response/get_post.dto.dart';
+import 'package:anti_fake_book/store/state/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:go_router/go_router.dart';
@@ -29,174 +30,251 @@ class CreatePostScreen extends StatefulWidget {
 }
 
 class _CreatePostScreenState extends State<CreatePostScreen> {
-  AddPostRequestDTO postData = AddPostRequestDTO();
-  bool get isHaveContent {
-    return postData.described.isNotEmpty ||
-        postData.image.isNotEmpty ||
-        postData.video.isNotEmpty;
-  }
+  // AddPostRequestDTO postData = AddPostRequestDTO();
+  // bool get isHaveContent {
+  //   return postData.described.isNotEmpty ||
+  //       postData.image.isNotEmpty ||
+  //       postData.video.isNotEmpty;
+  // }
 
-  List<Uint8List> tuan = [];
-  Future<void> _pickImages() async {
-    try {
-      List<PlatformFile> result = await FilePicker.platform
-          .pickFiles(
-        type: FileType.image,
-        allowMultiple: true,
-      )
-          .then((value) {
-        return value != null ? value.files : [];
-      });
-      setState(() {
+  _getImageOnPressed(_CreatePostViewModel vm) {
+    return () async {
+      try {
+        List<PlatformFile> result = await FilePicker.platform
+            .pickFiles(
+          type: FileType.image,
+          allowMultiple: true,
+        )
+            .then((value) {
+          return value != null ? value.files : [];
+        });
         result.forEach((element) {
           if (Platform.isAndroid) {
             final file = File(element.path!);
-            postData.image.add(file.readAsBytesSync());
+            vm.addImage(file.readAsBytesSync());
           } else {
-            postData.image.add(element.bytes!);
+            vm.addImage(element.bytes!);
           }
         });
-      });
-    } on Exception catch (e) {
-      print(e);
-    }
-  }
-
-  _getImageOnPressed() {
-    return _pickImages();
+      } on Exception catch (e) {
+        print(e);
+      }
+    };
   }
 
   void _getEmotionOnPressed() {
     context.go('/create-post/emotions');
   }
 
-  final List<ListButtonItemConfig> listButtonConfig = [];
-  _CreatePostScreenState() : super() {
-    listButtonConfig.addAll([
-      ListButtonItemConfig(_getImageOnPressed, 'Lấy ảnh/Lấy video',
+  // final List<ListButtonItemConfig> listButtonConfig = [];
+  List<ListButtonItemConfig> getListButtionConfig(_CreatePostViewModel vm) {
+    return [
+      ListButtonItemConfig(_getImageOnPressed(vm), 'Lấy ảnh/Lấy video',
           icon: 0xe332),
       ListButtonItemConfig(_getEmotionOnPressed, 'Cảm xúc/Hoạt động',
           icon: 0xe57d),
-    ]);
+    ];
   }
+
+  List<ListButtonItemConfig> getListButttonOutPage() {
+    return [
+      ListButtonItemConfig(() {
+        setState(() {
+          isShowButtonSheet = false;
+        });
+        context.go('/');
+      }, 'Lưu làm bản nháp', icon: 0xe0f1),
+      ListButtonItemConfig(() {
+        setState(() {
+          isShowButtonSheet = false;
+        });
+        context.go('/');
+      }, 'Bỏ bài viết', icon: 0xe1bb),
+      ListButtonItemConfig(() {
+        setState(() {
+          isShowButtonSheet = false;
+        });
+      }, 'Tiếp tục chỉnh sửa', icon: 0xe156),
+    ];
+  }
+
+  bool isShowButtonSheet = false;
+
+  _CreatePostScreenState() : super();
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    return StoreBuilder<AntiFakeBookState>(
-        builder: (BuildContext context, Store<AntiFakeBookState> store) {
-      return WillPopScope(
-        onWillPop: () async {
-          final shouldPop = await showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text('Bạn có muốn thoát?'),
-              actions: [
-                TextButton(
-                  child: Text('Không'),
-                  onPressed: () => Navigator.of(context).pop(false),
-                ),
-                TextButton(
-                  child: Text('Có'),
-                  onPressed: () => Navigator.of(context).pop(true),
-                ),
-              ],
+    return StoreConnector<AntiFakeBookState, _CreatePostViewModel>(
+        converter: (store) => _CreatePostViewModel(store),
+        builder: (BuildContext context, _CreatePostViewModel vm) {
+          return WillPopScope(
+            onWillPop: () async {
+              // cập nhật state isShowButtonSheet thành true
+              setState(() {
+                isShowButtonSheet = true;
+              });
+              print(isShowButtonSheet);
+              return false;
+            },
+            child: Scaffold(
+              appBar: CommonAppBar(
+                title: 'Tạo bài đăng',
+                context: context,
+                onPressedLeading: () {
+                  print('dm');
+                  // cập nhật state isShowButtonSheet thành true
+                  setState(() {
+                    isShowButtonSheet = true;
+                  });
+                },
+                actions: [
+                  createTextButton(
+                      isDisable: !vm.isHaveContent,
+                      onPressed: () {
+                        vm.onCreatePost();
+                        context.go('/');
+                      },
+                      title: 'Đăng'),
+                ],
+              ),
+              body: Container(
+                child: Column(children: [
+                  Expanded(
+                      child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage:
+                                    NetworkImage(vm.userInfomation.avatar),
+                              ),
+                              const SizedBox(width: 8.0),
+                              Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      vm.userInfomation.username,
+                                      style: const TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const ChipTags(list: visibilityPost),
+                                  ])
+                            ],
+                          ),
+                          const SizedBox(height: 16.0),
+                          TextField(
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              labelText: 'Nội dung',
+                            ),
+                            maxLines: null,
+                            onChanged: (value) {
+                              vm.updateDescribed(value);
+                            },
+                          ),
+                          if (vm.postData.image.isNotEmpty)
+                            GridView.count(
+                              crossAxisCount: 2,
+                              shrinkWrap: true,
+                              mainAxisSpacing: 0.5,
+                              crossAxisSpacing: 0.5,
+                              physics: const ScrollPhysics(),
+                              children: vm.postData.image.map((Uint8List file) {
+                                return Stack(
+                                  alignment: Alignment.topRight,
+                                  children: <Widget>[
+                                    Image.memory(file),
+                                    Padding(
+                                      padding: const EdgeInsets.all(0.0),
+                                      child: IconButton(
+                                        icon: const Icon(Icons.close,
+                                            color: Colors.red),
+                                        onPressed: () {
+                                          setState(() {
+                                            vm.removeImage(file);
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }).toList(),
+                            )
+                        ],
+                      ),
+                    ),
+                  )),
+                  ListButton(
+                      screenWidth,
+                      !isShowButtonSheet
+                          ? getListButtionConfig(vm)
+                          : getListButttonOutPage())
+                ]),
+              ),
             ),
           );
-          return shouldPop ?? false;
-        },
-        child: Scaffold(
-          appBar: CommonAppBar(
-            title: 'Tạo bài đăng',
-            context: context,
-            actions: [
-              createTextButton(
-                  isDisable: !isHaveContent,
-                  onPressed: () {
-                    store.dispatch(CreatePostAction(postData));
-                    context.go('/');
-                  },
-                  title: 'Đăng'),
-            ],
-          ),
-          body: Column(children: [
-            Expanded(
-                child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          backgroundImage:
-                              NetworkImage(store.state.userState.avatar),
-                        ),
-                        const SizedBox(width: 8.0),
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                store.state.userState.username,
-                                style: const TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const ChipTags(list: visibilityPost),
-                            ])
-                      ],
-                    ),
-                    const SizedBox(height: 16.0),
-                    TextField(
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        labelText: 'Nội dung',
-                      ),
-                      maxLines: null,
-                      onChanged: (value) {
-                        setState(() {
-                          postData.described = value;
-                        });
-                      },
-                    ),
-                    if (postData.image.isNotEmpty)
-                      GridView.count(
-                        crossAxisCount: 2,
-                        shrinkWrap: true,
-                        mainAxisSpacing: 0.5,
-                        crossAxisSpacing: 0.5,
-                        physics: const ScrollPhysics(),
-                        children: postData.image.map((Uint8List file) {
-                          return Stack(
-                            alignment: Alignment.topRight,
-                            children: <Widget>[
-                              Image.memory(file),
-                              Padding(
-                                padding: const EdgeInsets.all(0.0),
-                                child: IconButton(
-                                  icon: const Icon(Icons.close,
-                                      color: Colors.red),
-                                  onPressed: () {
-                                    setState(() {
-                                      postData.image.remove(file);
-                                    });
-                                  },
-                                ),
-                              ),
-                            ],
-                          );
-                        }).toList(),
-                      )
-                  ],
-                ),
-              ),
-            )),
-            ListButton(screenWidth, listButtonConfig)
-          ]),
-        ),
-      );
-    });
+        });
+  }
+}
+
+class _CreatePostViewModel {
+  late final AddPostRequestDTO postData;
+  late final UserState userInfomation;
+  bool get isHaveContent {
+    return postData.described.isNotEmpty ||
+        postData.image.isNotEmpty ||
+        postData.video.isNotEmpty;
+  }
+
+  late final Function addImage;
+  late final Function removeImage;
+  late final Function updateDescribed;
+  late final Function onEditPost;
+  late final Function onCreatePost;
+
+  _CreatePostViewModel(Store<AntiFakeBookState> store) {
+    addImage = (Uint8List file) {
+      final images = [
+        ...store.state.postState.selected.images,
+        ImagePayloadDTO(id: '', url: '', bytes: file)
+      ];
+      store.dispatch(SetSelectedPostAction(
+          store.state.postState.selected.copyWith(images: images)));
+    };
+
+    removeImage = (Uint8List file) {
+      final images = [
+        ...store.state.postState.selected.images
+            .where((element) => element.bytes != file)
+      ];
+      store.dispatch(SetSelectedPostAction(
+          store.state.postState.selected.copyWith(images: images)));
+    };
+
+    updateDescribed = (String described) {
+      store.dispatch(SetSelectedPostAction(
+          store.state.postState.selected.copyWith(described: described)));
+    };
+
+    onCreatePost = () {
+      store.dispatch(CreatePostAction(postData));
+      store.dispatch(SetSelectedPostAction(const PostPayloadDTO()));
+    };
+
+    onEditPost = () {};
+    userInfomation = store.state.userState;
+    postData = AddPostRequestDTO()
+      ..described = store.state.postState.selected.described
+      // lấy bytes từ images, nếu ko có thì fetch từ url
+      ..image = store.state.postState.selected.images
+          .map((e) => e.bytes ?? Uint8List.fromList([]))
+          .toList();
   }
 }
