@@ -76,7 +76,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     ];
   }
 
-  List<ListButtonItemConfig> getListButttonOutPage() {
+  List<ListButtonItemConfig> getListButttonOutPage(_CreatePostViewModel vm) {
     return [
       ListButtonItemConfig(() {
         setState(() {
@@ -88,6 +88,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         setState(() {
           isShowButtonSheet = false;
         });
+        vm.onClearPost();
         context.go('/');
       }, 'Bỏ bài viết', icon: 0xe1bb),
       ListButtonItemConfig(() {
@@ -122,7 +123,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 title: 'Tạo bài đăng',
                 context: context,
                 onPressedLeading: () {
-                  print('dm');
                   // cập nhật state isShowButtonSheet thành true
                   setState(() {
                     isShowButtonSheet = true;
@@ -169,12 +169,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                             ],
                           ),
                           const SizedBox(height: 16.0),
-                          TextField(
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              labelText: 'Nội dung',
-                            ),
+                          TextFormField(
+                            initialValue: vm.postData.described,
                             maxLines: null,
+                            decoration: const InputDecoration(
+                              hintText: 'Bạn đang nghĩ gì?',
+                              border: InputBorder.none,
+                            ),
                             onChanged: (value) {
                               vm.updateDescribed(value);
                             },
@@ -211,11 +212,37 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       ),
                     ),
                   )),
-                  ListButton(
-                      screenWidth,
-                      !isShowButtonSheet
-                          ? getListButtionConfig(vm)
-                          : getListButttonOutPage())
+                  if (isShowButtonSheet)
+                    Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(16.0),
+                          alignment: Alignment.topLeft,
+                          child: const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            textBaseline: TextBaseline.alphabetic,
+                            children: [
+                              Text(
+                                'Bạn có muốn lưu bài viết này không?',
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                'Lưu làm bảo sao nháp hoặc tiếp tục chỉnh sửa',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        ListButton(screenWidth, getListButttonOutPage(vm))
+                      ],
+                    )
+                  else
+                    ListButton(screenWidth, getListButtionConfig(vm))
                 ]),
               ),
             ),
@@ -238,6 +265,7 @@ class _CreatePostViewModel {
   late final Function updateDescribed;
   late final Function onEditPost;
   late final Function onCreatePost;
+  late final Function onClearPost;
 
   _CreatePostViewModel(Store<AntiFakeBookState> store) {
     addImage = (Uint8List file) {
@@ -265,6 +293,10 @@ class _CreatePostViewModel {
 
     onCreatePost = () {
       store.dispatch(CreatePostAction(postData));
+      onClearPost();
+    };
+
+    onClearPost = () {
       store.dispatch(SetSelectedPostAction(const PostPayloadDTO()));
     };
 
