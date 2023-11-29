@@ -1,6 +1,5 @@
 import 'package:anti_fake_book/utils.dart';
 part 'device.dto.g.dart';
-
 @customJsonSerializable
 class SetDevtokenRequest {
   final String token;

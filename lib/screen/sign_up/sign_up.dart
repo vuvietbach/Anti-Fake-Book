@@ -1,12 +1,9 @@
 import 'dart:math';
 
-import 'package:anti_fake_book/helper/helper.dart';
 import 'package:anti_fake_book/layout/default_layer.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/index.dart';
-import 'package:anti_fake_book/models/base_apis/dto/response/auth.dto.dart';
 import 'package:anti_fake_book/screen/sign_up/redux_actions.dart';
 import 'package:anti_fake_book/screen/sign_up/widget.dart';
-import 'package:anti_fake_book/store/actions/auth.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/utils.dart';
 import 'package:anti_fake_book/widgets/buttons.dart';
