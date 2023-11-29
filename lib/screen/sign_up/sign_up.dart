@@ -1,11 +1,14 @@
 import 'dart:math';
 
 import 'package:anti_fake_book/screen/sign_up/widget.dart';
+import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/utils.dart';
 import 'package:anti_fake_book/widgets/buttons.dart';
 import 'package:anti_fake_book/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
+import 'package:redux/redux.dart';
 import '../../styles.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -204,9 +207,9 @@ class _SignUpAgeState extends State<SignUpAge> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text("Bạn chưa đủ tuổi"),
+              title: const Text("Tuổi không hợp lệ"),
               content:
-                  const Text("Bạn phải đủ 13 tuổi để sử dụng Anti-Fakebook"),
+                  const Text("Người dùng phải từ 13 tuổi trở lên để sử dụng Anti-Fakebook"),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
@@ -553,11 +556,17 @@ class _PolicyScreenState extends State<PolicyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WebViewWidget(
-        controller: WebViewController()
-          ..setJavaScriptMode(JavaScriptMode.unrestricted)
-          ..addJavaScriptChannel("app",
-              onMessageReceived: (JavaScriptMessage message) async {})
-          ..loadFlutterAsset('assets/policy.html'));
+    return StoreBuilder(
+      builder: (BuildContext context, Store<AntiFakeBookState> store) {
+        return WebViewWidget(
+            controller: WebViewController()
+              ..setJavaScriptMode(JavaScriptMode.unrestricted)
+              ..addJavaScriptChannel("app",
+                  onMessageReceived: (JavaScriptMessage message) async {
+                    // store.dispatch(SignUpAction)
+                  })
+              ..loadFlutterAsset('assets/policy.html'));
+      }
+    );
   }
 }

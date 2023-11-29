@@ -6,8 +6,6 @@ import 'package:anti_fake_book/screen/posts/report_post/report_post.dart';
 import 'package:anti_fake_book/screen/sign_in/routes.dart';
 import 'package:anti_fake_book/screen/sign_up/routes.dart';
 import 'package:anti_fake_book/screen/welcome_screen.dart';
-import 'package:anti_fake_book/utils.dart';
-import 'package:anti_fake_book/widgets/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +19,6 @@ import 'package:anti_fake_book/screen/posts/emotion_list.dart';
 import 'package:anti_fake_book/layout/default_layer.dart';
 import 'package:anti_fake_book/store/reducers/index.dart';
 import 'package:anti_fake_book/store/state/index.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'layout/home_page.dart';
 

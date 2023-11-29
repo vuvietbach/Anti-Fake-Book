@@ -1,5 +1,5 @@
 import 'package:anti_fake_book/constants/constants.dart';
-import 'package:anti_fake_book/models/base_apis/dto/request/sign_in.dto.dart';
+import 'package:anti_fake_book/models/base_apis/dto/request/auth.dto.dart';
 import 'package:anti_fake_book/store/actions/auth.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/utils.dart';
@@ -126,7 +126,7 @@ class _SignInState extends State<SignIn> {
                 : () async {
                     FocusManager.instance.primaryFocus?.unfocus();
                     if (_formKey.currentState!.validate() || true) {
-                      SignInRequestDTO signInData = SignInRequestDTO(
+                      SignInRequest signInData = SignInRequest(
                           email: emailController.text,
                           password: passwordController.text);
                       store.dispatch(SignInAction(

@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:anti_fake_book/constants/base_apis.dart';
+import 'package:anti_fake_book/models/base_apis/dto/response/device.dto.dart';
 import 'package:dio/dio.dart';
 
 import 'dto/request/index.dart';
@@ -93,11 +95,8 @@ class ApiModel {
     return GetPostResponseDTO(data: response.data);
   }
 
-  Future<SignInResponse> signIn(SignInRequestDTO data) async {
-    final response = await _dio.post(PathName.signIn, data: {
-      'email': data.email,
-      'password': data.password,
-    });
+  Future<SignInResponse> signIn(SignInRequest data) async {
+    final response = await _dio.post(PathName.signIn, data: data.toJson());
     SignInResponse signInResponse = SignInResponse.fromJson(response.data);
     return signInResponse;
   }
@@ -137,4 +136,106 @@ class ApiModel {
     return _dio.post(PathName.getNotification).then(
         (rawResponse) => GetNotificationReponseDto.fromJson(rawResponse.data));
   }
+  Future<SignUpResponse> signUp(SignUpRequest data) async {
+    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    SignUpResponse signUpResponse = SignUpResponse.fromJson(response.data);
+    return signUpResponse;
+  }
+
+  Future<LogOutResponse> logOut(LogOutRequest data) async {
+    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    LogOutResponse logOutResponse = LogOutResponse.fromJson(response.data);
+    return logOutResponse;
+  }
+
+  Future<GetVerifyCodeResponse> getVerifyCode(GetVerifyCodeRequest data) async {
+    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    GetVerifyCodeResponse getVerifyCodeResponse =
+        GetVerifyCodeResponse.fromJson(response.data);
+    return getVerifyCodeResponse;
+  }
+
+  Future<CheckVerifyCodeResponse> checkVerifyCode(
+      CheckVerifyCodeRequest data) async {
+    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    CheckVerifyCodeResponse checkVerifyCodeResponse =
+        CheckVerifyCodeResponse.fromJson(response.data);
+    return checkVerifyCodeResponse;
+  }
+
+  Future<GetSavedSearchResponse> getSavedSearch(
+      GetSavedSearchRequest data) async {
+    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    GetSavedSearchResponse getSavedSearchResponse =
+        GetSavedSearchResponse.fromJson(response.data);
+    return getSavedSearchResponse;
+  }
+
+  Future<DelSavedSearchResponse> delSavedSearch(
+      DelSavedSearchRequest data) async {
+    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    DelSavedSearchResponse delSavedSearchResponse =
+        DelSavedSearchResponse.fromJson(response.data);
+    return delSavedSearchResponse;
+  }
+
+  Future<SetDevtokenResponse> setDevtoken(SetDevtokenRequest data) async {
+    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    SetDevtokenResponse setDevtokenResponse =
+        SetDevtokenResponse.fromJson(response.data);
+    return setDevtokenResponse;
+  }
+
+  Future<SetUserInfoResponse> setUserInfo(SetUserInfoRequest data) async {
+    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    SetUserInfoResponse setUserInfoResponse =
+        SetUserInfoResponse.fromJson(response.data);
+    return setUserInfoResponse;
+  }
+
+  Future<GetListConversationResponse> getListConversation(
+      GetListConversationRequest data) async {
+    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    GetListConversationResponse getListConversationResponse =
+        GetListConversationResponse.fromJson(response.data);
+    return getListConversationResponse;
+  }
+
+  Future<GetConversationResponse> getConversation(
+      GetConversationRequest data) async {
+    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    GetConversationResponse getConversationResponse =
+        GetConversationResponse.fromJson(response.data);
+    return getConversationResponse;
+  }
+
+  Future<SetReadMessageResponse> setReadMessage(
+      SetReadMessageRequest data) async {
+    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    SetReadMessageResponse setReadMessageResponse =
+        SetReadMessageResponse.fromJson(response.data);
+    return setReadMessageResponse;
+  }
+
+  Future<DeleteMessageResponse> deleteMessage(DeleteMessageRequest data) async {
+    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    DeleteMessageResponse deleteMessageResponse =
+        DeleteMessageResponse.fromJson(response.data);
+    return deleteMessageResponse;
+  }
+
+  Future<DeleteConversationResponse> deleteConversation(
+      DeleteConversationRequest data) async {
+    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    DeleteConversationResponse deleteConversationResponse =
+        DeleteConversationResponse.fromJson(response.data);
+    return deleteConversationResponse;
+  }
+}
+
+void main() async {
+  final api = ApiModel();
+  final signIn = SignInRequest(email: "bach", password: "1234");
+  final addPostResponse = await api.signIn(signIn);
+  print(addPostResponse);
 }

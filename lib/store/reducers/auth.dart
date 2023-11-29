@@ -13,7 +13,7 @@ AntiFakeBookState onSignInSuccess(
   action.extras['onSuccess']!();
   late UserState userState;
   if (action.payload.code == 1000) {
-    userState = UserState.fromJson(action.payload.data);
+    userState = UserState.fromJson(action.payload.data.toJson());
   } else {
     userState = state.userState;
   }
