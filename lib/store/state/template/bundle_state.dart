@@ -1,5 +1,5 @@
 abstract class BundleState<T> {
-  T? selected;
-  List<T>? listSelections;
-  int? totalSelections;
+  late T selected;
+  late List<T> listSelections;
+  late int totalSelections;
 }

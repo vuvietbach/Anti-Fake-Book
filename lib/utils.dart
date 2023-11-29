@@ -84,13 +84,34 @@ class CustomStringConvert implements JsonConverter<String, dynamic> {
   }
 }
 
+class CustomUint8ListConverter implements JsonConverter<Uint8List?, dynamic> {
+  const CustomUint8ListConverter();
+
+  @override
+  Uint8List? fromJson(dynamic json) {
+    switch (json.runtimeType) {
+      case String:
+        return base64Decode(json);
+      case Uint8List:
+        return json;
+    }
+    return null;
+  }
+
+  @override
+  Uint8List? toJson(Uint8List? object) {
+    return object;
+  }
+}
+
 const customJsonSerializable = JsonSerializable(
   fieldRename: FieldRename.snake,
   explicitToJson: true,
   converters: [
     CustomBoolConverter(),
     CustomIntConverter(),
-    CustomStringConvert()
+    CustomStringConvert(),
+    CustomUint8ListConverter(),
   ],
 );
 
