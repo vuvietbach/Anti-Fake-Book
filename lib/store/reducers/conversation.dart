@@ -61,7 +61,6 @@ AntiFakeBookState onSuccessGetConversation(
 //   if (isSuccessCode(action.payload.code)) {
 //     newState = state.copyWith(
 //       conversationState: state.conversationState.copyWith(
-
 //       ),
 //     );
 //   }
