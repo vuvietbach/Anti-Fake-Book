@@ -20,7 +20,6 @@ class DiskStore {
   }
 
   static Future<void> saveState(AntiFakeBookState state) async {
-    print(state.userState.email);
     await _prefs.setString("email", state.userState.email);
     await _prefs.setString("token", state.userState.token);
     await _prefs.setString("username", state.userState.username);

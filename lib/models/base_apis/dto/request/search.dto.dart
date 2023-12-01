@@ -1,8 +1,9 @@
+import 'package:anti_fake_book/utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'search.dto.g.dart';
 
-@JsonSerializable()
+@customJsonSerializable
 class SearchRequest {
   final String token;
   final String keyword;
@@ -23,7 +24,7 @@ class SearchRequest {
   Map<String, dynamic> toJson() => _$SearchRequestToJson(this);
 }
 
-@JsonSerializable()
+@customJsonSerializable
 class GetSavedSearchRequest {
   final String token;
   final int index;
@@ -37,7 +38,7 @@ class GetSavedSearchRequest {
   Map<String, dynamic> toJson() => _$GetSavedSearchRequestToJson(this);
 }
 
-@JsonSerializable()
+@customJsonSerializable
 class DelSavedSearchRequest {
   final String token;
   @JsonKey(name: "search_id")

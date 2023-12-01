@@ -71,7 +71,8 @@ class ConversationMetadata {
 
   final List<ConversationData> conversation;
 
-  ConversationMetadata({required this.isBlocked, required this.conversation});
+  const ConversationMetadata(
+      {required this.isBlocked, required this.conversation});
   factory ConversationMetadata.fromJson(Map<String, dynamic> json) =>
       _$ConversationMetadataFromJson(json);
   Map<String, dynamic> toJson() => _$ConversationMetadataToJson(this);

@@ -3,6 +3,7 @@ import 'package:anti_fake_book/disk.dart';
 import 'package:anti_fake_book/screen/HomePage/HomeFake.dart';
 import 'package:anti_fake_book/screen/posts/report_post/confirm_report.dart';
 import 'package:anti_fake_book/screen/posts/report_post/report_post.dart';
+import 'package:anti_fake_book/screen/search_page/search_page.dart';
 import 'package:anti_fake_book/screen/sign_in/routes.dart';
 import 'package:anti_fake_book/screen/sign_up/routes.dart';
 import 'package:anti_fake_book/screen/welcome_screen.dart';
@@ -26,7 +27,8 @@ final GoRouter _router = GoRouter(routes: [
   GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState stage) {
-        return const EmptyLayout(child: CheckLoginWrapper(child: HomePage()));
+        // return const EmptyLayout(child: CheckLoginWrapper(child: HomePage()));
+        return const EmptyLayout(child: SearchPage());
       },
       routes: [
         GoRoute(
@@ -80,6 +82,11 @@ final GoRouter _router = GoRouter(routes: [
         ),
         ...signInRoutes,
         signUpRoutes,
+        GoRoute(
+          path: 'search',
+          builder: (BuildContext context, GoRouterState stage) =>
+              const SearchPage(),
+        ),
       ]),
 ]);
 

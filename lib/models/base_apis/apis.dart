@@ -90,10 +90,14 @@ class ApiModel {
     return ResponseDTO.fromJson(rawResponse);
   }
 
-  Future<GetPostResponseDTO> getUserInfo(String id) async {
-    final response = await _dio.post(PathName.getUserInfo, data: {'id': id});
-    return GetPostResponseDTO(data: response.data);
-  }
+  // Future<GetPostResponseDTO> getUserInfo(String id) async {
+  //   final response = await _dio.post(PathName.getUserInfo, data: {'id': id});
+  //   return GetPostResponseDTO(data: response.data);
+  // }
+  // Future<GetPostResponseDTO> getUserInfo(String id) async {
+  //   final response = await _dio.post(PathName.getUserInfo, data: {'id': id});
+  //   return GetPostResponseDTO(data: response.data);
+  // }
 
   Future<SignInResponse> signIn(SignInRequest data) async {
     final response = await _dio.post(PathName.signIn, data: data.toJson());
@@ -186,6 +190,13 @@ class ApiModel {
     return setDevtokenResponse;
   }
 
+  Future<GetUserInfoResponse> getUserInfo(GetUserInfoRequest data) async {
+    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    GetUserInfoResponse getUserInfoResponse =
+        GetUserInfoResponse.fromJson(response.data);
+    return getUserInfoResponse;
+  }
+
   Future<SetUserInfoResponse> setUserInfo(SetUserInfoRequest data) async {
     final response = await _dio.post(PathName.signIn, data: data.toJson());
     SetUserInfoResponse setUserInfoResponse =
@@ -237,5 +248,9 @@ void main() async {
   final api = ApiModel();
   final signIn = SignInRequest(email: "bach", password: "1234");
   final addPostResponse = await api.signIn(signIn);
-  print(addPostResponse);
+  print(addPostResponse.code);
+  final signUp = SignUpRequest(email: "bach", password: "1234", uuid: "1234");
+  final signUpResponse = await api.signUp(signUp);
+  print(signUpResponse.code);
+  // final search = GetSavedSearchRequest(token: , index: index, count: count)
 }

@@ -1,5 +1,5 @@
-import 'package:anti_fake_book/constants/constants.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/auth.dto.dart';
+import 'package:anti_fake_book/models/base_apis/dto/response/auth.dto.dart';
 import 'package:anti_fake_book/store/actions/auth.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/utils.dart';
@@ -131,8 +131,13 @@ class _SignInState extends State<SignIn> {
                           password: passwordController.text);
                       store.dispatch(SignInAction(
                           data: signInData,
-                          onSuccess: () {
-                            context.go("/home");
+                          onSuccess: (SignInResponse data) {
+                            if (data.code == 1000) {
+                              context.go("/home");
+                            } else {
+                              showErrorDialog(context, data.code,
+                                  pageType: PageType.signIn);
+                            }
                           },
                           onPending: () {
                             showLoadingDialog(context);

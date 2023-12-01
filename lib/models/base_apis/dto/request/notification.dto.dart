@@ -1,7 +1,8 @@
+import 'package:anti_fake_book/utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'notification.dto.g.dart';
 
-@JsonSerializable()
+@customJsonSerializable
 class GetNotificationRequest {
   final String token;
   final int index;
@@ -15,7 +16,7 @@ class GetNotificationRequest {
   Map<String, dynamic> toJson() => _$GetNotificationRequestToJson(this);
 }
 
-@JsonSerializable()
+@customJsonSerializable
 class SetReadNotificationRequest {
   final String token;
   @JsonKey(name: "notification_id")
@@ -30,7 +31,7 @@ class SetReadNotificationRequest {
   Map<String, dynamic> toJson() => _$SetReadNotificationRequestToJson(this);
 }
 
-@JsonSerializable()
+@customJsonSerializable
 class SetDevTokenRequest {
   final String token;
   final String devtoken;
@@ -43,34 +44,4 @@ class SetDevTokenRequest {
 
   factory SetDevTokenRequest.fromJson(Map<String, dynamic> json) =>
       _$SetDevTokenRequestFromJson(json);
-}
-
-@JsonSerializable()
-class SetUserInfoRequest {
-  final String token;
-  final String? username;
-  final String? description;
-  final String? avatar;
-  final String? address;
-  final String? city;
-  final String? country;
-  @JsonKey(name: "cover_image")
-  final String? coverImage;
-  final String? link;
-
-  SetUserInfoRequest(
-      {required this.token,
-      this.username,
-      this.description,
-      this.avatar,
-      this.address,
-      this.city,
-      this.country,
-      this.coverImage,
-      this.link});
-
-  Map<String, dynamic> toJson() => _$SetUserInfoRequestToJson(this);
-
-  factory SetUserInfoRequest.fromJson(Map<String, dynamic> json) =>
-      _$SetUserInfoRequestFromJson(json);
 }

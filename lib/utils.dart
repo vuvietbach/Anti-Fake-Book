@@ -264,3 +264,6 @@ String timeAgo(DateTime created) {
   difference = DateTime.now().difference(created).inSeconds;
   return '$difference giây';
 }
+bool isSuccessCode(int code) {
+  return code == 1000;
+}
