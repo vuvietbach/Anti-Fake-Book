@@ -13,7 +13,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:anti_fake_book/global_type/list_button_config.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/widgets/common/app_bar.dart';
-import 'package:anti_fake_book/widgets/common/chip_tags.dart';
+import 'package:anti_fake_book/widgets/common/selection_chip_tags.dart';
 import 'package:anti_fake_book/widgets/common/list_button.dart';
 import 'package:anti_fake_book/store/actions/index.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/index.dart';

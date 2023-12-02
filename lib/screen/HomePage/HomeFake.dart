@@ -39,7 +39,7 @@ class HomeFake extends StatelessWidget {
                 floatingActionButton: Center(
                   child: ElevatedButton(
                     onPressed: () {
-                      context.go('/create-post');
+                      context.go('/post/1/report');
                     },
                     child: const Text(
                       'next',

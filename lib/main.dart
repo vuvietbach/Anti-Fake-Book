@@ -1,5 +1,8 @@
 //Lib
 import 'package:anti_fake_book/disk.dart';
+import 'package:anti_fake_book/screen/HomePage/HomeFake.dart';
+import 'package:anti_fake_book/screen/posts/report_post/confirm_report.dart';
+import 'package:anti_fake_book/screen/posts/report_post/report_post.dart';
 import 'package:anti_fake_book/screen/sign_in/routes.dart';
 import 'package:anti_fake_book/screen/sign_up/routes.dart';
 import 'package:anti_fake_book/screen/welcome_screen.dart';
@@ -13,8 +16,8 @@ import 'package:redux/redux.dart';
 import 'package:redux_future_middleware/redux_future_middleware.dart';
 
 //module
-import 'package:anti_fake_book/screen/create_post/create_post.dart';
-import 'package:anti_fake_book/screen/create_post/emotion_list.dart';
+import 'package:anti_fake_book/screen/posts/create_post.dart';
+import 'package:anti_fake_book/screen/posts/emotion_list.dart';
 import 'package:anti_fake_book/layout/default_layer.dart';
 import 'package:anti_fake_book/store/reducers/index.dart';
 import 'package:anti_fake_book/store/state/index.dart';
@@ -39,6 +42,33 @@ final GoRouter _router = GoRouter(routes: [
                 builder: (BuildContext context, GoRouterState stage) =>
                     const EmotionsList(),
               )
+            ]),
+        GoRoute(
+            path: 'post/:id',
+            builder: (BuildContext context, GoRouterState stage) {
+              return const HomeFake();
+            },
+            routes: [
+              GoRoute(
+                  path: 'report',
+                  builder: (BuildContext context, GoRouterState stage) =>
+                      ReportPostScreenWidget(),
+                  routes: [
+                    GoRoute(
+                        path: 'confirm',
+                        builder: (BuildContext context, GoRouterState stage) {
+                          final List<String> listSelectedReason =
+                              stage.extra as List<String>? ?? ['tuan', 'tu'];
+
+                          final String postId =
+                              stage.pathParameters['id'] ?? '';
+                          return EmptyLayout(
+                            child: ConfirmReportScreen(
+                                postId: postId,
+                                listSelectedReason: listSelectedReason),
+                          );
+                        })
+                  ]),
             ]),
         GoRoute(
           path: 'welcome',
