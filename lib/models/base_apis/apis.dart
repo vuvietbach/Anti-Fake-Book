@@ -1,19 +1,18 @@
 import 'dart:io';
-import 'package:anti_fake_book/constants/base_apis.dart';
-import 'package:anti_fake_book/models/base_apis/dto/request/sign_in.dto.dart';
-import 'package:anti_fake_book/models/base_apis/dto/response/sign_in.dto.dart';
 import 'package:dio/dio.dart';
 
-import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
-
 import 'dto/request/index.dart';
+import 'dto/response/index.dart';
+import 'package:anti_fake_book/utils.dart';
+
+import 'package:anti_fake_book/constants/base_apis.dart';
 
 class ApiModel {
   late final String _baseUrl;
   late final BaseOptions _baseOptions;
   late final Dio _dio;
   ApiModel() {
-    _baseUrl = 'https://21207cc3-5154-4640-8809-dd9b7a2e95f8.mock.pstmn.io';
+    _baseUrl = 'https://f2782c39-9f02-4230-9c31-8f458430943c.mock.pstmn.io';
     _baseOptions = BaseOptions(baseUrl: _baseUrl);
     _dio = Dio(_baseOptions);
     _dio.interceptors.add(InterceptorsWrapper(
@@ -37,14 +36,8 @@ class ApiModel {
 
   Future<AddPostResponseDTO> addPost(AddPostRequestDTO addPostData) async {
     //Chuyển addPostData thành FormData
-    final formData = FormData.fromMap({
-      "image": addPostData.image
-          .map((e) => MultipartFile.fromBytes(e, filename: e.toString())),
-      "video": addPostData.video
-          .map((e) => MultipartFile.fromBytes(e, filename: e.toString())),
-      "described": addPostData.described,
-      "status": addPostData.status,
-    });
+    final jsonData = convertUint8ListToMultipartFile(addPostData.toJson());
+    final formData = FormData.fromMap(jsonData);
     final response = await _dio.post(PathName.addPost, data: formData);
     AddPostResponseDTO addPostResponseDTO =
         AddPostResponseDTO.fromJson(response.data);
@@ -54,6 +47,45 @@ class ApiModel {
   Future<GetPostResponseDTO> getPost(String id) async {
     final response = await _dio.post(PathName.getPost, data: {'id': id});
     return GetPostResponseDTO(data: response.data);
+  }
+
+  Future<ModifiedPostResponseDto> editPost(
+      EditPostRequestDto editPostRequest) async {
+    final jsonData = convertUint8ListToMultipartFile(editPostRequest.toJson());
+    final formData = FormData.fromMap(jsonData);
+    final response = await _dio.post(PathName.editPost, data: formData);
+    ModifiedPostResponseDto modifiedPostResponseDto =
+        ModifiedPostResponseDto.fromJson(response.data);
+    return modifiedPostResponseDto;
+  }
+
+  Future<ModifiedPostResponseDto> deletePost(String id) async {
+    final response = await _dio.post(PathName.deletePost, data: {'id': id});
+    ModifiedPostResponseDto deletePostResponseDto =
+        ModifiedPostResponseDto.fromJson(response.data);
+    return deletePostResponseDto;
+  }
+
+  Future<ResponseDTO> reportPost(
+      ReportPostRequestDto reportPostRequestDto) async {
+    final bodyRequest = reportPostRequestDto.toJson();
+    final rawResponse = await _dio.post(PathName.reportPost, data: bodyRequest);
+    ResponseDTO response = ResponseDTO.fromJson(rawResponse.data);
+    return response;
+  }
+
+  Future<GetMarkCommentResponseDto> getMarkComment(
+      GetMarkCommentRequestDto request) async {
+    final bodyRequest = request.toJson();
+    final rawResponse = await _dio.post(PathName.getMarkComment,
+        data: bodyRequest) as Map<String, dynamic>;
+    return GetMarkCommentResponseDto.fromJson(rawResponse);
+  }
+
+  Future<ResponseDTO> feelPost(String postId) async {
+    final rawResponse = await _dio.post(PathName.feelPost, data: {"id": postId})
+        as Map<String, dynamic>;
+    return ResponseDTO.fromJson(rawResponse);
   }
 
   Future<GetPostResponseDTO> getUserInfo(String id) async {

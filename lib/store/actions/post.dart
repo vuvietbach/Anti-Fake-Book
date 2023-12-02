@@ -22,3 +22,14 @@ class SetSelectedPostAction extends PostAction {
   PostPayloadDTO post;
   SetSelectedPostAction(this.post);
 }
+
+class ReportPostAction extends FutureAction<ReportPostAction, ResponseDTO>
+    implements PostAction {
+  ReportPostRequestDto reportData;
+  ReportPostAction(this.reportData)
+      : super(future: ApiModel.api.reportPost(reportData));
+}
+
+typedef PendingReportPostAction = FuturePendingAction<ReportPostAction>;
+typedef SuccessReportPostAction
+    = FutureSucceededAction<ReportPostAction, ResponseDTO>;

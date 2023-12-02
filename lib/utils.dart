@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
 import 'package:anti_fake_book/store/state/index.dart';
+import 'package:dio/dio.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -49,11 +50,11 @@ class CustomBoolConverter implements JsonConverter<bool?, dynamic> {
 }
 
 //class convert string vể số
-class CustomIntConverter implements JsonConverter<int?, dynamic> {
+class CustomIntConverter implements JsonConverter<int, dynamic> {
   const CustomIntConverter();
 
   @override
-  int? fromJson(dynamic json) {
+  int fromJson(dynamic json) {
     switch (json.runtimeType) {
       case String:
         return int.parse(json);
@@ -64,7 +65,7 @@ class CustomIntConverter implements JsonConverter<int?, dynamic> {
   }
 
   @override
-  int? toJson(int? object) {
+  int toJson(int object) {
     return object;
   }
 }
@@ -84,22 +85,17 @@ class CustomStringConvert implements JsonConverter<String, dynamic> {
   }
 }
 
-class CustomUint8ListConverter implements JsonConverter<Uint8List?, dynamic> {
+class CustomUint8ListConverter implements JsonConverter<Uint8List, dynamic> {
   const CustomUint8ListConverter();
 
   @override
-  Uint8List? fromJson(dynamic json) {
-    switch (json.runtimeType) {
-      case String:
-        return base64Decode(json);
-      case Uint8List:
-        return json;
-    }
-    return null;
+  Uint8List fromJson(dynamic json) {
+    if (json is Uint8List) return json;
+    return base64Decode(json);
   }
 
   @override
-  Uint8List? toJson(Uint8List? object) {
+  Uint8List toJson(Uint8List object) {
     return object;
   }
 }
@@ -235,4 +231,19 @@ Future saveStateToDisk(AntiFakeBookState state) async {
   await prefs.setString("email", state.userState.email);
   await prefs.setString("token", state.userState.token);
   await prefs.setString("username", state.userState.username);
+}
+
+//Convert Uint8List to  MultipartFile.fromBytes(e, filename: e.toString()) recursively
+convertUint8ListToMultipartFile(input) {
+  if (input is Uint8List) {
+    return MultipartFile.fromBytes(input, filename: input.toString());
+  } else if (input is List) {
+    return input.map((e) => convertUint8ListToMultipartFile(e)).toList();
+  }
+  if (input is Map) {
+    return input.map((key, value) {
+      return MapEntry(key, convertUint8ListToMultipartFile(value));
+    });
+  }
+  return input;
 }

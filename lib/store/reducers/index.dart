@@ -12,6 +12,7 @@ import '../state/index.dart';
 //hàm in ra FailureCreatePostAction
 AntiFakeBookState failureCreatePostAction(
     AntiFakeBookState state, FutureFailedAction action) {
+  print(action.error);
   return state;
 }
 
@@ -23,4 +24,6 @@ final antiFakeBookReducers = combineReducers<AntiFakeBookState>([
   TypedReducer<AntiFakeBookState, SuccessSignInAction>(onSignInSuccess),
   TypedReducer<AntiFakeBookState, PendingSignInAction>(onSignInPending),
   TypedReducer<AntiFakeBookState, ResetResponseAction>(onResetResponse),
+  TypedReducer<AntiFakeBookState, PendingReportPostAction>(onReportPostPending),
+  TypedReducer<AntiFakeBookState, SuccessReportPostAction>(onReportPostSuccess),
 ]);
