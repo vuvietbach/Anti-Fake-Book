@@ -247,3 +247,20 @@ convertUint8ListToMultipartFile(input) {
   }
   return input;
 }
+
+String timeAgo(DateTime created) {
+  int difference = DateTime.now().difference(created).inDays;
+  if (difference > 0) {
+    return '$difference ngày';
+  }
+  difference = DateTime.now().difference(created).inHours;
+  if (difference > 0) {
+    return '$difference giờ';
+  }
+  difference = DateTime.now().difference(created).inMinutes;
+  if (difference > 0) {
+    return '$difference phút';
+  }
+  difference = DateTime.now().difference(created).inSeconds;
+  return '$difference giây';
+}
