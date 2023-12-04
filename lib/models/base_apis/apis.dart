@@ -101,4 +101,40 @@ class ApiModel {
     SignInResponse signInResponse = SignInResponse.fromJson(response.data);
     return signInResponse;
   }
+
+  Future<ResponseDTO> setPushSetting(SetPushSettingRequest request) {
+    final bodyRequest = request.toJson();
+    return _dio
+        .post(PathName.setPushSettings, data: bodyRequest)
+        .then((rawResponse) => ResponseDTO.fromJson(rawResponse.data));
+  }
+
+  Future<ResponseDTO> changePassword(String password, String newPassword) {
+    return _dio.post(PathName.changePassword, data: {
+      'password': password,
+      'newPassword': newPassword,
+    }).then((rawResponse) => ResponseDTO.fromJson(rawResponse.data));
+  }
+
+  Future<GetPushSettingResponseDto> getPushSetting() {
+    return _dio.post(PathName.getPushSettings).then(
+        (rawResponse) => GetPushSettingResponseDto.fromJson(rawResponse.data));
+  }
+
+  Future<CheckNewVersionReponseDto> checkNewVersion() {
+    return _dio.post(PathName.checkNewVersion).then(
+        (rawResponse) => CheckNewVersionReponseDto.fromJson(rawResponse.data));
+  }
+
+  Future<ResponseDTO> setBlockUser(String userId, bool isBlock) {
+    return _dio.post(PathName.setBlock, data: {
+      'userId': userId,
+      'type': isBlock ? 1 : 0,
+    }).then((rawResponse) => ResponseDTO.fromJson(rawResponse.data));
+  }
+
+  Future<GetNotificationReponseDto> getNotification(int index, int count) {
+    return _dio.post(PathName.getNotification).then(
+        (rawResponse) => GetNotificationReponseDto.fromJson(rawResponse.data));
+  }
 }

@@ -20,5 +20,12 @@ class CommonAppBar extends AppBar {
               : null,
           centerTitle: false,
           actions: actions,
+          bottom: const PreferredSize(
+            preferredSize: Size.fromHeight(1),
+            child: Divider(
+              height: 1,
+              thickness: 1,
+            ),
+          ),
         );
 }

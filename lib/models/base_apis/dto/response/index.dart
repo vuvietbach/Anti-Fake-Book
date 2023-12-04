@@ -6,3 +6,7 @@ export 'feel_post.dto.dart';
 export 'get_mark_comment.dto.dart';
 export 'sign_in.dto.dart';
 export 'modified_post.dto.dart';
+export 'check_new_version.dto.dart';
+export 'get_notification.dto.dart';
+export 'get_push_settings.dto.dart';
+export 'set_mark_comment.dto.dart';
