@@ -1,6 +1,9 @@
 import 'package:anti_fake_book/models/base_apis/dto/request/auth.dto.dart';
+import 'package:anti_fake_book/models/base_apis/dto/request/index.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/auth.dto.dart';
+import 'package:anti_fake_book/models/base_apis/dto/response/user_info.dto.dart';
 import 'package:anti_fake_book/store/actions/auth.dart';
+import 'package:anti_fake_book/store/actions/user_info.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/utils.dart';
 import 'package:anti_fake_book/widgets/widgets.dart';
@@ -125,7 +128,7 @@ class _SignInState extends State<SignIn> {
                 ? null
                 : () async {
                     FocusManager.instance.primaryFocus?.unfocus();
-                    if (_formKey.currentState!.validate() || true) {
+                    if (_formKey.currentState!.validate()) {
                       SignInRequest signInData = SignInRequest(
                           email: emailController.text,
                           password: passwordController.text);
@@ -133,7 +136,21 @@ class _SignInState extends State<SignIn> {
                           data: signInData,
                           onSuccess: (SignInResponse data) {
                             if (data.code == 1000) {
-                              context.go("/home");
+                              store.dispatch(GetUserInfoAction(
+                                  data: GetUserInfoRequest(
+                                      token: data.data.token),
+                                  onSuccess: (GetUserInfoResponse data) {
+                                    if (data.code == 1000) {
+                                      print(store.state.userState.userInfo.username);
+                                      // context.go("/home");
+                                    } else {
+                                      // showErrorDialog(context, data.code,
+                                      //     pageType: PageType.signIn);
+                                    }
+                                  },
+                                  onPending: () {
+                                    showLoadingDialog(context);
+                                  }));
                             } else {
                               showErrorDialog(context, data.code,
                                   pageType: PageType.signIn);

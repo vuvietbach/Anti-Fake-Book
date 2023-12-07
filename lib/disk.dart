@@ -24,4 +24,8 @@ class DiskStore {
     await _prefs.setString("token", state.userState.token);
     await _prefs.setString("username", state.userState.username);
   }
+
+  static Future<void> test() async {
+    await _prefs.setString("email", "test");
+  }
 }

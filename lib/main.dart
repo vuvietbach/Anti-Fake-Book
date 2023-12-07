@@ -6,6 +6,7 @@ import 'package:anti_fake_book/screen/posts/report_post/report_post.dart';
 import 'package:anti_fake_book/screen/profile/routes.dart';
 import 'package:anti_fake_book/screen/search_page/search_page.dart';
 import 'package:anti_fake_book/screen/sign_in/routes.dart';
+import 'package:anti_fake_book/screen/sign_in/sign_in.dart';
 import 'package:anti_fake_book/screen/sign_up/routes.dart';
 import 'package:anti_fake_book/screen/welcome_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -29,7 +30,7 @@ final GoRouter _router = GoRouter(routes: [
       path: '/',
       builder: (BuildContext context, GoRouterState stage) {
         // return const EmptyLayout(child: CheckLoginWrapper(child: HomePage()));
-        return const EmptyLayout(child: HomePage());
+        return const EmptyLayout(child: SignIn());
       },
       routes: [
         GoRoute(
@@ -100,6 +101,8 @@ void main() async {
   // await dotenv.load(fileName: ".env");
   AntiFakeBookState initialState = AntiFakeBookState.initState();
   final initState = DiskStore.loadAndMergeState(initialState);
+  await DiskStore.test();
+  print(initState.userState.email);
   final store = Store<AntiFakeBookState>(antiFakeBookReducers,
       initialState: initState, middleware: [futureMiddleware]);
   runApp(AntiFakeBookApp(store: store));
