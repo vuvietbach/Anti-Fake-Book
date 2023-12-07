@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
 import 'package:anti_fake_book/store/state/index.dart';
@@ -9,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomRoute {
@@ -121,7 +119,7 @@ String? validateEmail(String? value) {
   }
 }
 
-Future<String> getDeviceId(BuildContext context) async {
+Future<String> getDeviceId() async {
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
   return androidInfo.id;
@@ -170,25 +168,50 @@ Future showLoadingDialog(BuildContext context) async {
 
 enum PageType {
   signIn,
+  signUp,
   other,
+  getVerifyCode,
+  checkVerifyCode
 }
+
+const int NetworkErrorCode = 0;
 
 Future showErrorDialog(BuildContext context, int code,
     {PageType pageType = PageType.other}) async {
   if (context.mounted) {
-    String title = "Lỗi";
-    String content = "Vui lòng thử lại sau";
-    if (pageType == PageType.signIn) {
-      if (code == 9995) {
+    String? title;
+    String? content;
+    if (code == NetworkErrorCode) {
+      title = "Lỗi kết nối";
+      content = "Vui lòng kiểm tra lại kết nối mạng";
+    } else {
+      if (pageType == PageType.signIn) {
         title = "Sai thông tin đăng nhập";
         content = "Vui lòng kiểm tra lại email hoặc mật khẩu";
+      } else if (pageType == PageType.signUp) {
+        if (code == 9996) {
+          title = "Email đã tồn tại";
+          content = "Vui lòng kiểm tra lại email";
+        }
+      } else if (pageType == PageType.getVerifyCode) {
+        if (code == 1010) {
+          title = "Email đã được dùng để đăng ký cho tài khoản khác";
+        } else if (code == 1004 || code == 9995) {
+          title = "Email không tồn tại hoặc không đúng định dạng";
+          content = "Vui lòng thử đăng ký lại";
+        }
+      } else if (pageType == PageType.checkVerifyCode) {
+        if (code == 9995 || code == 1004 || code == 9996) {
+          title = "Mã xác thực không hợp lệ";
+          content = "Vui lòng kiểm tra mã xác thực";
+        } 
       }
-    }
+    } 
     showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
-              title: Text(title),
-              content: Text(content),
+              title: title != null ? Text(title) : null,
+              content: content != null ? Text(content) : null,
               actions: [
                 TextButton(
                     onPressed: () {
@@ -208,17 +231,17 @@ bool isLogin(AntiFakeBookState state) {
   return state.userState.token != "";
 }
 
-Future<File> getLocalJsonFile(String fileName) async {
-  final directory = await getApplicationDocumentsDirectory();
-  return File('${directory.path}/$fileName');
-}
+// Future<File> getLocalJsonFile(String fileName) async {
+//   final directory = await getApplicationDocumentsDirectory();
+//   return File('${directory.path}/$fileName');
+// }
 
-Future<void> saveToJsonFile(
-    String fileName, Map<String, dynamic> jsonContent) async {
-  final file = await getLocalJsonFile(fileName);
-  final jsonString = json.encode(jsonContent);
-  await file.writeAsString(jsonString);
-}
+// Future<void> saveToJsonFile(
+//     String fileName, Map<String, dynamic> jsonContent) async {
+//   final file = await getLocalJsonFile(fileName);
+//   final jsonString = json.encode(jsonContent);
+//   await file.writeAsString(jsonString);
+// }
 
 Future<Map<String, dynamic>> readFromJsonFile(String fileName) async {
   final jsonString = await rootBundle.loadString(fileName);

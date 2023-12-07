@@ -10,9 +10,11 @@ AntiFakeBookState onPendingGetListConversation(
 
 AntiFakeBookState onSuccessGetListConversation(
     AntiFakeBookState state, SuccessGetListConversationAction action) {
+  print('onSuccessGetListConversation');
   if (action.extras['onSuccess'] != null) {
     action.extras['onSuccess']!(action.payload);
   }
+  print(state.conversationState.conversations.length);
   AntiFakeBookState newState = state;
   if (isSuccessCode(action.payload.code)) {
     newState = state.copyWith(

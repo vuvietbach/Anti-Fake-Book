@@ -20,10 +20,11 @@ class SignInAction extends FutureAction<SignInAction, SignInResponse> {
 typedef SuccessSignInAction
     = FutureSucceededAction<SignInAction, SignInResponse>;
 typedef PendingSignInAction = FuturePendingAction<SignInAction>;
+typedef ErrorSignInAction = FutureFailedAction<SignInAction>;
 
 class SignUpAction extends FutureAction<SignUpAction, SignUpResponse> {
   final SignUpRequest data;
-  final Function? onSuccess;
+  final Function(SignUpResponse)? onSuccess;
   final Function? onPending;
   final Function? onError;
   SignUpAction(
@@ -38,6 +39,7 @@ class SignUpAction extends FutureAction<SignUpAction, SignUpResponse> {
 typedef SuccessSignUpAction
     = FutureSucceededAction<SignUpAction, SignUpResponse>;
 typedef PendingSignUpAction = FuturePendingAction<SignUpAction>;
+typedef ErrorSignUpAction = FutureFailedAction<SignUpAction>;
 
 class LogOutAction extends FutureAction<LogOutAction, LogOutResponse> {
   final LogOutRequest data;
@@ -95,3 +97,5 @@ typedef SuccessCheckVerifyCodeAction
     = FutureSucceededAction<CheckVerifyCodeAction, CheckVerifyCodeResponse>;
 typedef PendingCheckVerifyCodeAction
     = FuturePendingAction<CheckVerifyCodeAction>;
+typedef ErrorCheckVerifyCodeAction
+    = FutureFailedAction<CheckVerifyCodeAction>;

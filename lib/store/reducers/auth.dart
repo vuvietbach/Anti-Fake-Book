@@ -35,3 +35,15 @@ AntiFakeBookState onSignInPending(
     appState: AppState(status: AppStatus.loading),
   );
 }
+
+AntiFakeBookState onSignUpSuccess(
+    AntiFakeBookState state, SuccessSignUpAction action) {
+  action.extras['onSuccess']?.call(action.payload);
+  return state;
+}
+
+AntiFakeBookState onSignUpPending(
+    AntiFakeBookState state, PendingSignUpAction action) {
+  action.extras['onPending']?.call();
+  return state;
+}

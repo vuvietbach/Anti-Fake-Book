@@ -29,6 +29,8 @@ final antiFakeBookReducers = combineReducers<AntiFakeBookState>([
   TypedReducer<AntiFakeBookState, SetSelectedPostAction>(onSetSellectedPost),
   TypedReducer<AntiFakeBookState, SuccessSignInAction>(onSignInSuccess),
   TypedReducer<AntiFakeBookState, PendingSignInAction>(onSignInPending),
+  TypedReducer<AntiFakeBookState, SuccessSignUpAction>(onSignUpSuccess),
+  TypedReducer<AntiFakeBookState, PendingSignUpAction>(onSignUpPending),
   TypedReducer<AntiFakeBookState, ResetResponseAction>(onResetResponse),
   TypedReducer<AntiFakeBookState, PendingReportPostAction>(onReportPostPending),
   TypedReducer<AntiFakeBookState, SuccessReportPostAction>(onReportPostSuccess),
@@ -63,3 +65,8 @@ final antiFakeBookReducers = combineReducers<AntiFakeBookState>([
   // TypedReducer<AntiFakeBookState, PendingDeleteConversationAction>(onPendingDeleteConversation),
   // TypedReducer<AntiFakeBookState, SuccessDeleteConversationAction>(onSuccessDeleteConversation),
 ]);
+
+AntiFakeBookState onNetworkError(
+    AntiFakeBookState state,  action) {
+  return state;
+}

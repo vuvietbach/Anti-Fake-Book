@@ -141,19 +141,19 @@ class ApiModel {
         (rawResponse) => GetNotificationReponseDto.fromJson(rawResponse.data));
   }
   Future<SignUpResponse> signUp(SignUpRequest data) async {
-    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    final response = await _dio.post(PathName.signUp, data: data.toJson());
     SignUpResponse signUpResponse = SignUpResponse.fromJson(response.data);
     return signUpResponse;
   }
 
   Future<LogOutResponse> logOut(LogOutRequest data) async {
-    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    final response = await _dio.post(PathName.logOut, data: data.toJson());
     LogOutResponse logOutResponse = LogOutResponse.fromJson(response.data);
     return logOutResponse;
   }
 
   Future<GetVerifyCodeResponse> getVerifyCode(GetVerifyCodeRequest data) async {
-    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    final response = await _dio.post(PathName.getVerifyCode, data: data.toJson());
     GetVerifyCodeResponse getVerifyCodeResponse =
         GetVerifyCodeResponse.fromJson(response.data);
     return getVerifyCodeResponse;
@@ -161,7 +161,7 @@ class ApiModel {
 
   Future<CheckVerifyCodeResponse> checkVerifyCode(
       CheckVerifyCodeRequest data) async {
-    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    final response = await _dio.post(PathName.checkVerifyCode, data: data.toJson());
     CheckVerifyCodeResponse checkVerifyCodeResponse =
         CheckVerifyCodeResponse.fromJson(response.data);
     return checkVerifyCodeResponse;
@@ -169,7 +169,8 @@ class ApiModel {
 
   Future<GetSavedSearchResponse> getSavedSearch(
       GetSavedSearchRequest data) async {
-    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    final response = await _dio.post(PathName.getSavedSearch, data: data.toJson());
+    print(response.data);
     GetSavedSearchResponse getSavedSearchResponse =
         GetSavedSearchResponse.fromJson(response.data);
     return getSavedSearchResponse;
@@ -177,28 +178,28 @@ class ApiModel {
 
   Future<DelSavedSearchResponse> delSavedSearch(
       DelSavedSearchRequest data) async {
-    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    final response = await _dio.post(PathName.delSavedSearch, data: data.toJson());
     DelSavedSearchResponse delSavedSearchResponse =
         DelSavedSearchResponse.fromJson(response.data);
     return delSavedSearchResponse;
   }
 
   Future<SetDevtokenResponse> setDevtoken(SetDevtokenRequest data) async {
-    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    final response = await _dio.post(PathName.setDevToken, data: data.toJson());
     SetDevtokenResponse setDevtokenResponse =
         SetDevtokenResponse.fromJson(response.data);
     return setDevtokenResponse;
   }
 
   Future<GetUserInfoResponse> getUserInfo(GetUserInfoRequest data) async {
-    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    final response = await _dio.post(PathName.getUserInfo, data: data.toJson());
     GetUserInfoResponse getUserInfoResponse =
         GetUserInfoResponse.fromJson(response.data);
     return getUserInfoResponse;
   }
 
   Future<SetUserInfoResponse> setUserInfo(SetUserInfoRequest data) async {
-    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    final response = await _dio.post(PathName.setUserInfo, data: data.toJson());
     SetUserInfoResponse setUserInfoResponse =
         SetUserInfoResponse.fromJson(response.data);
     return setUserInfoResponse;
@@ -206,7 +207,7 @@ class ApiModel {
 
   Future<GetListConversationResponse> getListConversation(
       GetListConversationRequest data) async {
-    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    final response = await _dio.post(PathName.getListConversation, data: data.toJson());
     GetListConversationResponse getListConversationResponse =
         GetListConversationResponse.fromJson(response.data);
     return getListConversationResponse;
@@ -214,7 +215,7 @@ class ApiModel {
 
   Future<GetConversationResponse> getConversation(
       GetConversationRequest data) async {
-    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    final response = await _dio.post(PathName.getConversation, data: data.toJson());
     GetConversationResponse getConversationResponse =
         GetConversationResponse.fromJson(response.data);
     return getConversationResponse;
@@ -222,14 +223,14 @@ class ApiModel {
 
   Future<SetReadMessageResponse> setReadMessage(
       SetReadMessageRequest data) async {
-    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    final response = await _dio.post(PathName.setReadMessage, data: data.toJson());
     SetReadMessageResponse setReadMessageResponse =
         SetReadMessageResponse.fromJson(response.data);
     return setReadMessageResponse;
   }
 
   Future<DeleteMessageResponse> deleteMessage(DeleteMessageRequest data) async {
-    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    final response = await _dio.post(PathName.deleteMessage, data: data.toJson());
     DeleteMessageResponse deleteMessageResponse =
         DeleteMessageResponse.fromJson(response.data);
     return deleteMessageResponse;
@@ -237,7 +238,7 @@ class ApiModel {
 
   Future<DeleteConversationResponse> deleteConversation(
       DeleteConversationRequest data) async {
-    final response = await _dio.post(PathName.signIn, data: data.toJson());
+    final response = await _dio.post(PathName.deleteConversation, data: data.toJson());
     DeleteConversationResponse deleteConversationResponse =
         DeleteConversationResponse.fromJson(response.data);
     return deleteConversationResponse;

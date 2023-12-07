@@ -39,10 +39,10 @@ class SetUserInfoRequest {
 
 @customJsonSerializable
 class GetUserInfoRequest {
-  final String token;
-  final String? userId;
+  final String? token;
+  final int? userId;
 
-  GetUserInfoRequest({required this.token, this.userId});
+  GetUserInfoRequest({this.token, this.userId});
 
   Map<String, dynamic> toJson() => _$GetUserInfoRequestToJson(this);
 

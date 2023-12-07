@@ -7,8 +7,10 @@ class GetListConversationResponse {
   final int code;
   final String message;
   final List<ListConversationData> data;
+  @JsonKey(name: 'numNewMessage')
+  final int numNewMessage;
   GetListConversationResponse(
-      {required this.code, required this.message, required this.data});
+      {required this.code, required this.message, required this.data, required this.numNewMessage});
   factory GetListConversationResponse.fromJson(Map<String, dynamic> json) =>
       _$GetListConversationResponseFromJson(json);
   Map<String, dynamic> toJson() => _$GetListConversationResponseToJson(this);
@@ -18,6 +20,7 @@ class GetListConversationResponse {
 class ListConversationData {
   final String id;
   final PartnerData partner;
+  @JsonKey(name: 'lastMessage')
   final MessageData lastMessage;
 
   ListConversationData(
@@ -126,4 +129,12 @@ class DeleteConversationResponse {
   factory DeleteConversationResponse.fromJson(Map<String, dynamic> json) =>
       _$DeleteConversationResponseFromJson(json);
   Map<String, dynamic> toJson() => _$DeleteConversationResponseToJson(this);
+}
+
+void main() {
+  Map<String, dynamic> data =  {"code": 1000, "message": "OK", "data": [{"id": 0, "partner": {"id": 0, "username": "aloha", "avatar": "https://images.rawpixel.com/image_png_600/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTA3L3JvYl9yYXdwaXhlbF9hX3N0dWRpb19waG90b19vZl9hX3B1Z19mdWxsX2JvZHlfaXNvbGF0ZWRfb25fd2hpdF84MjQ0ZjE0Ny1kMDQ4LTRjNWYtYTVjYi1mYWE3YzQwMWI1YzctNXgtaHEtc2NhbGUtNV8wMHgtam9iMTg5NF8xLnBuZw.png"}, "lastMessage": {
+    "message": "Xin chao. Toi la Aloha", "created": "2023-11-10", "unread": 1}}], "numNewMessage": 1};
+  final getListConversationResponse =
+      GetListConversationResponse.fromJson(data);
+  print(getListConversationResponse.data[0].lastMessage.message);
 }

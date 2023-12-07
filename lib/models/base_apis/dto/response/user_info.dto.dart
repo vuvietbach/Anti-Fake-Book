@@ -16,7 +16,7 @@ class SetUserInfoResponse {
 
 @customJsonSerializable
 class UserInfoData {
-  final String id;
+  final int id;
   final String username;
   final String created;
   final String description;
@@ -32,7 +32,7 @@ class UserInfoData {
   final int coins;
 
   const UserInfoData({
-    this.id = "",
+    this.id = -1,
     this.username = "",
     this.created = "",
     this.description = "",

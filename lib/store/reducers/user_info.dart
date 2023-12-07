@@ -1,3 +1,4 @@
+import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
 import 'package:anti_fake_book/store/actions/user_info.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/utils.dart';
@@ -15,8 +16,13 @@ AntiFakeBookState onSuccessGetUserInfo(
   }
   AntiFakeBookState newState = state;
   if (isSuccessCode(action.payload.code)) {
+    UserInfoData userInfo = state.userState.userInfo;
+    if(action.extras['userId'] == null) {
+      userInfo = action.payload.data;
+    }
     newState = state.copyWith(
       userState: state.userState.copyWith(
+        userInfo: userInfo,
         searchedUserInfo: action.payload.data,
       ),
     );

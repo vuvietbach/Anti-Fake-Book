@@ -47,7 +47,6 @@ class GetVerifyCodeRequest {
 @customJsonSerializable
 class CheckVerifyCodeRequest {
   final String email;
-
   @JsonKey(name: "code_verify")
   final String codeVerify;
 

@@ -33,7 +33,8 @@ class GetUserInfoAction
       : super(future: ApiModel.api.getUserInfo(data), extras: {
           'onSuccess': onSuccess,
           'onPending': onPending,
-          'onError': onError
+          'onError': onError,
+          'userId': data.userId,
         });
 }
 

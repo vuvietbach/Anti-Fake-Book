@@ -49,10 +49,21 @@ class SearchPage extends StatelessWidget {
             icon: const Icon(Icons.arrow_back, color: Colors.black),
           ),
           title: CustomSearchBar(
-              searchCallback: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SearchResultPage()))),
+            searchCallback: () => {
+              // store.dispatch(GetSavedSearchAction(
+              //   // TODO: What is the meaning of index and count?
+              //   data: GetSavedSearchRequest(
+              //     token: store.state.userState.token,
+              //     index: 0,
+              //     count: 20,
+              //   ),
+              // ))
+            },
+            // searchCallback: () => Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => const SearchResultPage()))
+          ),
         ),
         body: Column(
           children: [
@@ -233,7 +244,7 @@ class _SearchHistoryState extends State<SearchHistory> {
               style: TextStyle(color: Theme.of(context).primaryColor),
             ),
           ),
-          const TimestampSearchSection()
+          const Expanded(child: TimestampSearchSection())
         ]),
       ),
     );
@@ -250,29 +261,31 @@ class TimestampSearchSection extends StatelessWidget {
     return StoreBuilder(
         builder: (BuildContext context, Store<AntiFakeBookState> store) {
       List<SavedSearchData> searchHistory = store.state.searchState.savedSearch;
-      return ListView.builder(itemBuilder: (context, index) {
-        if (index == 0 ||
-            (index > 0 &&
-                searchHistory[index].created !=
-                    searchHistory[index - 1].created)) {
-          DateTime date = DateTime.parse(searchHistory[index].created);
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text("${date.day} tháng ${date.month} ${date.year}",
-                    style: const TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.bold)),
-              ),
-              SearchHistoryItem(
-                  data: store.state.searchState.savedSearch[index])
-            ],
-          );
-        } else {
-          return SearchHistoryItem(
-              data: store.state.searchState.savedSearch[index]);
-        }
-      });
+      return ListView.builder(
+          itemCount: searchHistory.length,
+          itemBuilder: (context, index) {
+            if (index == 0 ||
+                (index > 0 &&
+                    searchHistory[index].created !=
+                        searchHistory[index - 1].created)) {
+              DateTime date = DateTime.parse(searchHistory[index].created);
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("${date.day} tháng ${date.month} ${date.year}",
+                        style: const TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold)),
+                  ),
+                  SearchHistoryItem(
+                      data: store.state.searchState.savedSearch[index])
+                ],
+              );
+            } else {
+              return SearchHistoryItem(
+                  data: store.state.searchState.savedSearch[index]);
+            }
+          });
     });
   }
 }
