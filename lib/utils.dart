@@ -166,13 +166,7 @@ Future showLoadingDialog(BuildContext context) async {
   }
 }
 
-enum PageType {
-  signIn,
-  signUp,
-  other,
-  getVerifyCode,
-  checkVerifyCode
-}
+enum PageType { signIn, signUp, other, getVerifyCode, checkVerifyCode }
 
 const int NetworkErrorCode = 0;
 
@@ -204,9 +198,9 @@ Future showErrorDialog(BuildContext context, int code,
         if (code == 9995 || code == 1004 || code == 9996) {
           title = "Mã xác thực không hợp lệ";
           content = "Vui lòng kiểm tra mã xác thực";
-        } 
+        }
       }
-    } 
+    }
     showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
@@ -287,6 +281,7 @@ String timeAgo(DateTime created) {
   difference = DateTime.now().difference(created).inSeconds;
   return '$difference giây';
 }
+
 bool isSuccessCode(int code) {
   return code == 1000;
 }

@@ -14,7 +14,6 @@ class ContinueButton extends StatelessWidget {
       text: "Tiếp tục",
       onPressed: () {
         if (validate?.call() ?? true) {
-          
           FocusScope.of(context).unfocus();
           pageController.nextPage(
             duration: const Duration(milliseconds: 500),

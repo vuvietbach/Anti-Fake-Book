@@ -7,7 +7,8 @@ class OtherUserProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(color: Colors.black, onPressed: () => Navigator.pop(context)),
+        leading: BackButton(
+            color: Colors.black, onPressed: () => Navigator.pop(context)),
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),

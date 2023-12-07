@@ -87,8 +87,6 @@ class AvatarSection extends StatelessWidget {
       ),
     );
   }
-
-
 }
 
 class Section extends StatelessWidget {

@@ -74,7 +74,6 @@ class PrimaryButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(30.0),
         ),
         child: ElevatedButton(
-            onPressed: onPressed as void Function()?,
-            child: Text(text ?? "")));
+            onPressed: onPressed as void Function()?, child: Text(text ?? "")));
   }
 }

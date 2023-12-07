@@ -97,5 +97,4 @@ typedef SuccessCheckVerifyCodeAction
     = FutureSucceededAction<CheckVerifyCodeAction, CheckVerifyCodeResponse>;
 typedef PendingCheckVerifyCodeAction
     = FuturePendingAction<CheckVerifyCodeAction>;
-typedef ErrorCheckVerifyCodeAction
-    = FutureFailedAction<CheckVerifyCodeAction>;
+typedef ErrorCheckVerifyCodeAction = FutureFailedAction<CheckVerifyCodeAction>;

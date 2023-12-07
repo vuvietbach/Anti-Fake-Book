@@ -28,8 +28,10 @@ abstract class PathName {
   static String getSavedSearch = '/get_saved_search'; // da xong
   static String delSavedSearch = '/del_saved_search'; // da xong
   // Tuan 10
-  static String setReadNotification = '/set_read_notification'; // chua xong, chua hieu cong nghe
-  static String setDevToken = '/set_devtoken'; // da xong, nhung ma lam the nao de moi khi khoi dong lai thi gui
+  static String setReadNotification =
+      '/set_read_notification'; // chua xong, chua hieu cong nghe
+  static String setDevToken =
+      '/set_devtoken'; // da xong, nhung ma lam the nao de moi khi khoi dong lai thi gui
   static String setUserInfo = '/set_user_info'; // da xong
   // Tuan 11
   static String getListConversation = '/get_list_conversation'; // da xong

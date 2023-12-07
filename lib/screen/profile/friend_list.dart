@@ -60,17 +60,20 @@ class FriendList extends StatelessWidget {
                               child: Column(children: [
                                 ListTile(
                                   leading: const Icon(Icons.person_add),
-                                  title: const Text("Xem bạn bè của Vũ Việt Bách"),
+                                  title:
+                                      const Text("Xem bạn bè của Vũ Việt Bách"),
                                   onTap: () => {},
                                 ),
                                 ListTile(
                                   leading: const Icon(Icons.chat),
-                                  title: const Text("Nhắn tin cho Vũ Việt Bách"),
+                                  title:
+                                      const Text("Nhắn tin cho Vũ Việt Bách"),
                                   onTap: () => {},
                                 ),
                                 ListTile(
                                   leading: const Icon(Icons.account_circle),
-                                  title: const Text("Xem trang cá nhân của Vũ Việt Bách"),
+                                  title: const Text(
+                                      "Xem trang cá nhân của Vũ Việt Bách"),
                                   onTap: () => {},
                                 ),
                                 ListTile(
@@ -82,7 +85,8 @@ class FriendList extends StatelessWidget {
                                 ),
                                 ListTile(
                                   leading: const Icon(Icons.person_remove),
-                                  title: const Text("Hủy kết bạn với Vũ Việt Bách"),
+                                  title: const Text(
+                                      "Hủy kết bạn với Vũ Việt Bách"),
                                   subtitle: const Text(
                                       "Xóa Vũ Việt Bách khỏi danh sách bạn bè."),
                                   onTap: () => {},

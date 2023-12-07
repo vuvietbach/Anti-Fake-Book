@@ -141,7 +141,8 @@ class _SignInState extends State<SignIn> {
                                       token: data.data.token),
                                   onSuccess: (GetUserInfoResponse data) {
                                     if (data.code == 1000) {
-                                      print(store.state.userState.userInfo.username);
+                                      print(store
+                                          .state.userState.userInfo.username);
                                       // context.go("/home");
                                     } else {
                                       // showErrorDialog(context, data.code,

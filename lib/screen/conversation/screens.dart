@@ -100,7 +100,7 @@ class WaitingMessage extends StatelessWidget {
 
 class NewMessage extends StatelessWidget {
   const NewMessage({super.key});
-  static const  imageUrl =
+  static const imageUrl =
       'https://images.rawpixel.com/image_600/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTA4L3Jhd3BpeGVsX29mZmljZV8yNF9pbGx1c3RyYXRpb25fb2ZfYV9sYWJyYWRvcl9mdWxsX2JvZHlfc2l0dGluZ19kN2E1NjhkMS01MTBjLTRjMjktYTRmNS04YzExYTNlYmJkOTZfMS5qcGc.jpg';
 
   @override

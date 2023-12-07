@@ -278,7 +278,9 @@ class _EditAvatarState extends State<EditAvatar> {
           children: [
             CircleAvatar(
               radius: 60.0,
-              backgroundImage: pickedFile != null ? FileImage(File(pickedFile!)) as ImageProvider: const AssetImage('assets/images/avatar.jpeg'),
+              backgroundImage: pickedFile != null
+                  ? FileImage(File(pickedFile!)) as ImageProvider
+                  : const AssetImage('assets/images/avatar.jpeg'),
             ),
             const SizedBox(
               height: 20.0,
@@ -359,7 +361,9 @@ class _EditCoverImageState extends State<EditCoverImage> {
         child: Column(
           children: [
             CoverImage(
-              image: (pickedFile != null) ? FileImage(File(pickedFile!)) as ImageProvider : const AssetImage('assets/images/background.jpeg'),
+              image: (pickedFile != null)
+                  ? FileImage(File(pickedFile!)) as ImageProvider
+                  : const AssetImage('assets/images/background.jpeg'),
             ),
             const SizedBox(
               height: 20.0,
@@ -418,4 +422,3 @@ class _EditCoverImageState extends State<EditCoverImage> {
             ));
   }
 }
-

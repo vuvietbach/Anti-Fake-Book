@@ -107,7 +107,8 @@ class _SignUpState extends State<SignUp> {
                                   duration: const Duration(milliseconds: 500),
                                   curve: Curves.ease);
                             } else {
-                              showErrorDialog(context, response.code, pageType: PageType.signUp);
+                              showErrorDialog(context, response.code,
+                                  pageType: PageType.signUp);
                             }
                           },
                           onPending: () {

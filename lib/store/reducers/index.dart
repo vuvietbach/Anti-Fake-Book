@@ -66,7 +66,6 @@ final antiFakeBookReducers = combineReducers<AntiFakeBookState>([
   // TypedReducer<AntiFakeBookState, SuccessDeleteConversationAction>(onSuccessDeleteConversation),
 ]);
 
-AntiFakeBookState onNetworkError(
-    AntiFakeBookState state,  action) {
+AntiFakeBookState onNetworkError(AntiFakeBookState state, action) {
   return state;
 }

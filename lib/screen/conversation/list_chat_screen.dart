@@ -37,13 +37,14 @@ class ChatMainPage extends StatelessWidget {
             child: InkWell(
               onTap: () {
                 store.dispatch(GetListConversationAction(
-                  data: GetListConversationRequest(
-                    index: '$DEFAULT_INDEX',
-                    count: '$DEFAULT_COUNT',
-                    token: store.state.userState.token,
-                  ),
-                  onPending: () {showLoadingDialog(context);}
-                ));
+                    data: GetListConversationRequest(
+                      index: '$DEFAULT_INDEX',
+                      count: '$DEFAULT_COUNT',
+                      token: store.state.userState.token,
+                    ),
+                    onPending: () {
+                      showLoadingDialog(context);
+                    }));
                 // Navigator.of(context).push(MaterialPageRoute(
                 //   builder: (context) => const Profile(),
                 // ));

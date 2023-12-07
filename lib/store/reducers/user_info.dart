@@ -17,7 +17,7 @@ AntiFakeBookState onSuccessGetUserInfo(
   AntiFakeBookState newState = state;
   if (isSuccessCode(action.payload.code)) {
     UserInfoData userInfo = state.userState.userInfo;
-    if(action.extras['userId'] == null) {
+    if (action.extras['userId'] == null) {
       userInfo = action.payload.data;
     }
     newState = state.copyWith(

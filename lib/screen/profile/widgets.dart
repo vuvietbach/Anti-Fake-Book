@@ -202,4 +202,3 @@ class GeneralInfo extends StatelessWidget {
     );
   }
 }
-
