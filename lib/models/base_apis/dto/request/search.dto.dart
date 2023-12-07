@@ -16,12 +16,11 @@ class SearchRequest {
       required this.userId,
       required this.index,
       required this.count});
-  
+
   factory SearchRequest.fromJson(Map<String, dynamic> json) =>
       _$SearchRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$SearchRequestToJson(this);
-
 }
 
 @JsonSerializable()
@@ -29,8 +28,9 @@ class GetSavedSearchRequest {
   final String token;
   final int index;
   final int count;
-  GetSavedSearchRequest({required this.token, required this.index, required this.count});
-  
+  GetSavedSearchRequest(
+      {required this.token, required this.index, required this.count});
+
   factory GetSavedSearchRequest.fromJson(Map<String, dynamic> json) =>
       _$GetSavedSearchRequestFromJson(json);
 
@@ -42,14 +42,12 @@ class DelSavedSearchRequest {
   final String token;
   @JsonKey(name: "search_id")
   final String? searchId;
-  final String? all; 
+  final String? all;
 
   DelSavedSearchRequest({required this.token, this.searchId, this.all});
-  
+
   factory DelSavedSearchRequest.fromJson(Map<String, dynamic> json) =>
       _$DelSavedSearchRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$DelSavedSearchRequestToJson(this);
-
 }
-

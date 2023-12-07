@@ -1,4 +1,3 @@
-
 class ChangeInfoAfterSignUpRequest {
   final String token;
   final String username;

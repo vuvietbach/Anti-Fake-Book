@@ -9,7 +9,8 @@ class GetListConversationResponse {
   final List<ListConversationData> data;
   GetListConversationResponse(
       {required this.code, required this.message, required this.data});
-  factory GetListConversationResponse.fromJson(Map<String, dynamic> json) => _$GetListConversationResponseFromJson(json);
+  factory GetListConversationResponse.fromJson(Map<String, dynamic> json) =>
+      _$GetListConversationResponseFromJson(json);
   Map<String, dynamic> toJson() => _$GetListConversationResponseToJson(this);
 }
 
@@ -19,8 +20,10 @@ class ListConversationData {
   final PartnerData partner;
   final MessageData lastMessage;
 
-  ListConversationData({required this.id, required this.partner, required this.lastMessage});
-  factory ListConversationData.fromJson(Map<String, dynamic> json) => _$ListConversationDataFromJson(json);
+  ListConversationData(
+      {required this.id, required this.partner, required this.lastMessage});
+  factory ListConversationData.fromJson(Map<String, dynamic> json) =>
+      _$ListConversationDataFromJson(json);
   Map<String, dynamic> toJson() => _$ListConversationDataToJson(this);
 }
 
@@ -31,9 +34,9 @@ class PartnerData {
   final String avatar;
 
   PartnerData({required this.id, required this.username, required this.avatar});
-  factory PartnerData.fromJson(Map<String, dynamic> json) => _$PartnerDataFromJson(json);
+  factory PartnerData.fromJson(Map<String, dynamic> json) =>
+      _$PartnerDataFromJson(json);
   Map<String, dynamic> toJson() => _$PartnerDataToJson(this);
-
 }
 
 @customJsonSerializable
@@ -42,10 +45,11 @@ class MessageData {
   final String created;
   final int unread;
 
-  MessageData({required this.message, required this.created, required this.unread});
-  factory MessageData.fromJson(Map<String, dynamic> json) => _$MessageDataFromJson(json);
+  MessageData(
+      {required this.message, required this.created, required this.unread});
+  factory MessageData.fromJson(Map<String, dynamic> json) =>
+      _$MessageDataFromJson(json);
   Map<String, dynamic> toJson() => _$MessageDataToJson(this);
-  
 }
 
 @customJsonSerializable
@@ -55,7 +59,8 @@ class GetConversationResponse {
   final ConversationMetadata data;
   GetConversationResponse(
       {required this.code, required this.message, required this.data});
-  factory GetConversationResponse.fromJson(Map<String, dynamic> json) => _$GetConversationResponseFromJson(json);
+  factory GetConversationResponse.fromJson(Map<String, dynamic> json) =>
+      _$GetConversationResponseFromJson(json);
   Map<String, dynamic> toJson() => _$GetConversationResponseToJson(this);
 }
 
@@ -63,11 +68,12 @@ class GetConversationResponse {
 class ConversationMetadata {
   @JsonKey(name: 'is_blocked')
   final int isBlocked;
-  
+
   final List<ConversationData> conversation;
 
   ConversationMetadata({required this.isBlocked, required this.conversation});
-  factory ConversationMetadata.fromJson(Map<String, dynamic> json) => _$ConversationMetadataFromJson(json);
+  factory ConversationMetadata.fromJson(Map<String, dynamic> json) =>
+      _$ConversationMetadataFromJson(json);
   Map<String, dynamic> toJson() => _$ConversationMetadataToJson(this);
 }
 
@@ -80,8 +86,14 @@ class ConversationData {
   final int unread;
   final PartnerData sender;
 
-  ConversationData({required this.message, required this.messageId, required this.created, required this.unread, required this.sender});
-  factory ConversationData.fromJson(Map<String, dynamic> json) => _$ConversationDataFromJson(json);
+  ConversationData(
+      {required this.message,
+      required this.messageId,
+      required this.created,
+      required this.unread,
+      required this.sender});
+  factory ConversationData.fromJson(Map<String, dynamic> json) =>
+      _$ConversationDataFromJson(json);
   Map<String, dynamic> toJson() => _$ConversationDataToJson(this);
 }
 
@@ -90,7 +102,8 @@ class SetReadMessageResponse {
   final int code;
   final String message;
   SetReadMessageResponse({required this.code, required this.message});
-  factory SetReadMessageResponse.fromJson(Map<String, dynamic> json) => _$SetReadMessageResponseFromJson(json);
+  factory SetReadMessageResponse.fromJson(Map<String, dynamic> json) =>
+      _$SetReadMessageResponseFromJson(json);
   Map<String, dynamic> toJson() => _$SetReadMessageResponseToJson(this);
 }
 
@@ -99,7 +112,8 @@ class DeleteMessageResponse {
   final int code;
   final String message;
   DeleteMessageResponse({required this.code, required this.message});
-  factory DeleteMessageResponse.fromJson(Map<String, dynamic> json) => _$DeleteMessageResponseFromJson(json);
+  factory DeleteMessageResponse.fromJson(Map<String, dynamic> json) =>
+      _$DeleteMessageResponseFromJson(json);
   Map<String, dynamic> toJson() => _$DeleteMessageResponseToJson(this);
 }
 
@@ -108,6 +122,7 @@ class DeleteConversationResponse {
   final int code;
   final String message;
   DeleteConversationResponse({required this.code, required this.message});
-  factory DeleteConversationResponse.fromJson(Map<String, dynamic> json) => _$DeleteConversationResponseFromJson(json);
+  factory DeleteConversationResponse.fromJson(Map<String, dynamic> json) =>
+      _$DeleteConversationResponseFromJson(json);
   Map<String, dynamic> toJson() => _$DeleteConversationResponseToJson(this);
 }

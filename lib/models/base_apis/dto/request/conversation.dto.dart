@@ -7,10 +7,11 @@ class GetListConversationRequest {
   final String token;
   final String index;
   final String count;
-  GetListConversationRequest({required this.token, required this.index, required this.count});
+  GetListConversationRequest(
+      {required this.token, required this.index, required this.count});
   factory GetListConversationRequest.fromJson(Map<String, dynamic> json) =>
       _$GetListConversationRequestFromJson(json);
-  
+
   Map<String, dynamic> toJson() => _$GetListConversationRequestToJson(this);
 }
 
@@ -23,10 +24,15 @@ class GetConversationRequest {
   final String? conversationId;
   final String index;
   final String count;
-  GetConversationRequest({required this.token, this.conversationId, this.partnerId ,required this.index, required this.count});
+  GetConversationRequest(
+      {required this.token,
+      this.conversationId,
+      this.partnerId,
+      required this.index,
+      required this.count});
   factory GetConversationRequest.fromJson(Map<String, dynamic> json) =>
       _$GetConversationRequestFromJson(json);
-  
+
   Map<String, dynamic> toJson() => _$GetConversationRequestToJson(this);
 }
 
@@ -37,7 +43,8 @@ class SetReadMessageRequest {
   final String? partnerId;
   @JsonKey(name: "conversation_id")
   final String? conversationId;
-  SetReadMessageRequest({required this.token, this.conversationId, this.partnerId});
+  SetReadMessageRequest(
+      {required this.token, this.conversationId, this.partnerId});
   factory SetReadMessageRequest.fromJson(Map<String, dynamic> json) =>
       _$SetReadMessageRequestFromJson(json);
   Map<String, dynamic> toJson() => _$SetReadMessageRequestToJson(this);
@@ -52,7 +59,11 @@ class DeleteMessageRequest {
   final String? conversationId;
   @JsonKey(name: "partner_id")
   final String? partnerId;
-  DeleteMessageRequest({required this.token, required this.messageId, this.conversationId, this.partnerId});
+  DeleteMessageRequest(
+      {required this.token,
+      required this.messageId,
+      this.conversationId,
+      this.partnerId});
   factory DeleteMessageRequest.fromJson(Map<String, dynamic> json) =>
       _$DeleteMessageRequestFromJson(json);
   Map<String, dynamic> toJson() => _$DeleteMessageRequestToJson(this);
@@ -65,9 +76,9 @@ class DeleteConversationRequest {
   final String? conversationId;
   @JsonKey(name: "partner_id")
   final String? partnerId;
-  DeleteConversationRequest({required this.token, this.conversationId, this.partnerId});
+  DeleteConversationRequest(
+      {required this.token, this.conversationId, this.partnerId});
   factory DeleteConversationRequest.fromJson(Map<String, dynamic> json) =>
       _$DeleteConversationRequestFromJson(json);
   Map<String, dynamic> toJson() => _$DeleteConversationRequestToJson(this);
-  
 }

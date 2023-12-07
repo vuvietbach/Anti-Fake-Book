@@ -7,8 +7,7 @@ part 'auth.dto.g.dart';
 class SignUpResponse {
   final int code;
   final String message;
-  SignUpResponse(
-      {required this.code, required this.message});
+  SignUpResponse({required this.code, required this.message});
 
   factory SignUpResponse.fromJson(Map<String, dynamic> json) =>
       _$SignUpResponseFromJson(json);
@@ -39,13 +38,18 @@ class SignInResponseData {
   final int active;
   final int coins;
 
-  SignInResponseData({required this.id, required this.username, required this.token, required this.avatar, required this.active, required this.coins});
-  
+  SignInResponseData(
+      {required this.id,
+      required this.username,
+      required this.token,
+      required this.avatar,
+      required this.active,
+      required this.coins});
+
   factory SignInResponseData.fromJson(Map<String, dynamic> json) =>
       _$SignInResponseDataFromJson(json);
   Map<String, dynamic> toJson() => _$SignInResponseDataToJson(this);
 }
-
 
 @customJsonSerializable
 class GetVerifyCodeResponse {
@@ -66,8 +70,7 @@ class GetVerifyCodeResponse {
 class CheckVerifyCodeResponse {
   final int code;
   final String message;
-  CheckVerifyCodeResponse(
-      {required this.code, required this.message});
+  CheckVerifyCodeResponse({required this.code, required this.message});
 
   factory CheckVerifyCodeResponse.fromJson(Map<String, dynamic> json) =>
       _$CheckVerifyCodeResponseFromJson(json);
@@ -79,8 +82,7 @@ class CheckVerifyCodeResponse {
 class LogOutResponse {
   final int code;
   final String message;
-  LogOutResponse(
-      {required this.code, required this.message});
+  LogOutResponse({required this.code, required this.message});
 
   factory LogOutResponse.fromJson(Map<String, dynamic> json) =>
       _$LogOutResponseFromJson(json);

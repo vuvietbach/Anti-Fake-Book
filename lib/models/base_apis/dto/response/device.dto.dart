@@ -1,4 +1,3 @@
-
 import 'package:anti_fake_book/utils.dart';
 part 'device.dto.g.dart';
 

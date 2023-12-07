@@ -16,7 +16,6 @@ class GetSavedSearchResponse {
   factory GetSavedSearchResponse.fromJson(Map<String, dynamic> json) =>
       _$GetSavedSearchResponseFromJson(json);
   Map<String, dynamic> toJson() => _$GetSavedSearchResponseToJson(this);
-  
 }
 
 @customJsonSerializable
@@ -25,7 +24,8 @@ class SavedSearchData {
   final String code;
   final String created;
 
-  SavedSearchData({required this.id, required this.code, required this.created});
+  SavedSearchData(
+      {required this.id, required this.code, required this.created});
   factory SavedSearchData.fromJson(Map<String, dynamic> json) =>
       _$SavedSearchDataFromJson(json);
   Map<String, dynamic> toJson() => _$SavedSearchDataToJson(this);

@@ -208,8 +208,8 @@ class _SignUpAgeState extends State<SignUpAge> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text("Tuổi không hợp lệ"),
-              content:
-                  const Text("Người dùng phải từ 13 tuổi trở lên để sử dụng Anti-Fakebook"),
+              content: const Text(
+                  "Người dùng phải từ 13 tuổi trở lên để sử dụng Anti-Fakebook"),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
@@ -557,16 +557,15 @@ class _PolicyScreenState extends State<PolicyScreen> {
   @override
   Widget build(BuildContext context) {
     return StoreBuilder(
-      builder: (BuildContext context, Store<AntiFakeBookState> store) {
-        return WebViewWidget(
-            controller: WebViewController()
-              ..setJavaScriptMode(JavaScriptMode.unrestricted)
-              ..addJavaScriptChannel("app",
-                  onMessageReceived: (JavaScriptMessage message) async {
-                    // store.dispatch(SignUpAction)
-                  })
-              ..loadFlutterAsset('assets/policy.html'));
-      }
-    );
+        builder: (BuildContext context, Store<AntiFakeBookState> store) {
+      return WebViewWidget(
+          controller: WebViewController()
+            ..setJavaScriptMode(JavaScriptMode.unrestricted)
+            ..addJavaScriptChannel("app",
+                onMessageReceived: (JavaScriptMessage message) async {
+              // store.dispatch(SignUpAction)
+            })
+            ..loadFlutterAsset('assets/policy.html'));
+    });
   }
 }
