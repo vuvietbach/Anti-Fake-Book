@@ -6,7 +6,7 @@ part 'conversation.g.dart';
 @Freezed(makeCollectionsUnmodifiable: false)
 class ConversationState with _$ConversationState {
   factory ConversationState({
-    @Default([]) List<ListConversationData> conversations,
+    @Default([]) List<ConversationInfo> conversations,
     @Default(ConversationMetadata(isBlocked: 0, conversation: []))
     ConversationMetadata currentConversation,
   }) = _ConversationState;

@@ -6,7 +6,7 @@ import 'package:redux_future_middleware/redux_future_middleware.dart';
 class SetUserInfoAction
     extends FutureAction<SetUserInfoAction, SetUserInfoResponse> {
   final SetUserInfoRequest data;
-  final Function? onSuccess;
+  final Function(SetUserInfoResponse)? onSuccess;
   final Function? onPending;
   final Function? onError;
   SetUserInfoAction(

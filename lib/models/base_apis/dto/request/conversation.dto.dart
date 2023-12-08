@@ -18,9 +18,7 @@ class GetListConversationRequest {
 @customJsonSerializable
 class GetConversationRequest {
   final String token;
-  @JsonKey(name: "partner_id")
   final String? partnerId;
-  @JsonKey(name: "conversation_id")
   final String? conversationId;
   final String index;
   final String count;
@@ -39,9 +37,7 @@ class GetConversationRequest {
 @customJsonSerializable
 class SetReadMessageRequest {
   final String token;
-  @JsonKey(name: "partner_id")
   final String? partnerId;
-  @JsonKey(name: "conversation_id")
   final String? conversationId;
   SetReadMessageRequest(
       {required this.token, this.conversationId, this.partnerId});
@@ -53,11 +49,8 @@ class SetReadMessageRequest {
 @customJsonSerializable
 class DeleteMessageRequest {
   final String token;
-  @JsonKey(name: "message_id")
   final String messageId;
-  @JsonKey(name: "conversation_id")
   final String? conversationId;
-  @JsonKey(name: "partner_id")
   final String? partnerId;
   DeleteMessageRequest(
       {required this.token,
@@ -72,9 +65,7 @@ class DeleteMessageRequest {
 @customJsonSerializable
 class DeleteConversationRequest {
   final String token;
-  @JsonKey(name: "conversation_id")
   final String? conversationId;
-  @JsonKey(name: "partner_id")
   final String? partnerId;
   DeleteConversationRequest(
       {required this.token, this.conversationId, this.partnerId});

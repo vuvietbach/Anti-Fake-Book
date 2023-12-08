@@ -1,6 +1,7 @@
 import 'package:anti_fake_book/models/base_apis/dto/request/index.dart';
 import 'package:anti_fake_book/screen/profile/change_setting/change_setting.dart';
 import 'package:anti_fake_book/screen/profile/friend_list.dart';
+import 'package:anti_fake_book/screen/profile/change_setting/screens.dart';
 import 'package:anti_fake_book/screen/profile/widgets.dart';
 import 'package:anti_fake_book/store/actions/user_info.dart';
 import 'package:anti_fake_book/store/state/index.dart';
@@ -63,7 +64,9 @@ class ProfilePage extends StatelessWidget {
                   height: 20.0,
                   thickness: 2.0,
                 ),
-                const GeneralInfoSection(),
+                const GeneralInfoSection(
+                  userType: 1,
+                ),
                 const Divider(
                   height: 20.0,
                   thickness: 2.0,

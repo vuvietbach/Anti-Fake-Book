@@ -1,14 +1,17 @@
 //Lib
 import 'package:anti_fake_book/disk.dart';
 import 'package:anti_fake_book/screen/HomePage/HomeFake.dart';
+import 'package:anti_fake_book/screen/conversation/chat_page.dart';
+import 'package:anti_fake_book/screen/conversation/list_chat_screen.dart';
 import 'package:anti_fake_book/screen/posts/report_post/confirm_report.dart';
 import 'package:anti_fake_book/screen/posts/report_post/report_post.dart';
+import 'package:anti_fake_book/screen/profile/change_setting/change_setting.dart';
 import 'package:anti_fake_book/screen/profile/routes.dart';
 import 'package:anti_fake_book/screen/search_page/search_page.dart';
 import 'package:anti_fake_book/screen/sign_in/routes.dart';
-import 'package:anti_fake_book/screen/sign_in/sign_in.dart';
 import 'package:anti_fake_book/screen/sign_up/routes.dart';
 import 'package:anti_fake_book/screen/welcome_screen.dart';
+import 'package:anti_fake_book/test.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +33,7 @@ final GoRouter _router = GoRouter(routes: [
       path: '/',
       builder: (BuildContext context, GoRouterState stage) {
         // return const EmptyLayout(child: CheckLoginWrapper(child: HomePage()));
-        return const EmptyLayout(child: SignIn());
+        return const EmptyLayout(child: ChatMainPage());
       },
       routes: [
         GoRoute(
@@ -53,7 +56,7 @@ final GoRouter _router = GoRouter(routes: [
               GoRoute(
                   path: 'report',
                   builder: (BuildContext context, GoRouterState stage) =>
-                      ReportPostScreenWidget(),
+                      const ReportPostScreenWidget(),
                   routes: [
                     GoRoute(
                         path: 'confirm',

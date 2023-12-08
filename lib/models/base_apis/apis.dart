@@ -90,15 +90,6 @@ class ApiModel {
     return ResponseDTO.fromJson(rawResponse);
   }
 
-  // Future<GetPostResponseDTO> getUserInfo(String id) async {
-  //   final response = await _dio.post(PathName.getUserInfo, data: {'id': id});
-  //   return GetPostResponseDTO(data: response.data);
-  // }
-  // Future<GetPostResponseDTO> getUserInfo(String id) async {
-  //   final response = await _dio.post(PathName.getUserInfo, data: {'id': id});
-  //   return GetPostResponseDTO(data: response.data);
-  // }
-
   Future<SignInResponse> signIn(SignInRequest data) async {
     final response = await _dio.post(PathName.signIn, data: data.toJson());
     SignInResponse signInResponse = SignInResponse.fromJson(response.data);
@@ -198,13 +189,23 @@ class ApiModel {
 
   Future<GetUserInfoResponse> getUserInfo(GetUserInfoRequest data) async {
     final response = await _dio.post(PathName.getUserInfo, data: data.toJson());
+    // print(response.data);
     GetUserInfoResponse getUserInfoResponse =
         GetUserInfoResponse.fromJson(response.data);
     return getUserInfoResponse;
   }
 
   Future<SetUserInfoResponse> setUserInfo(SetUserInfoRequest data) async {
-    final response = await _dio.post(PathName.setUserInfo, data: data.toJson());
+    FormData formData = FormData.fromMap(data.toJson());
+    if (data.avatar != null) {
+      formData.files.add(MapEntry(
+          'avatar',
+          await MultipartFile.fromFile(
+            data.avatar!,
+            filename: 'avatar',
+          )));
+    }
+    final response = await _dio.post(PathName.setUserInfo, data: data);
     SetUserInfoResponse setUserInfoResponse =
         SetUserInfoResponse.fromJson(response.data);
     return setUserInfoResponse;
@@ -223,8 +224,10 @@ class ApiModel {
       GetConversationRequest data) async {
     final response =
         await _dio.post(PathName.getConversation, data: data.toJson());
+    // rprint(response);
     GetConversationResponse getConversationResponse =
         GetConversationResponse.fromJson(response.data);
+    print(getConversationResponse.code);
     return getConversationResponse;
   }
 

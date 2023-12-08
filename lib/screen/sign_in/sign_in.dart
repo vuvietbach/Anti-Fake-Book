@@ -128,10 +128,25 @@ class _SignInState extends State<SignIn> {
                 ? null
                 : () async {
                     FocusManager.instance.primaryFocus?.unfocus();
-                    if (_formKey.currentState!.validate()) {
+                    if (_formKey.currentState!.validate() || true) {
                       SignInRequest signInData = SignInRequest(
                           email: emailController.text,
                           password: passwordController.text);
+                      // store.dispatch(GetUserInfoAction(
+                      //     data: GetUserInfoRequest(token: ""),
+                      //     onSuccess: (GetUserInfoResponse data) {
+                      //       if (data.code == 1000) {
+                      //         print(store.state.userState.userInfo.username);
+                      //         // context.go("/home");
+                      //       } else {
+                      //         // showErrorDialog(context, data.code,
+                      //         //     pageType: PageType.signIn);
+                      //       }
+                      //     },
+                      //     onPending: () {
+                      //       showLoadingDialog(context);
+                      //     }));
+
                       store.dispatch(SignInAction(
                           data: signInData,
                           onSuccess: (SignInResponse data) {
@@ -140,14 +155,9 @@ class _SignInState extends State<SignIn> {
                                   data: GetUserInfoRequest(
                                       token: data.data.token),
                                   onSuccess: (GetUserInfoResponse data) {
-                                    if (data.code == 1000) {
-                                      print(store
-                                          .state.userState.userInfo.username);
-                                      // context.go("/home");
-                                    } else {
-                                      // showErrorDialog(context, data.code,
-                                      //     pageType: PageType.signIn);
-                                    }
+                                    if (isSuccessCode(data.code)) {
+                                      context.go("/home");
+                                    } else {}
                                   },
                                   onPending: () {
                                     showLoadingDialog(context);

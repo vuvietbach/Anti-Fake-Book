@@ -6,7 +6,7 @@ part 'conversation.dto.g.dart';
 class GetListConversationResponse {
   final int code;
   final String message;
-  final List<ListConversationData> data;
+  final List<ConversationInfo> data;
   @JsonKey(name: 'numNewMessage')
   final int numNewMessage;
   GetListConversationResponse(
@@ -20,17 +20,17 @@ class GetListConversationResponse {
 }
 
 @customJsonSerializable
-class ListConversationData {
+class ConversationInfo {
   final String id;
   final PartnerData partner;
   @JsonKey(name: 'lastMessage')
   final MessageData lastMessage;
 
-  ListConversationData(
+  ConversationInfo(
       {required this.id, required this.partner, required this.lastMessage});
-  factory ListConversationData.fromJson(Map<String, dynamic> json) =>
-      _$ListConversationDataFromJson(json);
-  Map<String, dynamic> toJson() => _$ListConversationDataToJson(this);
+  factory ConversationInfo.fromJson(Map<String, dynamic> json) =>
+      _$ConversationInfoFromJson(json);
+  Map<String, dynamic> toJson() => _$ConversationInfoToJson(this);
 }
 
 @customJsonSerializable
@@ -72,9 +72,7 @@ class GetConversationResponse {
 
 @customJsonSerializable
 class ConversationMetadata {
-  @JsonKey(name: 'is_blocked')
-  final int isBlocked;
-
+  final int? isBlocked;
   final List<ConversationData> conversation;
 
   const ConversationMetadata(
@@ -87,10 +85,9 @@ class ConversationMetadata {
 @customJsonSerializable
 class ConversationData {
   final String message;
-  @JsonKey(name: 'message_id')
   final String messageId;
-  final String created;
   final int unread;
+  final String created;
   final PartnerData sender;
 
   ConversationData(
@@ -136,27 +133,62 @@ class DeleteConversationResponse {
 
 void main() {
   Map<String, dynamic> data = {
-    "code": 1000,
+    "code": "1000",
     "message": "OK",
-    "data": [
-      {
-        "id": 0,
-        "partner": {
-          "id": 0,
-          "username": "aloha",
-          "avatar":
-              "https://images.rawpixel.com/image_png_600/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTA3L3JvYl9yYXdwaXhlbF9hX3N0dWRpb19waG90b19vZl9hX3B1Z19mdWxsX2JvZHlfaXNvbGF0ZWRfb25fd2hpdF84MjQ0ZjE0Ny1kMDQ4LTRjNWYtYTVjYi1mYWE3YzQwMWI1YzctNXgtaHEtc2NhbGUtNV8wMHgtam9iMTg5NF8xLnBuZw.png"
-        },
-        "lastMessage": {
-          "message": "Xin chao. Toi la Aloha",
+    "data": {
+      "conversation": [
+        {
+          "message": "xin chào",
+          "message_id": "0",
+          "unread": "0",
           "created": "2023-11-10",
-          "unread": 1
+          "sender": {
+            "id": "0",
+            "username": "aloha",
+            "avatar":
+                "https://images.rawpixel.com/image_600/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTA3L3JvYl9yYXdwaXhlbF9hX3N0dWRpb19waG90b19vZl9hX2JvcmRlcl9jb2xsaWVfZnVsbF9ib2R5X2lzb2xhdF84YTdhNzNmMC1jZWZiLTQ3YTEtOTJiYy1mZGIwM2RkOTJkMWMtNXgtaHEtc2NhbGUtNV8wMHguanBn.jpg"
+          }
+        },
+        {
+          "message": "xin chào",
+          "message_id": "0",
+          "unread": "0",
+          "created": "2023-11-11",
+          "sender": {
+            "id": "1",
+            "username": "aloha",
+            "avatar":
+                "https://images.rawpixel.com/image_600/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTA3L3JvYl9yYXdwaXhlbF9hX3N0dWRpb19waG90b19vZl9hX2JvcmRlcl9jb2xsaWVfZnVsbF9ib2R5X2lzb2xhdF84YTdhNzNmMC1jZWZiLTQ3YTEtOTJiYy1mZGIwM2RkOTJkMWMtNXgtaHEtc2NhbGUtNV8wMHguanBn.jpg"
+          }
+        },
+        {
+          "message": "xin chào",
+          "message_id": "0",
+          "unread": "0",
+          "created": "2023-11-11",
+          "sender": {
+            "id": "1",
+            "username": "aloha",
+            "avatar":
+                "https://images.rawpixel.com/image_600/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTA3L3JvYl9yYXdwaXhlbF9hX3N0dWRpb19waG90b19vZl9hX2JvcmRlcl9jb2xsaWVfZnVsbF9ib2R5X2lzb2xhdF84YTdhNzNmMC1jZWZiLTQ3YTEtOTJiYy1mZGIwM2RkOTJkMWMtNXgtaHEtc2NhbGUtNV8wMHguanBn.jpg"
+          }
+        },
+        {
+          "message": "xin chào",
+          "message_id": "0",
+          "unread": "0",
+          "created": "2023-11-12",
+          "sender": {
+            "id": "0",
+            "username": "aloha",
+            "avatar":
+                "https://images.rawpixel.com/image_600/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTA3L3JvYl9yYXdwaXhlbF9hX3N0dWRpb19waG90b19vZl9hX2JvcmRlcl9jb2xsaWVfZnVsbF9ib2R5X2lzb2xhdF84YTdhNzNmMC1jZWZiLTQ3YTEtOTJiYy1mZGIwM2RkOTJkMWMtNXgtaHEtc2NhbGUtNV8wMHguanBn.jpg"
+          }
         }
-      }
-    ],
-    "numNewMessage": 1
+      ],
+      "is_blocked": "0"
+    }
   };
-  final getListConversationResponse =
-      GetListConversationResponse.fromJson(data);
-  print(getListConversationResponse.data[0].lastMessage.message);
+  GetConversationResponse data1 = GetConversationResponse.fromJson(data);
+  print(data1.data.conversation[0].sender.avatar);
 }

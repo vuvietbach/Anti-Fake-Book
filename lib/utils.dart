@@ -101,6 +101,7 @@ class CustomUint8ListConverter implements JsonConverter<Uint8List, dynamic> {
 const customJsonSerializable = JsonSerializable(
   fieldRename: FieldRename.snake,
   explicitToJson: true,
+  includeIfNull: false,
   converters: [
     CustomBoolConverter(),
     CustomIntConverter(),
