@@ -1,13 +1,16 @@
 //Lib
-import 'package:anti_fake_book/disk.dart';
+import 'package:anti_fake_book/services/save_to_disk_service.dart';
+import 'package:anti_fake_book/helper/helper.dart';
+import 'package:anti_fake_book/services/notification_service.dart';
 import 'package:anti_fake_book/screen/HomePage/HomeFake.dart';
+import 'package:anti_fake_book/screen/conversation/list_chat_screen.dart';
 import 'package:anti_fake_book/screen/posts/report_post/confirm_report.dart';
 import 'package:anti_fake_book/screen/posts/report_post/report_post.dart';
+import 'package:anti_fake_book/screen/profile/routes.dart';
+import 'package:anti_fake_book/screen/search_page/search_page.dart';
 import 'package:anti_fake_book/screen/sign_in/routes.dart';
 import 'package:anti_fake_book/screen/sign_up/routes.dart';
 import 'package:anti_fake_book/screen/welcome_screen.dart';
-import 'package:anti_fake_book/utils.dart';
-import 'package:anti_fake_book/widgets/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +24,6 @@ import 'package:anti_fake_book/screen/posts/emotion_list.dart';
 import 'package:anti_fake_book/layout/default_layer.dart';
 import 'package:anti_fake_book/store/reducers/index.dart';
 import 'package:anti_fake_book/store/state/index.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'layout/home_page.dart';
 
@@ -29,7 +31,8 @@ final GoRouter _router = GoRouter(routes: [
   GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState stage) {
-        return const EmptyLayout(child: CheckLoginWrapper(child: HomePage()));
+        // return const EmptyLayout(child: CheckLoginWrapper(child: HomePage()));
+        return const EmptyLayout(child: HomePage());
       },
       routes: [
         GoRoute(
@@ -52,7 +55,7 @@ final GoRouter _router = GoRouter(routes: [
               GoRoute(
                   path: 'report',
                   builder: (BuildContext context, GoRouterState stage) =>
-                      ReportPostScreenWidget(),
+                      const ReportPostScreenWidget(),
                   routes: [
                     GoRoute(
                         path: 'confirm',
@@ -83,6 +86,12 @@ final GoRouter _router = GoRouter(routes: [
         ),
         ...signInRoutes,
         signUpRoutes,
+        GoRoute(
+          path: 'search',
+          builder: (BuildContext context, GoRouterState stage) =>
+              const SearchPage(),
+        ),
+        profileRoutes,
       ]),
 ]);
 
@@ -90,12 +99,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // SharedPreferences.setMockInitialValues({"email":"", "token":"", "username":""});
   await DiskStore.init();
-
-  // await dotenv.load(fileName: ".env");
-  AntiFakeBookState initialState = AntiFakeBookState.initState();
-  final initState = DiskStore.loadAndMergeState(initialState);
+  final initialState =
+      await DiskStore.loadAndMergeState(AntiFakeBookState.initState());
+  await NotificationService.init();
+  print(await (getDeviceId()));
   final store = Store<AntiFakeBookState>(antiFakeBookReducers,
-      initialState: initState, middleware: [futureMiddleware]);
+      initialState: initialState, middleware: [futureMiddleware]);
   runApp(AntiFakeBookApp(store: store));
 }
 

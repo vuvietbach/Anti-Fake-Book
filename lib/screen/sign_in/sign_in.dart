@@ -1,5 +1,8 @@
-import 'package:anti_fake_book/constants/constants.dart';
-import 'package:anti_fake_book/models/base_apis/dto/request/sign_in.dto.dart';
+import 'package:anti_fake_book/test/common_actions.dart';
+import 'package:anti_fake_book/helper/helper.dart';
+import 'package:anti_fake_book/models/base_apis/dto/request/auth.dto.dart';
+import 'package:anti_fake_book/models/base_apis/dto/request/index.dart';
+import 'package:anti_fake_book/models/base_apis/dto/response/auth.dto.dart';
 import 'package:anti_fake_book/store/actions/auth.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/utils.dart';
@@ -125,18 +128,11 @@ class _SignInState extends State<SignIn> {
                 ? null
                 : () async {
                     FocusManager.instance.primaryFocus?.unfocus();
-                    if (_formKey.currentState!.validate() || true) {
-                      SignInRequestDTO signInData = SignInRequestDTO(
-                          email: emailController.text,
-                          password: passwordController.text);
-                      store.dispatch(SignInAction(
-                          data: signInData,
-                          onSuccess: () {
-                            context.go("/home");
-                          },
-                          onPending: () {
-                            showLoadingDialog(context);
-                          }));
+                    if (_formKey.currentState!.validate()) {
+                      // SignInRequest signInData = SignInRequest(
+                      //     email: emailController.text,
+                      //     password: passwordController.text);
+                      // signIn(context, store, signInData);
                     }
                   },
             child: const Text('Đăng nhập'),
@@ -156,6 +152,21 @@ class _SignInState extends State<SignIn> {
         child: const Text('Tạo tài khoản mới'),
       ),
     );
+  }
+
+  void signIn(BuildContext context, Store<AntiFakeBookState> store,
+      SignInRequest request) {
+    store.dispatch(SignInAction(
+        data: request,
+        onPending: () => showLoadingDialog(context),
+        onSuccess: (SignInResponse response) {
+          if (isErrorCode(response.code)) {
+            showErrorDialog(context, response.code, apiType: ApiType.signIn);
+          } else {
+            getUserInfo(store);
+            context.go("/home");
+          }
+        }));
   }
 }
 

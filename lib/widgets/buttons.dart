@@ -67,12 +67,13 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
         height: 40.0,
         width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
         child: ElevatedButton(
-            style: CustomButtonStyle.roundBorderButton(30.0),
-            onPressed: onPressed as void Function()?,
-            child: Text(text ?? "")));
+            onPressed: onPressed as void Function()?, child: Text(text ?? "")));
   }
 }
