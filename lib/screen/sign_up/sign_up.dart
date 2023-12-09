@@ -1,7 +1,10 @@
 import 'dart:math';
 
+import 'package:anti_fake_book/helper/helper.dart';
+import 'package:anti_fake_book/layout/default_layer.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/index.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/auth.dto.dart';
+import 'package:anti_fake_book/screen/sign_up/redux_actions.dart';
 import 'package:anti_fake_book/screen/sign_up/widget.dart';
 import 'package:anti_fake_book/store/actions/auth.dart';
 import 'package:anti_fake_book/store/state/index.dart';
@@ -490,15 +493,15 @@ class SaveInfo extends StatelessWidget {
   }
 }
 
-class VerifyAccount extends StatefulWidget {
-  const VerifyAccount({super.key, required this.email});
+class VerifyAccountPage extends StatefulWidget {
+  const VerifyAccountPage({super.key, required this.email});
   final String email;
 
   @override
-  State<VerifyAccount> createState() => _VerifyAccountState();
+  State<VerifyAccountPage> createState() => _VerifyAccountPageState();
 }
 
-class _VerifyAccountState extends State<VerifyAccount> {
+class _VerifyAccountPageState extends State<VerifyAccountPage> {
   final controller = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   @override
@@ -506,89 +509,100 @@ class _VerifyAccountState extends State<VerifyAccount> {
     super.initState();
   }
 
-  GetVerifyCodeAction _buildGetVerifyCodeAction(BuildContext context) {
-    return GetVerifyCodeAction(
-        data: GetVerifyCodeRequest(email: widget.email),
-        onPending: () {
-          showLoadingDialog(context);
-        },
-        onSuccess: (GetVerifyCodeResponse data) {
-          if (isSuccessCode(data.code)) {
-          } else {
-            showErrorDialog(context, data.code);
-          }
-        });
-  }
-
-  CheckVerifyCodeAction _buildCheckVerifyCodeAction(BuildContext context) {
-    return CheckVerifyCodeAction(
-        data: CheckVerifyCodeRequest(
-            email: widget.email, codeVerify: controller.text),
-        onPending: () {
-          showLoadingDialog(context);
-        },
-        onSuccess: (CheckVerifyCodeResponse data) {
-          if (isSuccessCode(data.code)) {
-            context.go("/home");
-          } else {
-            showErrorDialog(context, data.code);
-          }
-        });
+  Widget _instruction() {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Xác nhận tài khoản",
+            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+        SizedBox(
+          height: 10,
+        ),
+        Text(
+            "Chúng tôi đã gửi mã xác nhận tới email của bạn. Vui lòng kiểm tra email và nhập mã gồm 6 chữ số vào đây.",
+            style: TextStyle(fontSize: 16.0)),
+        SizedBox(
+          height: 10,
+        ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return StoreBuilder(onInit: (Store<AntiFakeBookState> store) {
-      store.dispatch(_buildGetVerifyCodeAction(context));
+      getVerifyCode(context, store, GetVerifyCodeRequest(email: widget.email));
     }, builder: (BuildContext context, Store<AntiFakeBookState> store) {
-      return Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text("Xác nhận tài khoản", style: CustomTextStyle.titleStyle),
-            const SizedBox(
-              height: 10,
+      return EmptyLayout(
+        child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {},
             ),
-            Text(
-                "Chúng tôi đã gửi mã xác nhận tới email của bạn. Vui lòng kiểm tra email và nhập mã gồm 6 chữ số vào đây.",
-                style: CustomTextStyle.normalStyle),
-            const SizedBox(
-              height: 10,
-            ),
-            buildCodeField(),
-            const SizedBox(
-              height: 10,
-            ),
-            PrimaryButton(
-              text: "Xác nhận",
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  store.dispatch(_buildCheckVerifyCodeAction(context));
-                }
-              },
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            SizedBox(
-              height: 40.0,
-              width: double.infinity,
-              child: OutlinedButton(
-                onPressed: () {
-                  store.dispatch(_buildGetVerifyCodeAction(context));
-                },
-                style: CustomButtonStyle.roundBorderButton(30.0),
-                child: const Text("Gửi lại mã"),
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+          ),
+          body: Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _instruction(),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  _codeField(),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  _confirmButton(context, store),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  _resendCodeButton(),
+                ],
               ),
-            )
-          ],
+            ),
+          ),
         ),
       );
     });
   }
 
-  Widget buildCodeField() {
+  Widget _resendCodeButton() {
+    return ResendCodeButton(
+      onPressed: () {
+        getVerifyCode(
+            context,
+            StoreProvider.of<AntiFakeBookState>(context),
+            GetVerifyCodeRequest(
+              email: widget.email,
+            ));
+      },
+    );
+  }
+
+  PrimaryButton _confirmButton(
+      BuildContext context, Store<AntiFakeBookState> store) {
+    return PrimaryButton(
+      text: "Xác nhận",
+      onPressed: () {
+        if (_formKey.currentState!.validate()) {
+          checkVerifyCode(
+              context,
+              store,
+              CheckVerifyCodeRequest(
+                  email: widget.email, codeVerify: controller.text),
+              onSuccess: () => context.go("/home"));
+        }
+      },
+    );
+  }
+
+  Widget _codeField() {
     return Container(
       alignment: Alignment.center,
       child: SizedBox(

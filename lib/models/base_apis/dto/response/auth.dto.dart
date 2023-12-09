@@ -1,5 +1,4 @@
 import 'package:anti_fake_book/utils.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 part 'auth.dto.g.dart';
 
@@ -7,12 +6,26 @@ part 'auth.dto.g.dart';
 class SignUpResponse {
   final int code;
   final String message;
-  SignUpResponse({required this.code, required this.message});
+  final SignUpResponseData data;
+
+  SignUpResponse(
+      {required this.code, required this.message, required this.data});
 
   factory SignUpResponse.fromJson(Map<String, dynamic> json) =>
       _$SignUpResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$SignUpResponseToJson(this);
+}
+
+@customJsonSerializable
+class SignUpResponseData {
+  final String verifyCode;
+
+  SignUpResponseData({required this.verifyCode});
+
+  factory SignUpResponseData.fromJson(Map<String, dynamic> json) =>
+      _$SignUpResponseDataFromJson(json);
+  Map<String, dynamic> toJson() => _$SignUpResponseDataToJson(this);
 }
 
 @customJsonSerializable
@@ -55,10 +68,10 @@ class SignInResponseData {
 class GetVerifyCodeResponse {
   final int code;
   final String message;
-  @JsonKey(name: "code_verify")
-  final String codeVerify;
+  final GetVerifyCodeResponseData data;
+
   GetVerifyCodeResponse(
-      {required this.code, required this.message, required this.codeVerify});
+      {required this.code, required this.message, required this.data});
 
   factory GetVerifyCodeResponse.fromJson(Map<String, dynamic> json) =>
       _$GetVerifyCodeResponseFromJson(json);
@@ -67,15 +80,40 @@ class GetVerifyCodeResponse {
 }
 
 @customJsonSerializable
+class GetVerifyCodeResponseData {
+  final String verifyCode;
+  GetVerifyCodeResponseData({required this.verifyCode});
+
+  factory GetVerifyCodeResponseData.fromJson(Map<String, dynamic> json) =>
+      _$GetVerifyCodeResponseDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$GetVerifyCodeResponseDataToJson(this);
+}
+
+@customJsonSerializable
 class CheckVerifyCodeResponse {
   final int code;
   final String message;
-  CheckVerifyCodeResponse({required this.code, required this.message});
+  final CheckVerifyCodeResponseData data;
+  CheckVerifyCodeResponse(
+      {required this.code, required this.message, required this.data});
 
   factory CheckVerifyCodeResponse.fromJson(Map<String, dynamic> json) =>
       _$CheckVerifyCodeResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$CheckVerifyCodeResponseToJson(this);
+}
+
+@customJsonSerializable
+class CheckVerifyCodeResponseData {
+  final String id;
+  final int active;
+  CheckVerifyCodeResponseData({required this.id, required this.active});
+
+  factory CheckVerifyCodeResponseData.fromJson(Map<String, dynamic> json) =>
+      _$CheckVerifyCodeResponseDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CheckVerifyCodeResponseDataToJson(this);
 }
 
 @customJsonSerializable
@@ -88,4 +126,42 @@ class LogOutResponse {
       _$LogOutResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$LogOutResponseToJson(this);
+}
+
+@customJsonSerializable
+class ChangeProfileAfterSignUpResponse {
+  final int code;
+  final String message;
+  final ChangeProfileAfterSignUpResponseData data;
+  ChangeProfileAfterSignUpResponse(
+      {required this.code, required this.message, required this.data});
+
+  factory ChangeProfileAfterSignUpResponse.fromJson(
+          Map<String, dynamic> json) =>
+      _$ChangeProfileAfterSignUpResponseFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$ChangeProfileAfterSignUpResponseToJson(this);
+}
+
+@customJsonSerializable
+class ChangeProfileAfterSignUpResponseData {
+  final String id;
+  final String username;
+  final String email;
+  final String created;
+  final String avatar;
+
+  ChangeProfileAfterSignUpResponseData(
+      {required this.id,
+      required this.username,
+      required this.avatar,
+      required this.email,
+      required this.created});
+
+  factory ChangeProfileAfterSignUpResponseData.fromJson(
+          Map<String, dynamic> json) =>
+      _$ChangeProfileAfterSignUpResponseDataFromJson(json);
+  Map<String, dynamic> toJson() =>
+      _$ChangeProfileAfterSignUpResponseDataToJson(this);
 }

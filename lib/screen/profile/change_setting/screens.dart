@@ -5,7 +5,6 @@ import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
 import 'package:anti_fake_book/screen/profile/change_setting/actions.dart';
 import 'package:anti_fake_book/screen/profile/widgets.dart';
 import 'package:anti_fake_book/store/state/index.dart';
-import 'package:anti_fake_book/widgets/common/image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:image_picker/image_picker.dart';
@@ -200,7 +199,6 @@ class _EditGeneralInfoPageState extends State<EditGeneralInfoPage> {
           makeSetUserInfoAction(
               context,
               SetUserInfoRequest(
-                  token: store.state.userState.token,
                   city: _controller1.text,
                   address: _controller2.text,
                   country: _controller3.text),
@@ -334,12 +332,8 @@ class _EditDescriptionState extends State<EditDescription> {
           ),
         ),
         onConfirm: () {
-          makeSetUserInfoAction(
-              context,
-              SetUserInfoRequest(
-                  token: store.state.userState.token,
-                  description: _controller.text),
-              store);
+          makeSetUserInfoAction(context,
+              SetUserInfoRequest(description: _controller.text), store);
         },
         onCancel: () {
           setState(() {
@@ -418,10 +412,7 @@ class _EditAvatarPageState extends State<EditAvatarPage> {
         onConfirm: () {
           if (pickedFile != null) {
             makeSetUserInfoAction(
-                context,
-                SetUserInfoRequest(
-                    token: store.state.userState.token, avatar: pickedFile),
-                store);
+                context, SetUserInfoRequest(avatar: pickedFile), store);
           }
         },
         onCancel: () {
@@ -534,10 +525,7 @@ class _EditBackgroundPageState extends State<EditBackgroundPage> {
         onConfirm: () {
           if (pickedFile != null) {
             makeSetUserInfoAction(
-                context,
-                SetUserInfoRequest(
-                    token: store.state.userState.token, coverImage: pickedFile),
-                store);
+                context, SetUserInfoRequest(coverImage: pickedFile), store);
           }
         },
         onCancel: () {

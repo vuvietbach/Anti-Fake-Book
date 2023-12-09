@@ -31,9 +31,9 @@ class SearchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreBuilder(onInit: (Store<AntiFakeBookState> store) {
       store.dispatch(GetSavedSearchAction(
+        token: store.state.userState.token,
         // TODO: What is the meaning of index and count?
         data: GetSavedSearchRequest(
-          token: store.state.userState.token,
           index: 0,
           count: 20,
         ),

@@ -1,5 +1,4 @@
 import 'package:anti_fake_book/utils.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 part 'auth.dto.g.dart';
 
@@ -7,7 +6,9 @@ part 'auth.dto.g.dart';
 class SignInRequest {
   final String email;
   final String password;
-  SignInRequest({required this.email, required this.password});
+  final String uuid;
+  SignInRequest(
+      {required this.email, required this.password, required this.uuid});
   factory SignInRequest.fromJson(Map<String, dynamic> json) =>
       _$SignInRequestFromJson(json);
   Map<String, dynamic> toJson() => _$SignInRequestToJson(this);
@@ -47,7 +48,6 @@ class GetVerifyCodeRequest {
 @customJsonSerializable
 class CheckVerifyCodeRequest {
   final String email;
-  @JsonKey(name: "code_verify")
   final String codeVerify;
 
   CheckVerifyCodeRequest({required this.email, required this.codeVerify});
@@ -55,4 +55,17 @@ class CheckVerifyCodeRequest {
   factory CheckVerifyCodeRequest.fromJson(Map<String, dynamic> json) =>
       _$CheckVerifyCodeRequestFromJson(json);
   Map<String, dynamic> toJson() => _$CheckVerifyCodeRequestToJson(this);
+}
+
+@customJsonSerializable
+class ChangeProfileAfterSignUpRequest {
+  final String token;
+  final String username;
+  final String? avatar;
+  ChangeProfileAfterSignUpRequest(
+      {required this.token, required this.username, required this.avatar});
+  factory ChangeProfileAfterSignUpRequest.fromJson(Map<String, dynamic> json) =>
+      _$ChangeProfileAfterSignUpRequestFromJson(json);
+  Map<String, dynamic> toJson() =>
+      _$ChangeProfileAfterSignUpRequestToJson(this);
 }

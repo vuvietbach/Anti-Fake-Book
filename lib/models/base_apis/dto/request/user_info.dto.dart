@@ -1,4 +1,5 @@
 import 'package:anti_fake_book/utils.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 part 'user_info.dto.g.dart';
 
 class ChangeInfoAfterSignUpRequest {
@@ -10,7 +11,6 @@ class ChangeInfoAfterSignUpRequest {
 
 @customJsonSerializable
 class SetUserInfoRequest {
-  final String token;
   final String? username;
   final String? description;
   final String? avatar;
@@ -21,8 +21,7 @@ class SetUserInfoRequest {
   final String? link;
 
   SetUserInfoRequest(
-      {required this.token,
-      this.username,
+      {this.username,
       this.description,
       this.avatar,
       this.address,
@@ -39,10 +38,9 @@ class SetUserInfoRequest {
 
 @customJsonSerializable
 class GetUserInfoRequest {
-  final String? token;
-  final int? userId;
+  final String? userId;
 
-  GetUserInfoRequest({this.token, this.userId});
+  GetUserInfoRequest({this.userId});
 
   Map<String, dynamic> toJson() => _$GetUserInfoRequestToJson(this);
 

@@ -20,8 +20,8 @@ abstract class PathName {
   static String logOut = '/logout';
   static String getVerifyCode = '/get_verify_code'; // da xong
   static String checkVerifyCode = '/check_verify_code'; // da xong
-  static String changeInfoAfterSignUp =
-      '/change_info_after_signup'; // can kiem tra lai
+  static String changeProfileAfterSignUp =
+      '/change_profile_after_signup'; // can kiem tra lai
 
   // tuanf 6
   static String search = '/search'; // lien quan den phan cua Quang

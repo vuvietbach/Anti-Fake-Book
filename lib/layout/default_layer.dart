@@ -1,6 +1,6 @@
+import 'package:anti_fake_book/helper/helper.dart';
 import 'package:anti_fake_book/screen/welcome_screen.dart';
 import 'package:anti_fake_book/store/state/index.dart';
-import 'package:anti_fake_book/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';

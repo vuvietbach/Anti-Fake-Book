@@ -9,7 +9,10 @@ import 'package:go_router/go_router.dart';
 final GoRoute profileRoutes = GoRoute(
     path: 'profile',
     builder: (BuildContext context, GoRouterState state) {
-      return const EmptyLayout(child: ProfilePage());
+      return const EmptyLayout(
+          child: ProfilePage(
+        userId: "",
+      ));
     },
     routes: [
       GoRoute(

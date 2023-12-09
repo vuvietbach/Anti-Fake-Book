@@ -1,6 +1,8 @@
+import 'package:anti_fake_book/helper/helper.dart';
 import 'package:anti_fake_book/layout/default_layer.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/auth.dto.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
+import 'package:anti_fake_book/screen/sign_up/redux_actions.dart';
 import 'package:anti_fake_book/store/actions/auth.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/utils.dart';
@@ -91,39 +93,34 @@ class _SignUpState extends State<SignUp> {
                 },
                 pageController: _pageController,
               ),
-              StoreBuilder(builder:
-                  (BuildContext context, Store<AntiFakeBookState> store) {
-                return PolicyScreen(
-                  onConfirm: () async {
-                    store.dispatch(
-                      SignUpAction(
-                          data: SignUpRequest(
-                              email: _email!,
-                              password: _password!,
-                              uuid: await getDeviceId()),
-                          onSuccess: (SignUpResponse response) {
-                            if (isSuccessCode(response.code)) {
-                              _pageController.nextPage(
-                                  duration: const Duration(milliseconds: 500),
-                                  curve: Curves.ease);
-                            } else {
-                              showErrorDialog(context, response.code,
-                                  pageType: PageType.signUp);
-                            }
-                          },
-                          onPending: () {
-                            showLoadingDialog(context);
-                          }),
-                    );
-                  },
-                  pageController: _pageController,
-                );
-              }),
-              VerifyAccount(
-                email: (_email ?? ""),
-              ),
+              _policyScreen(),
             ],
           ),
         ));
+  }
+
+  Widget _policyScreen() {
+    return StoreBuilder(
+        builder: (BuildContext context, Store<AntiFakeBookState> store) {
+      return PolicyScreen(
+        onConfirm: () async {
+          signUp(
+            context,
+            store,
+            SignUpRequest(
+                email: _email!,
+                password: _password!,
+                uuid: await getDeviceId()),
+            onSuccess: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (context) => VerifyAccountPage(email: _email!)),
+              );
+            },
+          );
+        },
+        pageController: _pageController,
+      );
+    });
   }
 }

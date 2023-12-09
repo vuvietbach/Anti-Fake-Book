@@ -1,5 +1,5 @@
 import 'package:anti_fake_book/constants/constants.dart';
-import 'package:anti_fake_book/disk.dart';
+import 'package:anti_fake_book/services/save_to_disk_service.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/response.dto.dart';
 import 'package:anti_fake_book/store/actions/auth.dart';
 import 'package:anti_fake_book/store/state/app.dart';
@@ -44,6 +44,30 @@ AntiFakeBookState onSignUpSuccess(
 
 AntiFakeBookState onSignUpPending(
     AntiFakeBookState state, PendingSignUpAction action) {
+  action.extras['onPending']?.call();
+  return state;
+}
+
+AntiFakeBookState onSuccessCheckVerifyCode(
+    AntiFakeBookState state, SuccessCheckVerifyCodeAction action) {
+  action.extras['onSuccess']?.call(action.payload);
+  return state;
+}
+
+AntiFakeBookState onPendingCheckVerifyCode(
+    AntiFakeBookState state, PendingCheckVerifyCodeAction action) {
+  action.extras['onPending']?.call();
+  return state;
+}
+
+AntiFakeBookState onSuccessGetVerifyCode(
+    AntiFakeBookState state, SuccessGetVerifyCodeAction action) {
+  action.extras['onSuccess']?.call(action.payload);
+  return state;
+}
+
+AntiFakeBookState onPendingGetVerifyCode(
+    AntiFakeBookState state, PendingGetVerifyCodeAction action) {
   action.extras['onPending']?.call();
   return state;
 }

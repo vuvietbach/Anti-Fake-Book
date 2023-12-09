@@ -1,17 +1,16 @@
 //Lib
-import 'package:anti_fake_book/disk.dart';
+import 'package:anti_fake_book/services/save_to_disk_service.dart';
+import 'package:anti_fake_book/helper/helper.dart';
+import 'package:anti_fake_book/services/notification_service.dart';
 import 'package:anti_fake_book/screen/HomePage/HomeFake.dart';
-import 'package:anti_fake_book/screen/conversation/chat_page.dart';
 import 'package:anti_fake_book/screen/conversation/list_chat_screen.dart';
 import 'package:anti_fake_book/screen/posts/report_post/confirm_report.dart';
 import 'package:anti_fake_book/screen/posts/report_post/report_post.dart';
-import 'package:anti_fake_book/screen/profile/change_setting/change_setting.dart';
 import 'package:anti_fake_book/screen/profile/routes.dart';
 import 'package:anti_fake_book/screen/search_page/search_page.dart';
 import 'package:anti_fake_book/screen/sign_in/routes.dart';
 import 'package:anti_fake_book/screen/sign_up/routes.dart';
 import 'package:anti_fake_book/screen/welcome_screen.dart';
-import 'package:anti_fake_book/test.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +32,7 @@ final GoRouter _router = GoRouter(routes: [
       path: '/',
       builder: (BuildContext context, GoRouterState stage) {
         // return const EmptyLayout(child: CheckLoginWrapper(child: HomePage()));
-        return const EmptyLayout(child: ChatMainPage());
+        return const EmptyLayout(child: WelcomeScreen());
       },
       routes: [
         GoRoute(
@@ -100,14 +99,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // SharedPreferences.setMockInitialValues({"email":"", "token":"", "username":""});
   await DiskStore.init();
-
-  // await dotenv.load(fileName: ".env");
-  AntiFakeBookState initialState = AntiFakeBookState.initState();
-  final initState = DiskStore.loadAndMergeState(initialState);
-  await DiskStore.test();
-  print(initState.userState.email);
+  final initialState =
+      await DiskStore.loadAndMergeState(AntiFakeBookState.initState());
+  await NotificationService.init();
+  print(await (getDeviceId()));
   final store = Store<AntiFakeBookState>(antiFakeBookReducers,
-      initialState: initState, middleware: [futureMiddleware]);
+      initialState: initialState, middleware: [futureMiddleware]);
   runApp(AntiFakeBookApp(store: store));
 }
 

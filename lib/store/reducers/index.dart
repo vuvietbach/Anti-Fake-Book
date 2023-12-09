@@ -31,6 +31,14 @@ final antiFakeBookReducers = combineReducers<AntiFakeBookState>([
   TypedReducer<AntiFakeBookState, PendingSignInAction>(onSignInPending),
   TypedReducer<AntiFakeBookState, SuccessSignUpAction>(onSignUpSuccess),
   TypedReducer<AntiFakeBookState, PendingSignUpAction>(onSignUpPending),
+  TypedReducer<AntiFakeBookState, SuccessCheckVerifyCodeAction>(
+      onSuccessCheckVerifyCode),
+  TypedReducer<AntiFakeBookState, PendingCheckVerifyCodeAction>(
+      onPendingCheckVerifyCode),
+  TypedReducer<AntiFakeBookState, SuccessGetVerifyCodeAction>(
+      onSuccessGetVerifyCode),
+  TypedReducer<AntiFakeBookState, PendingGetVerifyCodeAction>(
+      onPendingGetVerifyCode),
   TypedReducer<AntiFakeBookState, ResetResponseAction>(onResetResponse),
   TypedReducer<AntiFakeBookState, PendingReportPostAction>(onReportPostPending),
   TypedReducer<AntiFakeBookState, SuccessReportPostAction>(onReportPostSuccess),

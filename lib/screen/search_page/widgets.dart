@@ -68,9 +68,8 @@ class SearchHistoryItem extends StatelessWidget {
           IconButton(
               onPressed: () {
                 store.dispatch(DelSavedSearchAction(
-                    data: DelSavedSearchRequest(
-                        token: store.state.userState.token,
-                        searchId: data.id)));
+                    token: store.state.userState.token,
+                    data: DelSavedSearchRequest(searchId: data.id)));
               },
               icon: const Icon(Icons.close))
         ],

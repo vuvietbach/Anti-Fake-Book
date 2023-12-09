@@ -1,4 +1,5 @@
 import 'package:anti_fake_book/models/base_apis/dto/response/user_info.dto.dart';
+import 'package:anti_fake_book/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
@@ -61,5 +62,23 @@ class _TestPhoneAppState extends State<TestPhoneApp> {
       style: const TextStyle(color: Colors.blue),
       linkStyle: const TextStyle(color: Colors.blue),
     );
+  }
+}
+
+class TestLocalNotification extends StatefulWidget {
+  const TestLocalNotification({super.key});
+
+  @override
+  State<TestLocalNotification> createState() => _TestLocalNotificationState();
+}
+
+class _TestLocalNotificationState extends State<TestLocalNotification> {
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+        onPressed: () async {
+          await NotificationService.showNotification("hello", "xin chao");
+        },
+        child: const Text("show notification"));
   }
 }

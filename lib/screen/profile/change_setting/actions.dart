@@ -1,3 +1,4 @@
+import 'package:anti_fake_book/helper/helper.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/index.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/user_info.dto.dart';
 import 'package:anti_fake_book/store/actions/user_info.dart';
@@ -10,6 +11,7 @@ void makeSetUserInfoAction(BuildContext context, SetUserInfoRequest data,
     Store<AntiFakeBookState> store,
     {Function(SetUserInfoResponse)? onSuccess}) {
   store.dispatch(SetUserInfoAction(
+      token: store.state.userState.token,
       data: data,
       onSuccess: (SetUserInfoResponse response) {
         if (!isSuccessCode(response.code)) {

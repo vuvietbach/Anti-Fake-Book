@@ -5,15 +5,12 @@ part 'search.dto.g.dart';
 
 @customJsonSerializable
 class SearchRequest {
-  final String token;
   final String keyword;
-  @JsonKey(name: "user_id")
   final String userId;
   final int index;
   final int count;
   SearchRequest(
-      {required this.token,
-      required this.keyword,
+      {required this.keyword,
       required this.userId,
       required this.index,
       required this.count});
@@ -26,11 +23,9 @@ class SearchRequest {
 
 @customJsonSerializable
 class GetSavedSearchRequest {
-  final String token;
   final int index;
   final int count;
-  GetSavedSearchRequest(
-      {required this.token, required this.index, required this.count});
+  GetSavedSearchRequest({required this.index, required this.count});
 
   factory GetSavedSearchRequest.fromJson(Map<String, dynamic> json) =>
       _$GetSavedSearchRequestFromJson(json);
@@ -40,12 +35,10 @@ class GetSavedSearchRequest {
 
 @customJsonSerializable
 class DelSavedSearchRequest {
-  final String token;
-  @JsonKey(name: "search_id")
   final String? searchId;
   final String? all;
 
-  DelSavedSearchRequest({required this.token, this.searchId, this.all});
+  DelSavedSearchRequest({this.searchId, this.all});
 
   factory DelSavedSearchRequest.fromJson(Map<String, dynamic> json) =>
       _$DelSavedSearchRequestFromJson(json);

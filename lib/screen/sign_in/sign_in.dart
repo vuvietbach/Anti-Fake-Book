@@ -1,9 +1,9 @@
+import 'package:anti_fake_book/test/common_actions.dart';
+import 'package:anti_fake_book/helper/helper.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/auth.dto.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/index.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/auth.dto.dart';
-import 'package:anti_fake_book/models/base_apis/dto/response/user_info.dto.dart';
 import 'package:anti_fake_book/store/actions/auth.dart';
-import 'package:anti_fake_book/store/actions/user_info.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/utils.dart';
 import 'package:anti_fake_book/widgets/widgets.dart';
@@ -128,48 +128,11 @@ class _SignInState extends State<SignIn> {
                 ? null
                 : () async {
                     FocusManager.instance.primaryFocus?.unfocus();
-                    if (_formKey.currentState!.validate() || true) {
-                      SignInRequest signInData = SignInRequest(
-                          email: emailController.text,
-                          password: passwordController.text);
-                      // store.dispatch(GetUserInfoAction(
-                      //     data: GetUserInfoRequest(token: ""),
-                      //     onSuccess: (GetUserInfoResponse data) {
-                      //       if (data.code == 1000) {
-                      //         print(store.state.userState.userInfo.username);
-                      //         // context.go("/home");
-                      //       } else {
-                      //         // showErrorDialog(context, data.code,
-                      //         //     pageType: PageType.signIn);
-                      //       }
-                      //     },
-                      //     onPending: () {
-                      //       showLoadingDialog(context);
-                      //     }));
-
-                      store.dispatch(SignInAction(
-                          data: signInData,
-                          onSuccess: (SignInResponse data) {
-                            if (data.code == 1000) {
-                              store.dispatch(GetUserInfoAction(
-                                  data: GetUserInfoRequest(
-                                      token: data.data.token),
-                                  onSuccess: (GetUserInfoResponse data) {
-                                    if (isSuccessCode(data.code)) {
-                                      context.go("/home");
-                                    } else {}
-                                  },
-                                  onPending: () {
-                                    showLoadingDialog(context);
-                                  }));
-                            } else {
-                              showErrorDialog(context, data.code,
-                                  pageType: PageType.signIn);
-                            }
-                          },
-                          onPending: () {
-                            showLoadingDialog(context);
-                          }));
+                    if (_formKey.currentState!.validate()) {
+                      // SignInRequest signInData = SignInRequest(
+                      //     email: emailController.text,
+                      //     password: passwordController.text);
+                      // signIn(context, store, signInData);
                     }
                   },
             child: const Text('Đăng nhập'),
@@ -189,6 +152,21 @@ class _SignInState extends State<SignIn> {
         child: const Text('Tạo tài khoản mới'),
       ),
     );
+  }
+
+  void signIn(BuildContext context, Store<AntiFakeBookState> store,
+      SignInRequest request) {
+    store.dispatch(SignInAction(
+        data: request,
+        onPending: () => showLoadingDialog(context),
+        onSuccess: (SignInResponse response) {
+          if (isErrorCode(response.code)) {
+            showErrorDialog(context, response.code, apiType: ApiType.signIn);
+          } else {
+            getUserInfo(store);
+            context.go("/home");
+          }
+        }));
   }
 }
 

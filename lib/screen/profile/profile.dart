@@ -11,14 +11,16 @@ import 'package:go_router/go_router.dart';
 import 'package:redux/redux.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  final String userId;
+  const ProfilePage({super.key, required this.userId});
   static const friendCardHeight = 200.0;
   @override
   Widget build(BuildContext context) {
     return StoreBuilder(onInit: (Store<AntiFakeBookState> store) {
       store.dispatch(GetUserInfoAction(
+        token: store.state.userState.token,
         data: GetUserInfoRequest(
-          token: store.state.userState.token,
+          userId: userId,
         ),
       ));
     }, builder: (BuildContext context, Store<AntiFakeBookState> store) {
@@ -35,13 +37,7 @@ class ProfilePage extends StatelessWidget {
                   Expanded(
                       flex: 8,
                       child: ElevatedButton(
-                        onPressed: () {
-                          store.dispatch(GetUserInfoAction(
-                            data: GetUserInfoRequest(
-                              token: store.state.userState.token,
-                            ),
-                          ));
-                        },
+                        onPressed: () {},
                         child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [

@@ -62,7 +62,7 @@ typedef PendingLogOutAction = FuturePendingAction<LogOutAction>;
 class GetVerifyCodeAction
     extends FutureAction<GetVerifyCodeAction, GetVerifyCodeResponse> {
   final GetVerifyCodeRequest data;
-  final Function? onSuccess;
+  final Function(GetVerifyCodeResponse)? onSuccess;
   final Function? onPending;
   final Function? onError;
   GetVerifyCodeAction(
