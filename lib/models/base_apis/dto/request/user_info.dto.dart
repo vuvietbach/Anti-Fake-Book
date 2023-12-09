@@ -1,4 +1,5 @@
 import 'package:anti_fake_book/utils.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 part 'user_info.dto.g.dart';
 
 class ChangeInfoAfterSignUpRequest {
