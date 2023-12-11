@@ -36,8 +36,7 @@ class ApiModel {
 
   Future<AddPostResponseDTO> addPost(AddPostRequestDTO addPostData) async {
     //Chuyển addPostData thành FormData
-    final jsonData = convertUint8ListToMultipartFile(addPostData.toJson());
-    final formData = FormData.fromMap(jsonData);
+    final formData = convertUint8ListToMultipartFile(addPostData.toJson());
     final response = await _dio.post(PathName.addPost, data: formData);
     AddPostResponseDTO addPostResponseDTO =
         AddPostResponseDTO.fromJson(response.data);

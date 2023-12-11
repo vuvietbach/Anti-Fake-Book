@@ -1,6 +1,7 @@
 //lib
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:anti_fake_book/layout/default_layer.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/get_post.dto.dart';
 import 'package:anti_fake_book/store/state/user.dart';
 import 'package:flutter/material.dart';
@@ -107,7 +108,12 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return StoreConnector<AntiFakeBookState, _CreatePostViewModel>(
-        converter: (store) => _CreatePostViewModel(store),
+        converter: (store) => _CreatePostViewModel(store, () {
+              EmptyLayoutState.of(context).touchLoading(true);
+            }, () {
+              EmptyLayoutState.of(context).touchLoading(false);
+              context.pop();
+            }),
         builder: (BuildContext context, _CreatePostViewModel vm) {
           return WillPopScope(
             onWillPop: () async {
@@ -133,7 +139,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       isDisable: !vm.isHaveContent,
                       onPressed: () {
                         vm.onCreatePost();
-                        context.go('/');
                       },
                       title: 'Đăng'),
                 ],
@@ -266,8 +271,11 @@ class _CreatePostViewModel {
   late final Function onEditPost;
   late final Function onCreatePost;
   late final Function onClearPost;
+  final Function onPendingLoading;
+  final Function onSuccessLoading;
 
-  _CreatePostViewModel(Store<AntiFakeBookState> store) {
+  _CreatePostViewModel(Store<AntiFakeBookState> store, this.onPendingLoading,
+      this.onSuccessLoading) {
     addImage = (Uint8List file) {
       final images = [
         ...store.state.postState.selected.images,
@@ -292,7 +300,8 @@ class _CreatePostViewModel {
     };
 
     onCreatePost = () {
-      store.dispatch(CreatePostAction(postData));
+      store.dispatch(
+          CreatePostAction(postData, onPendingLoading, onSuccessLoading));
       onClearPost();
     };
 

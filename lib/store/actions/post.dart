@@ -10,8 +10,17 @@ class CreatePostAction
     implements PostAction {
   AddPostRequestDTO postData;
 
-  CreatePostAction(this.postData)
-      : super(future: ApiModel.api.addPost(postData));
+  CreatePostAction(
+      this.postData, Function callbackOnPending, Function callbackOnSuccess)
+      : super(future: () async {
+          callbackOnPending();
+          AddPostResponseDTO rs =
+              await ApiModel.api.addPost(postData).catchError((onError) {
+            print(onError);
+          });
+          callbackOnSuccess();
+          return rs;
+        }());
 }
 
 typedef PendingCreatePostAction = FuturePendingAction<CreatePostAction>;

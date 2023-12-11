@@ -38,7 +38,7 @@ final GoRouter _router = GoRouter(routes: [
         GoRoute(
             path: 'create-post',
             builder: (BuildContext context, GoRouterState stage) =>
-                const CreatePostScreen(),
+                const EmptyLayout(child: CreatePostScreen()),
             routes: [
               GoRoute(
                 path: 'emotions',
