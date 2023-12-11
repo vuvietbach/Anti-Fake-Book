@@ -2,6 +2,7 @@
 import 'package:anti_fake_book/services/save_to_disk_service.dart';
 import 'package:anti_fake_book/helper/helper.dart';
 import 'package:anti_fake_book/services/notification_service.dart';
+import 'package:anti_fake_book/models/cached_http_request.dart';
 import 'package:anti_fake_book/screen/HomePage/HomeFake.dart';
 import 'package:anti_fake_book/screen/conversation/list_chat_screen.dart';
 import 'package:anti_fake_book/screen/posts/report_post/confirm_report.dart';
@@ -31,8 +32,7 @@ final GoRouter _router = GoRouter(routes: [
   GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState stage) {
-        // return const EmptyLayout(child: CheckLoginWrapper(child: HomePage()));
-        return const EmptyLayout(child: HomePage());
+        return const EmptyLayout(child: CheckLoginWrapper(child: HomePage()));
       },
       routes: [
         GoRoute(
@@ -102,6 +102,7 @@ void main() async {
   final initialState =
       await DiskStore.loadAndMergeState(AntiFakeBookState.initState());
   await NotificationService.init();
+  await initCached();
   print(await (getDeviceId()));
   final store = Store<AntiFakeBookState>(antiFakeBookReducers,
       initialState: initialState, middleware: [futureMiddleware]);

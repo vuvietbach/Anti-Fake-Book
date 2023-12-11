@@ -20,10 +20,11 @@ class NotificationPayloadDto {
   @JsonKey()
   TypeNotification type = TypeNotification.comment;
   String objectId = '';
-  String title = '';
+  String title = 'test notification';
   String notificationId = '';
   DateTime created = DateTime.now();
-  String avatar = '';
+  String avatar =
+      'https://store.bbcosplay.com/news/2023/04/15/hatsune-miku-la-ai-co-ca-si-ao-tai-nhat-ban-co-luong-fan-khung.jpg';
   @JsonKey()
   TypeGroup group = TypeGroup.notification;
   @JsonKey()
