@@ -1,6 +1,4 @@
-import 'package:anti_fake_book/models/base_apis/dto/request/user_info.dto.dart';
 import 'package:anti_fake_book/screen/profile/change_setting/screens.dart';
-import 'package:anti_fake_book/store/actions/user_info.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
