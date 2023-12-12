@@ -5,10 +5,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
-class EmptyLayout extends StatelessWidget {
+class EmptyLayout extends StatefulWidget {
   final Widget? child;
 
   const EmptyLayout({super.key, this.child});
+
+  @override
+  EmptyLayoutState createState() => EmptyLayoutState();
+}
+
+class EmptyLayoutState extends State<EmptyLayout> {
+  bool isLoading = false;
+
+  touchLoading(bool value) {
+    setState(() {
+      isLoading = !isLoading;
+    });
+  }
+
+  static EmptyLayoutState of(BuildContext context) =>
+      context.findAncestorStateOfType<EmptyLayoutState>()!;
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +34,17 @@ class EmptyLayout extends StatelessWidget {
           FocusManager.instance.primaryFocus?.unfocus();
           // FocusScope.of(context).requestFocus(FocusNode());
         },
-        child: Container(
-          child: child,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            widget.child!,
+            // màu nền CircularProgressIndicator trong suốt nhìn thấy widget ở dưới
+            //
+            if (isLoading)
+              const CircularProgressIndicator(
+                backgroundColor: Colors.transparent,
+              )
+          ],
         ),
       ), // Thêm widget con vào đây
     );
