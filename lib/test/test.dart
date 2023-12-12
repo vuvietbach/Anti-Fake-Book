@@ -19,8 +19,6 @@ void main() {
     "online": 13,
     "coins": 14,
   };
-  final userInfoData = UserInfoData.fromJson(userInfo);
-  print(userInfoData);
 }
 
 class TestPhoneApp extends StatefulWidget {

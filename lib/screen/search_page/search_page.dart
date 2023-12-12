@@ -1,114 +1,102 @@
+import 'package:anti_fake_book/constants/constants.dart';
+import 'package:anti_fake_book/layout/default_layer.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/index.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
+import 'package:anti_fake_book/screen/search_page/redux_actions.dart';
+import 'package:anti_fake_book/screen/search_page/utils.dart';
 import 'package:anti_fake_book/screen/search_page/widgets.dart';
-import 'package:anti_fake_book/store/actions/search.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/widgets/common/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
-class SearchPage extends StatelessWidget {
+class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
 
-  static const List<String> searchResults = [
-    'Search Result 1',
-    'Search Result 2',
-    'Search Result 3',
-    'Search Result 3',
-    'Search Result 3',
-    'Search Result 3',
+  @override
+  State<SearchPage> createState() => _SearchPageState();
+}
 
-    'Search Result 3',
-
-    'Search Result 3',
-
-    'Search Result 3',
-
-    // Add more search results as needed
-  ];
+class _SearchPageState extends State<SearchPage> {
+  List<SavedSearchData> savedSearch = [];
   @override
   Widget build(BuildContext context) {
     return StoreBuilder(onInit: (Store<AntiFakeBookState> store) {
-      store.dispatch(GetSavedSearchAction(
-        token: store.state.userState.token,
-        // TODO: What is the meaning of index and count?
-        data: GetSavedSearchRequest(
-          index: 0,
-          count: 20,
-        ),
-      ));
+      getSavedSearch(
+        context,
+        GetSavedSearchRequest(index: 0, count: NUM_QUERY_PER_REQUEST),
+        onSuccess: (GetSavedSearchResponse response) {
+          var tmpList = getDisplaySearchHistory(response.data);
+          setState(() {
+            savedSearch = tmpList;
+          });
+        },
+      );
     }, builder: (BuildContext context, Store<AntiFakeBookState> store) {
-      return Scaffold(
-        appBar: AppBar(
-          elevation: 0, // Remove AppBar shadow
-          backgroundColor: Colors.white,
-          leading: IconButton(
-            onPressed: () {},
-            // onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back, color: Colors.black),
-          ),
-          title: CustomSearchBar(
-            searchCallback: () => {
-              // store.dispatch(GetSavedSearchAction(
-              //   // TODO: What is the meaning of index and count?
-              //   data: GetSavedSearchRequest(
-              //     token: store.state.userState.token,
-              //     index: 0,
-              //     count: 20,
-              //   ),
-              // ))
-            },
-            // searchCallback: () => Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (context) => const SearchResultPage()))
-          ),
-        ),
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    "Tìm kiếm gần đây",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                  ),
-                  TextButton(
-                      onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SearchHistory())),
-                      child: const Text(
-                        "Chỉnh sửa",
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.grey,
-                            wordSpacing: 1.5,
-                            fontWeight: FontWeight.w300),
-                      )),
-                ],
-              ),
+      return EmptyLayout(
+        child: Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+            backgroundColor: Colors.white,
+            leading: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
             ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: store.state.searchState.savedSearch.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: IconButton(
-                        icon: const Icon(Icons.search), onPressed: () {}),
-                    title: Text(
-                        store.state.searchState.savedSearch[index].keyword),
-                  );
-                },
+            title: CustomSearchBar(searchCallback: () {}),
+          ),
+          body: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: savedSearch.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return _titleAndEditButton(context);
+                    } else {
+                      return ListTile(
+                        leading: const Icon(Icons.search),
+                        title: Text(savedSearch[index - 1].keyword),
+                      );
+                    }
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     });
+  }
+
+  Padding _titleAndEditButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
+            "Tìm kiếm gần đây",
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          ),
+          TextButton(
+              onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SearchHistory())),
+              child: const Text(
+                "Chỉnh sửa",
+                style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.grey,
+                    wordSpacing: 1.5,
+                    fontWeight: FontWeight.w300),
+              )),
+        ],
+      ),
+    );
   }
 }
 
@@ -237,17 +225,88 @@ class _SearchHistoryState extends State<SearchHistory> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              "Xoá các tìm kiếm",
-              style: TextStyle(color: Theme.of(context).primaryColor),
+          InkWell(
+            onTap: () => _deleteAllSearchHistory(context),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Xoá các tìm kiếm",
+                style: TextStyle(color: Theme.of(context).primaryColor),
+              ),
             ),
           ),
-          const Expanded(child: TimestampSearchSection())
+          Expanded(child: _searchHistory())
         ]),
       ),
     );
+  }
+
+  _deleteAllSearchHistory(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Xoá tất cả tìm kiếm"),
+            content: const Text(
+                "Bạn có chắc chắn muốn xoá tất cả tìm kiếm? Thay đổi này sẽ không thể hoàn tác"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Huỷ")),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    delSavedSearch(context, DelSavedSearchRequest(all: "1"));
+                  },
+                  child: const Text("Xoá"))
+            ],
+          );
+        });
+  }
+
+  StoreBuilder<AntiFakeBookState> _searchHistory() {
+    return StoreBuilder(
+        builder: (BuildContext context, Store<AntiFakeBookState> store) {
+      List<SavedSearchData> searchHistory = store.state.searchState.savedSearch;
+      return ListView.builder(
+          itemCount: searchHistory.length,
+          itemBuilder: (context, index) {
+            Widget child = Padding(
+              padding: const EdgeInsets.only(bottom: 5.0),
+              child: SearchHistoryItem(
+                  data: store.state.searchState.savedSearch[index]),
+            );
+            bool hasTimestamp = false;
+            if (index == 0) {
+              hasTimestamp = true;
+            } else {
+              var date1 = DateTime.parse(searchHistory[index - 1].created);
+              var date2 = DateTime.parse(searchHistory[index].created);
+              if (date1.day != date2.day ||
+                  date1.month != date2.month ||
+                  date1.year != date2.year) {
+                hasTimestamp = true;
+              }
+            }
+            if (hasTimestamp) {
+              DateTime date = DateTime.parse(searchHistory[index].created);
+              child = Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("${date.day} tháng ${date.month} ${date.year}",
+                        style: const TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold)),
+                  ),
+                  child
+                ],
+              );
+            }
+            return child;
+          });
+    });
   }
 }
 

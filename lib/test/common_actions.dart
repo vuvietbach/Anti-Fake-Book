@@ -14,9 +14,9 @@ void getConversation(Store<AntiFakeBookState> store) {
   )));
 }
 
-void getUserInfo(Store<AntiFakeBookState> store) {
-  store.dispatch(GetUserInfoAction(
-    token: store.state.userState.token,
-    data: GetUserInfoRequest(),
-  ));
-}
+// void getUserInfo(Store<AntiFakeBookState> store) {
+//   store.dispatch(GetUserInfoAction(
+//     token: store.state.userState.token,
+//     data: GetUserInfoRequest(),
+//   ));
+// }

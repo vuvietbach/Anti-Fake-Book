@@ -2,12 +2,6 @@ import 'package:anti_fake_book/utils.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'user_info.dto.g.dart';
 
-class ChangeInfoAfterSignUpRequest {
-  final String token;
-  final String username;
-  // TODO: add upload file avatar
-  ChangeInfoAfterSignUpRequest({required this.token, required this.username});
-}
 
 @customJsonSerializable
 class SetUserInfoRequest {

@@ -54,8 +54,13 @@ class CustomIntConverter implements JsonConverter<int, dynamic> {
         return int.parse(json);
       case bool:
         return json ? 1 : 0;
+      case int:
+        return json;
+      // ignore: prefer_void_to_null
+      case Null:
+        return 0;
     }
-    return json;
+    return 0;
   }
 
   @override
@@ -94,6 +99,49 @@ class CustomUint8ListConverter implements JsonConverter<Uint8List, dynamic> {
   }
 }
 
+class CustomNullableIntConverter implements JsonConverter<int?, dynamic> {
+  const CustomNullableIntConverter();
+
+  @override
+  int? fromJson(dynamic json) {
+    switch (json.runtimeType) {
+      case String:
+        return int.parse(json);
+      case bool:
+        return json ? 1 : 0;
+      case int:
+        return json;
+      // ignore: prefer_void_to_null
+      case Null:
+        return null;
+    }
+    return 0;
+  }
+
+  @override
+  int? toJson(int? object) {
+    return object;
+  }
+}
+
+int? nullableIntfromJson(dynamic json) {
+  switch (json.runtimeType) {
+    case String:
+      return int.parse(json);
+    case bool:
+      return json ? 1 : 0;
+    case int:
+      return json;
+    // ignore: prefer_void_to_null
+    case Null:
+      return null;
+  }
+  return 0;
+}
+int? nullableIntToJson(int? object) {
+  return object;
+}
+
 const customJsonSerializable = JsonSerializable(
   fieldRename: FieldRename.snake,
   explicitToJson: true,
@@ -101,6 +149,7 @@ const customJsonSerializable = JsonSerializable(
   converters: [
     CustomBoolConverter(),
     CustomIntConverter(),
+    // CustomNullableIntConverter(),
     CustomStringConvert(),
     CustomUint8ListConverter(),
   ],
@@ -194,4 +243,19 @@ Future<Map<String, dynamic>> readJson(String filePath) async {
     print('Error reading JSON data: $error');
     return {}; // Return an empty Map if an error occurs
   }
+}
+
+const maxUsernameLength = 30;
+const minUsernameLength = 6;
+bool validateUsername(String username, String email) {
+  final nonWordPattern = RegExp(r'[^\w\s]+');
+  // check if contain special character
+  // check if equal to email
+  // check if too short or too long
+  // check if not a link
+  return !nonWordPattern.hasMatch(username) &&
+      username != email &&
+      username.length >= minUsernameLength &&
+      username.length <= maxUsernameLength &&
+      Uri.parse(username).hasScheme;
 }

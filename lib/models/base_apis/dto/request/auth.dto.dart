@@ -59,11 +59,10 @@ class CheckVerifyCodeRequest {
 
 @customJsonSerializable
 class ChangeProfileAfterSignUpRequest {
-  final String token;
   final String username;
   final String? avatar;
   ChangeProfileAfterSignUpRequest(
-      {required this.token, required this.username, required this.avatar});
+      {required this.username, required this.avatar});
   factory ChangeProfileAfterSignUpRequest.fromJson(Map<String, dynamic> json) =>
       _$ChangeProfileAfterSignUpRequestFromJson(json);
   Map<String, dynamic> toJson() =>

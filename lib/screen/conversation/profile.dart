@@ -1,6 +1,5 @@
-import 'package:anti_fake_book/screen/profile/widgets.dart';
-import 'package:anti_fake_book/store/state/app.dart';
 import 'package:anti_fake_book/store/state/index.dart';
+import 'package:anti_fake_book/widgets/common/image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
@@ -91,7 +90,7 @@ class _ChatPartnerInfoPageState extends State<ChatPartnerInfoPage> {
   Widget _username(Store<AntiFakeBookState> store) {
     return Align(
       alignment: Alignment.center,
-      child: Text(store.state.userState.searchedUserInfo.username,
+      child: Text(store.state.userState.searchedUserInfo.username ?? "",
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
     );
   }

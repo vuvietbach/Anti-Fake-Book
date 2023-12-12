@@ -1,6 +1,6 @@
 import 'package:anti_fake_book/models/base_apis/dto/request/search.dto.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
-import 'package:anti_fake_book/store/actions/search.dart';
+import 'package:anti_fake_book/screen/search_page/redux_actions.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -66,14 +66,14 @@ class SearchHistoryItem extends StatelessWidget {
             ),
           ),
           IconButton(
-              onPressed: () {
-                store.dispatch(DelSavedSearchAction(
-                    token: store.state.userState.token,
-                    data: DelSavedSearchRequest(searchId: data.id)));
-              },
+              onPressed: () => _deleteSearch(context, data),
               icon: const Icon(Icons.close))
         ],
       );
     });
+  }
+
+  _deleteSearch(BuildContext context, SavedSearchData data) {
+    delSavedSearch(context, DelSavedSearchRequest(searchId: data.id));
   }
 }

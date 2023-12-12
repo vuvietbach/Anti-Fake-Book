@@ -12,10 +12,10 @@ class ChangeSettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreBuilder(onInit: (Store<AntiFakeBookState> store) {
-      store.dispatch(GetUserInfoAction(
-        token: store.state.userState.token,
-        data: GetUserInfoRequest(),
-      ));
+      // store.dispatch(GetUserInfoAction(
+      //   token: store.state.userState.token,
+      //   data: GetUserInfoRequest(),
+      // ));
     }, builder: (BuildContext context, Store<AntiFakeBookState> store) {
       return Scaffold(
           appBar: AppBar(

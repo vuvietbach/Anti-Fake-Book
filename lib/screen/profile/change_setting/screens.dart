@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:anti_fake_book/models/base_apis/dto/request/index.dart';
-import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
-import 'package:anti_fake_book/screen/profile/change_setting/actions.dart';
+import 'package:anti_fake_book/models/base_apis/dto/response/user_info_data.dart';
+import 'package:anti_fake_book/screen/profile/change_setting/redux_actions.dart';
 import 'package:anti_fake_book/screen/profile/widgets.dart';
 import 'package:anti_fake_book/store/state/index.dart';
+import 'package:anti_fake_book/store/state/user_info.dart';
+import 'package:anti_fake_book/widgets/common/image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:image_picker/image_picker.dart';
@@ -74,6 +76,7 @@ class EditBackgroundSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreBuilder(
         builder: (BuildContext context, Store<AntiFakeBookState> store) {
+      print(store.state.userState.userInfo.coverImage);
       return EditSection(
         onEdit: () => Navigator.of(context).push(
           MaterialPageRoute(
@@ -160,7 +163,7 @@ class _EditGeneralInfoPageState extends State<EditGeneralInfoPage> {
   @override
   Widget build(BuildContext context) {
     return StoreBuilder(onInit: (Store<AntiFakeBookState> store) {
-      UserInfoData userInfo = store.state.userState.userInfo;
+      UserInfo userInfo = store.state.userState.userInfo;
       _controller1.text = userInfo.city;
       _controller2.text = userInfo.address;
       _controller3.text = userInfo.country;
@@ -189,46 +192,22 @@ class _EditGeneralInfoPageState extends State<EditGeneralInfoPage> {
         ]),
         onCancel: () {
           setState(() {
-            UserInfoData userInfo = store.state.userState.userInfo;
+            UserInfo userInfo = store.state.userState.userInfo;
             _controller1.text = userInfo.city;
             _controller2.text = userInfo.address;
             _controller3.text = userInfo.country;
           });
         },
         onConfirm: () {
-          makeSetUserInfoAction(
+          setUserInfo(
               context,
               SetUserInfoRequest(
                   city: _controller1.text,
                   address: _controller2.text,
-                  country: _controller3.text),
-              store);
+                  country: _controller3.text));
         },
       );
     });
-  }
-
-  void _showConfirmDialog(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text("Xác nhận"),
-            content: const Text("Bạn có chắc chắn muốn cập nhập thông tin?"),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text("Hủy")),
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text("Đồng ý")),
-            ],
-          );
-        });
   }
 }
 
@@ -264,8 +243,13 @@ class EditPage extends StatelessWidget {
         width: double.infinity,
         height: 60.0,
         child: FloatingActionButton(
-          onPressed: () {
-            _showConfirmDialog(context);
+          onPressed: () async {
+            bool confirm = await _showConfirmDialog(context);
+            if (confirm) {
+              onConfirm?.call();
+            } else {
+              onCancel?.call();
+            }
           },
           child: const Text(
             "Cập nhập",
@@ -276,8 +260,8 @@ class EditPage extends StatelessWidget {
     );
   }
 
-  void _showConfirmDialog(BuildContext context) {
-    showDialog(
+  Future<bool> _showConfirmDialog(BuildContext context) async {
+    return await showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
@@ -286,14 +270,12 @@ class EditPage extends StatelessWidget {
             actions: [
               TextButton(
                   onPressed: () {
-                    onCancel?.call();
-                    Navigator.pop(context);
+                    Navigator.pop(context, false);
                   },
                   child: const Text("Hủy")),
               TextButton(
                   onPressed: () {
-                    onConfirm?.call();
-                    Navigator.pop(context);
+                    Navigator.pop(context, true);
                   },
                   child: const Text("Đồng ý")),
             ],
@@ -302,14 +284,14 @@ class EditPage extends StatelessWidget {
   }
 }
 
-class EditDescription extends StatefulWidget {
-  const EditDescription({super.key});
+class EditDescriptionPage extends StatefulWidget {
+  const EditDescriptionPage({super.key});
 
   @override
-  State<EditDescription> createState() => _EditDescriptionState();
+  State<EditDescriptionPage> createState() => _EditDescriptionPageState();
 }
 
-class _EditDescriptionState extends State<EditDescription> {
+class _EditDescriptionPageState extends State<EditDescriptionPage> {
   final _controller = TextEditingController();
 
   @override
@@ -320,20 +302,24 @@ class _EditDescriptionState extends State<EditDescription> {
   @override
   Widget build(BuildContext context) {
     return StoreBuilder(onInit: (Store<AntiFakeBookState> store) {
-      _controller.text = store.state.userState.userInfo.description;
+      _controller.text = store.state.userState.userInfo.description ?? "";
     }, builder: (BuildContext context, Store<AntiFakeBookState> store) {
       return EditPage(
         title: "Chỉnh sửa mô tả",
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: TextFormField(
+          child: TextField(
+            controller: _controller,
             maxLines: null,
             decoration: const InputDecoration(border: InputBorder.none),
           ),
         ),
         onConfirm: () {
-          makeSetUserInfoAction(context,
-              SetUserInfoRequest(description: _controller.text), store);
+          setUserInfo(
+            context,
+            SetUserInfoRequest(description: _controller.text),
+            // onSuccess: (res) => Navigator.pop(context),
+          );
         },
         onCancel: () {
           setState(() {
@@ -356,7 +342,7 @@ class _EditLinkState extends State<EditLink> {
   String initialText = "Mô tả";
   final _controller = TextEditingController();
   @override
-  void initialState() {
+  void initState() {
     super.initState();
     _controller.text = initialText;
   }
@@ -411,8 +397,7 @@ class _EditAvatarPageState extends State<EditAvatarPage> {
         title: "Chỉnh sửa ảnh đại diện",
         onConfirm: () {
           if (pickedFile != null) {
-            makeSetUserInfoAction(
-                context, SetUserInfoRequest(avatar: pickedFile), store);
+            setUserInfo(context, SetUserInfoRequest(avatar: pickedFile));
           }
         },
         onCancel: () {
@@ -524,8 +509,7 @@ class _EditBackgroundPageState extends State<EditBackgroundPage> {
         title: "Chỉnh sửa ảnh bìa",
         onConfirm: () {
           if (pickedFile != null) {
-            makeSetUserInfoAction(
-                context, SetUserInfoRequest(coverImage: pickedFile), store);
+            setUserInfo(context, SetUserInfoRequest(coverImage: pickedFile));
           }
         },
         onCancel: () {
@@ -606,7 +590,7 @@ class EditDescriptionSection extends StatelessWidget {
       sectionName: "Tiểu sử",
       onEdit: () => Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => const EditDescription(),
+          builder: (context) => const EditDescriptionPage(),
         ),
       ),
       child: const DescriptionSection(),
