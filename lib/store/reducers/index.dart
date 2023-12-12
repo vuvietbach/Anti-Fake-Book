@@ -68,7 +68,7 @@ final antiFakeBookReducers = combineReducers<AntiFakeBookState>([
       onSuccessGetConversation),
   TypedReducer<AntiFakeBookState, SuccessChangeProfileAfterSignUpAction>(
       onSuccessChangeProfileAfterSignUp),
-      
+
   // TypedReducer<AntiFakeBookState, PendingSetReadMessageAction>(onPendingSetReadMessage),
   // TypedReducer<AntiFakeBookState, SuccessSetReadMessageAction>(onSuccessSetReadMessage),
   // TypedReducer<AntiFakeBookState, PendingDeleteMessageAction>(onPendingDeleteMessage),

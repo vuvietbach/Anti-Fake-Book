@@ -8,10 +8,11 @@ import 'package:flutter_redux/flutter_redux.dart';
 void changeProfileAfterSignUp(
     BuildContext context, ChangeProfileAfterSignUpRequest data,
     {Function? onSuccess, Function? onPending, Function? onError}) {
-  StoreProvider.of<AntiFakeBookState>(context).dispatch(ChangeProfileAfterSignUpAction(
-      data: data,
-      onPending: () => showLoadingDialog(context),
-      onError: onError));
+  StoreProvider.of<AntiFakeBookState>(context).dispatch(
+      ChangeProfileAfterSignUpAction(
+          data: data,
+          onPending: () => showLoadingDialog(context),
+          onError: onError));
 }
 
 void getUserInfo(BuildContext context, GetUserInfoRequest data,

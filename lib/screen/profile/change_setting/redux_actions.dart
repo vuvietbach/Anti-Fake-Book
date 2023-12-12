@@ -6,7 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 void setUserInfo(BuildContext context, SetUserInfoRequest data,
-    {Function(SetUserInfoResponse)? onSuccess, Function? onPending, Function? onError}) {
-  StoreProvider.of<AntiFakeBookState>(context)
-      .dispatch(SetUserInfoAction(context: context, data: data, onSuccess: onSuccess, onPending: onPending, onError: onError));
+    {Function(SetUserInfoResponse)? onSuccess,
+    Function? onPending,
+    Function? onError}) {
+  StoreProvider.of<AntiFakeBookState>(context).dispatch(SetUserInfoAction(
+      context: context,
+      data: data,
+      onSuccess: onSuccess,
+      onPending: onPending,
+      onError: onError));
 }

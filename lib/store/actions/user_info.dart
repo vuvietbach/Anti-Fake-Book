@@ -14,8 +14,7 @@ class SetUserInfoAction
   final Function? onError;
   final BuildContext context;
   SetUserInfoAction(
-      {
-        required this.context,
+      {required this.context,
       required this.data,
       this.onSuccess,
       this.onPending,

@@ -15,8 +15,6 @@ class SetUserInfoResponse {
   Map<String, dynamic> toJson() => _$SetUserInfoResponseToJson(this);
 }
 
-
-
 // @customJsonSerializable
 // class UserInfoData {
 //   final String? id;

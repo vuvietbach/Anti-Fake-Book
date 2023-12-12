@@ -138,6 +138,7 @@ int? nullableIntfromJson(dynamic json) {
   }
   return 0;
 }
+
 int? nullableIntToJson(int? object) {
   return object;
 }
