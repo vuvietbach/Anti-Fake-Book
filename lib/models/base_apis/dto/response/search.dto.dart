@@ -9,7 +9,7 @@ part 'search.dto.g.dart';
 class SearchResponse {
   final int code;
   final String message;
-  final SearchResponseData data;
+  final List<SearchResultItem> data;
   SearchResponse(
       {required this.code, required this.message, required this.data});
   factory SearchResponse.fromJson(Map<String, dynamic> json) =>
@@ -20,8 +20,7 @@ class SearchResponse {
 @customJsonSerializable
 class SearchResponseData {
   final List<SearchResultItem> items;
-  final int total;
-  SearchResponseData({required this.items, required this.total});
+  SearchResponseData({required this.items});
   factory SearchResponseData.fromJson(Map<String, dynamic> json) =>
       _$SearchResponseDataFromJson(json);
   Map<String, dynamic> toJson() => _$SearchResponseDataToJson(this);
@@ -31,7 +30,7 @@ class SearchResponseData {
 class SearchResultItem {
   final String id;
   final String name;
-  final List<String>? image;
+  final List<ImageData>? image;
   final VideoData? video;
   final int feel;
   final int markComment;
@@ -58,12 +57,22 @@ class SearchResultItem {
 }
 
 @customJsonSerializable
+class ImageData {
+  final String id;
+  final String url;
+  ImageData({required this.id, required this.url});
+  factory ImageData.fromJson(Map<String, dynamic> json) =>
+      _$ImageDataFromJson(json);
+  Map<String, dynamic> toJson() => _$ImageDataToJson(this);
+}
+
+@customJsonSerializable
 class VideoData {
-  final String thumb;
+  final String? thumb;
   final String url;
   VideoData({
     required this.url,
-    required this.thumb,
+    this.thumb,
   });
   factory VideoData.fromJson(Map<String, dynamic> json) =>
       _$VideoDataFromJson(json);

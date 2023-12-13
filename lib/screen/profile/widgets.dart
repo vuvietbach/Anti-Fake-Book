@@ -1,7 +1,9 @@
 import 'dart:io';
 
-import 'package:anti_fake_book/models/base_apis/dto/response/user_info.dto.dart';
+import 'package:anti_fake_book/models/base_apis/dto/response/user_info_data.dart';
 import 'package:anti_fake_book/store/state/index.dart';
+import 'package:anti_fake_book/store/state/user_info.dart';
+import 'package:anti_fake_book/widgets/common/image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
@@ -151,24 +153,38 @@ class AccountImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreBuilder(
         builder: (BuildContext context, Store<AntiFakeBookState> store) {
-      UserInfoData userInfo = store.state.userState.searchedUserInfo;
+      UserInfo userInfo = store.state.userState.searchedUserInfo;
       return Stack(
         children: [
           Column(
             children: [
-              AccountBackgroundImage(
+              BackgroundImage(
+                height: 200,
                 imageUrl: userInfo.coverImage,
               ),
               Container(
-                height: AccountAvatar.total_height / 2,
+                height: 90,
               )
             ],
           ),
           Positioned(
               bottom: 0,
-              left: 20,
-              child: AccountAvatar(
-                imageUrl: userInfo.avatar,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Column(
+                  children: [
+                    AvatarImage(
+                      height: 140,
+                      imageUrl: userInfo.avatar,
+                    ),
+                    Text(
+                      userInfo.username,
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
               )),
         ],
       );
@@ -204,34 +220,6 @@ class GeneralInfo extends StatelessWidget {
   }
 }
 
-class AvatarImage extends StatelessWidget {
-  final double height;
-  final String? imageUrl;
-  const AvatarImage({
-    super.key,
-    this.imageUrl,
-    this.height = 200.0,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        height: height,
-        width: height,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          image: (imageUrl != null && imageUrl!.isNotEmpty)
-              ? DecorationImage(
-                  image: NetworkImage(imageUrl!),
-                  fit: BoxFit.cover,
-                )
-              : const DecorationImage(
-                  image: AssetImage('assets/images/default_avatar.jpeg'),
-                  fit: BoxFit.cover),
-        ));
-  }
-}
-
 class BackgroundImage extends StatelessWidget {
   final double height;
   final String? imageUrl;
@@ -244,10 +232,14 @@ class BackgroundImage extends StatelessWidget {
   });
   DecorationImage? _decorationImage() {
     ImageProvider? image;
-    if (imageUrl != null) {
-      image = NetworkImage(imageUrl!);
-    } else if (imagePath != null) {
-      image = FileImage(File(imagePath!));
+    try {
+      if (imagePath != null) {
+        image = FileImage(File(imagePath!));
+      } else if (imageUrl != null) {
+        image = NetworkImage(imageUrl!);
+      }
+    } catch (e) {
+      image = null;
     }
     if (image != null) {
       return DecorationImage(
@@ -281,7 +273,7 @@ class GeneralInfoSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreBuilder(
         builder: (BuildContext context, Store<AntiFakeBookState> store) {
-      UserInfoData userInfo = (userType == 0)
+      UserInfo userInfo = (userType == 0)
           ? store.state.userState.userInfo
           : store.state.userState.searchedUserInfo;
       return Column(

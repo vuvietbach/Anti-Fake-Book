@@ -1,5 +1,4 @@
 import 'package:anti_fake_book/utils.dart';
-import 'package:json_annotation/json_annotation.dart';
 part 'conversation.dto.g.dart';
 
 @customJsonSerializable

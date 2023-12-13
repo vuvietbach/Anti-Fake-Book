@@ -1,8 +1,17 @@
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-enum ApiType { signIn, signUp, other, getVerifyCode, checkVerifyCode }
+enum ApiType {
+  signIn,
+  signUp,
+  other,
+  getVerifyCode,
+  checkVerifyCode,
+  getUserInfo,
+  setUserInfo
+}
 
 const int NetworkErrorCode = 0;
 Future showErrorDialog(BuildContext context, int code,
@@ -38,19 +47,39 @@ Future showErrorDialog(BuildContext context, int code,
         }
       }
     }
-    showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-              title: title != null ? Text(title) : null,
-              content: content != null ? Text(content) : null,
+    if (code == 9998) {
+      title = "Lỗi xác thực";
+      content = "Vui lòng đăng nhập lại";
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(title!),
+              content: Text(content!),
               actions: [
                 TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      context.go("/welcome");
                     },
-                    child: const Text("Đóng"))
+                    child: const Text("Chuyển đến trang đăng nhập"))
               ],
-            ));
+            );
+          });
+    } else {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+                title: title != null ? Text(title) : null,
+                content: content != null ? Text(content) : null,
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("Đóng"))
+                ],
+              ));
+    }
   }
 }
 
@@ -89,4 +118,31 @@ Future<String> getDeviceId() async {
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
   return androidInfo.id;
+}
+
+void showConfirmDialog(BuildContext context, String? title, String? content,
+    {Function? onConfirm}) {
+  showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: title != null ? Text(title) : null,
+          content: content != null ? Text(content) : null,
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Hủy")),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  if (onConfirm != null) {
+                    onConfirm();
+                  }
+                },
+                child: const Text("Đồng ý"))
+          ],
+        );
+      });
 }

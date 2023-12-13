@@ -1,25 +1,27 @@
 import 'package:anti_fake_book/models/base_apis/apis.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/search.dto.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/search.dto.dart';
+import 'package:flutter/material.dart';
 import 'package:redux_future_middleware/redux_future_middleware.dart';
 
 class GetSavedSearchAction
     extends FutureAction<GetSavedSearchAction, GetSavedSearchResponse> {
-  final String token;
   final GetSavedSearchRequest data;
-  final Function? onSuccess;
+  final BuildContext context;
+  final Function(GetSavedSearchResponse)? onSuccess;
   final Function? onPending;
   final Function? onError;
   GetSavedSearchAction(
-      {required this.token,
+      {required this.context,
       required this.data,
       this.onSuccess,
       this.onPending,
       this.onError})
-      : super(future: ApiModel.api.getSavedSearch(token, data), extras: {
+      : super(future: ApiModel.api.getSavedSearch(data), extras: {
           'onSuccess': onSuccess,
           'onPending': onPending,
-          'onError': onError
+          'onError': onError,
+          'context': context,
         });
 }
 
@@ -29,22 +31,22 @@ typedef PendingGetSavedSearchAction = FuturePendingAction<GetSavedSearchAction>;
 
 class DelSavedSearchAction
     extends FutureAction<DelSavedSearchAction, DelSavedSearchResponse> {
-  final String token;
+  final BuildContext context;
   final DelSavedSearchRequest data;
-  final Function? onSuccess;
+  final Function(DelSavedSearchResponse)? onSuccess;
   final Function? onPending;
   final Function? onError;
   DelSavedSearchAction(
-      {required this.token,
+      {required this.context,
       required this.data,
       this.onSuccess,
       this.onPending,
       this.onError})
-      : super(future: ApiModel.api.delSavedSearch(token, data), extras: {
+      : super(future: ApiModel.api.delSavedSearch(data), extras: {
           'onSuccess': onSuccess,
           'onPending': onPending,
           'onError': onError,
-          "searchId": data.searchId
+          'request': data,
         });
 }
 

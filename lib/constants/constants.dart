@@ -16,3 +16,5 @@ class CodeActive {
   static const int INACTIVE = 0;
   static const int CHANGE_INFO_PENDING = -1;
 }
+
+const int NUM_QUERY_PER_REQUEST = 20;

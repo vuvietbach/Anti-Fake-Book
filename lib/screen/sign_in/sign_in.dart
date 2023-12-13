@@ -163,7 +163,7 @@ class _SignInState extends State<SignIn> {
           if (isErrorCode(response.code)) {
             showErrorDialog(context, response.code, apiType: ApiType.signIn);
           } else {
-            getUserInfo(store);
+            // getUserInfo(store);
             context.go("/home");
           }
         }));

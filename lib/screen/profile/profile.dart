@@ -1,9 +1,7 @@
 import 'package:anti_fake_book/models/base_apis/dto/request/index.dart';
-import 'package:anti_fake_book/screen/profile/change_setting/change_setting.dart';
 import 'package:anti_fake_book/screen/profile/friend_list.dart';
-import 'package:anti_fake_book/screen/profile/change_setting/screens.dart';
+import 'package:anti_fake_book/screen/profile/redux_actions.dart';
 import 'package:anti_fake_book/screen/profile/widgets.dart';
-import 'package:anti_fake_book/store/actions/user_info.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -17,12 +15,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreBuilder(onInit: (Store<AntiFakeBookState> store) {
-      store.dispatch(GetUserInfoAction(
-        token: store.state.userState.token,
-        data: GetUserInfoRequest(
-          userId: userId,
-        ),
-      ));
+      getUserInfo(context, GetUserInfoRequest(userId: userId));
     }, builder: (BuildContext context, Store<AntiFakeBookState> store) {
       return Scaffold(
           body: ListView(
@@ -34,27 +27,11 @@ class ProfilePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(children: [
-                  Expanded(
-                      flex: 8,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.add, color: Colors.white),
-                              SizedBox(
-                                width: 5.0,
-                              ),
-                              Text(
-                                "Thêm vào tin",
-                                style: TextStyle(color: Colors.white),
-                              )
-                            ]),
-                      )),
+                  _mainButton(context),
                   const SizedBox(
                     width: 10.0,
                   ),
-                  Expanded(flex: 2, child: _profileSettingButton(context)),
+                  _profileSettingButton(context),
                 ]),
                 const Divider(
                   height: 20.0,
@@ -76,27 +53,35 @@ class ProfilePage extends StatelessWidget {
     });
   }
 
-  ElevatedButton _profileSettingButton(BuildContext context) {
-    return ElevatedButton(
-        style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.grey)),
-        onPressed: () => context.go('/profile/setting'),
-        child: const Icon(Icons.more_horiz, color: Colors.black));
+  Widget _profileSettingButton(BuildContext context) {
+    return Expanded(
+      flex: 2,
+      child: ElevatedButton(
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Colors.grey)),
+          onPressed: () => context.go('/profile/setting'),
+          child: const Icon(Icons.more_horiz, color: Colors.black)),
+    );
   }
 
-  ElevatedButton _addToNewsButton() {
-    return ElevatedButton(
-      onPressed: () {},
-      child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Icon(Icons.add, color: Colors.white),
-        SizedBox(
-          width: 5.0,
-        ),
-        Text(
-          "Thêm vào tin",
-          style: TextStyle(color: Colors.white),
-        )
-      ]),
+  Widget _mainButton(BuildContext context) {
+    return Expanded(
+      flex: 8,
+      child: ElevatedButton(
+        onPressed: () =>
+            getUserInfo(context, GetUserInfoRequest(userId: userId)),
+        child:
+            const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Icon(Icons.add, color: Colors.white),
+          SizedBox(
+            width: 5.0,
+          ),
+          Text(
+            "Thêm vào tin",
+            style: TextStyle(color: Colors.white),
+          )
+        ]),
+      ),
     );
   }
 }

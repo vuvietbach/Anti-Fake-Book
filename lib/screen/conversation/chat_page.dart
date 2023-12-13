@@ -57,8 +57,8 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget? _title(BuildContext context, Store<AntiFakeBookState> store) {
-    String avatarUrl = store.state.userState.searchedUserInfo.avatar;
-    String username = store.state.userState.searchedUserInfo.username;
+    String avatarUrl = store.state.userState.searchedUserInfo.avatar!;
+    String username = store.state.userState.searchedUserInfo.username!;
     return InkWell(
       onTap: () => Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => const ChatPartnerInfoPage(),
@@ -97,7 +97,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return StoreBuilder(onInit: (Store<AntiFakeBookState> store) {
-      getUserInfo(store);
+      // getUserInfo(store);
       getConversation(store);
     }, builder: (BuildContext context, Store<AntiFakeBookState> store) {
       return Scaffold(
