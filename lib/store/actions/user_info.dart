@@ -66,7 +66,11 @@ class ChangeProfileAfterSignUpAction extends FutureAction<
   final Function? onError;
   final BuildContext context;
   ChangeProfileAfterSignUpAction(
-      {required this.data, required this.context, this.onSuccess, this.onPending, this.onError})
+      {required this.data,
+      required this.context,
+      this.onSuccess,
+      this.onPending,
+      this.onError})
       : super(future: ApiModel.api.changeProfileAfterSignUp(data), extras: {
           'onSuccess': onSuccess,
           'onError': onError,

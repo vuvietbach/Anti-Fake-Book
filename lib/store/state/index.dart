@@ -26,7 +26,7 @@ class AntiFakeBookState with _$AntiFakeBookState {
     required ConversationState conversationState,
   }) = _AntiFakeBookState;
 
-  factory AntiFakeBookState.initState() => AntiFakeBookState( 
+  factory AntiFakeBookState.initState() => AntiFakeBookState(
         token: "",
         authState: AuthState(),
         appState: AppState(),
