@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:anti_fake_book/layout/default_layer.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/index.dart';
+import 'package:anti_fake_book/screen/profile/change_profile_after_signup_page.dart';
 import 'package:anti_fake_book/screen/sign_up/redux_actions.dart';
 import 'package:anti_fake_book/screen/sign_up/widget.dart';
 import 'package:anti_fake_book/store/state/index.dart';
@@ -528,7 +529,7 @@ class _VerifyAccountPageState extends State<VerifyAccountPage> {
   @override
   Widget build(BuildContext context) {
     return StoreBuilder(onInit: (Store<AntiFakeBookState> store) {
-      getVerifyCode(context, store, GetVerifyCodeRequest(email: widget.email));
+      // getVerifyCode(context, store, GetVerifyCodeRequest(email: widget.email));
     }, builder: (BuildContext context, Store<AntiFakeBookState> store) {
       return EmptyLayout(
         child: Scaffold(
@@ -590,10 +591,8 @@ class _VerifyAccountPageState extends State<VerifyAccountPage> {
         if (_formKey.currentState!.validate()) {
           checkVerifyCode(
               context,
-              store,
               CheckVerifyCodeRequest(
-                  email: widget.email, codeVerify: controller.text),
-              onSuccess: () => context.go("/home"));
+                  email: widget.email, codeVerify: controller.text));
         }
       },
     );

@@ -75,28 +75,30 @@ AntiFakeBookState onSuccessSetUserInfo(
 
 AntiFakeBookState onPendingChangeProfileAfterSignUp(
     AntiFakeBookState state, PendingChangeProfileAfterSignUpAction action) {
-  if (action.extras['onPending'] != null) action.extras['onPending']!();
+  showLoadingDialog(action.extras['context']);
   return state;
 }
 
 AntiFakeBookState onSuccessChangeProfileAfterSignUp(
     AntiFakeBookState state, SuccessChangeProfileAfterSignUpAction action) {
-  if (action.extras['onSuccess'] != null) {
-    action.extras['onSuccess']!(action.payload);
-  }
-  AntiFakeBookState newState = state;
-  ChangeProfileAfterSignUpResponse response = action.payload;
+  Navigator.of(action.extras['context']).pop();
   if (isSuccessCode(action.payload.code)) {
+    action.extras['onSuccess']?.call(action.payload);
+    AntiFakeBookState newState = state;
+    ChangeProfileAfterSignUpResponse response = action.payload;
     newState = state.copyWith(
-      userState: state.userState.copyWith(
-          userInfo: UserInfo(
-        id: response.data.id,
-        username: response.data.username,
-        avatar: response.data.avatar,
-        email: response.data.email,
-        created: response.data.created,
-      )),
-    );
+        userState: state.userState.copyWith(
+            userInfo: UserInfo(
+      id: response.data.id,
+      username: response.data.username,
+      avatar: response.data.avatar,
+      email: response.data.email,
+      created: response.data.created,
+    )));
+    return newState;
+  } else {
+    showErrorDialog(action.extras['context'], action.payload.code,
+        apiType: ApiType.changeProfileAfterSignUp);
+    return state;
   }
-  return newState;
 }

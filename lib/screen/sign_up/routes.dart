@@ -103,17 +103,10 @@ class _SignUpState extends State<SignUp> {
         onConfirm: () async {
           signUp(
             context,
-            store,
             SignUpRequest(
                 email: _email!,
                 password: _password!,
                 uuid: await getDeviceId()),
-            onSuccess: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (context) => VerifyAccountPage(email: _email!)),
-              );
-            },
           );
         },
         pageController: _pageController,

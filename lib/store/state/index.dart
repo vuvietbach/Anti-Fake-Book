@@ -2,6 +2,7 @@ import 'package:anti_fake_book/helper/helper.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/response.dto.dart';
 import 'package:anti_fake_book/models/saved_state.dto.dart';
 import 'package:anti_fake_book/store/state/app.dart';
+import 'package:anti_fake_book/store/state/auth.dart';
 import 'package:anti_fake_book/store/state/conversation/conversation.dart';
 import 'package:anti_fake_book/store/state/post.dart';
 import 'package:anti_fake_book/store/state/search/search.dart';
@@ -16,6 +17,7 @@ class AntiFakeBookState with _$AntiFakeBookState {
   @customJsonSerializable
   factory AntiFakeBookState({
     required String token,
+    required AuthState authState,
     required ResponseDTO responseDTO,
     required AppState appState,
     required PostState postState,
@@ -26,6 +28,7 @@ class AntiFakeBookState with _$AntiFakeBookState {
 
   factory AntiFakeBookState.initState() => AntiFakeBookState( 
         token: "",
+        authState: AuthState(),
         appState: AppState(),
         postState: PostState(),
         userState: UserState(),

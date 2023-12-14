@@ -35,12 +35,19 @@ class SignUpAction extends FutureAction<SignUpAction, SignUpResponse> {
   final Function(SignUpResponse)? onSuccess;
   final Function? onPending;
   final Function? onError;
+  final BuildContext context;
   SignUpAction(
-      {required this.data, this.onSuccess, this.onPending, this.onError})
+      {required this.data,
+      required this.context,
+      this.onSuccess,
+      this.onPending,
+      this.onError})
       : super(future: ApiModel.api.signUp(data), extras: {
           'onSuccess': onSuccess,
           'onPending': onPending,
-          'onError': onError
+          'onError': onError,
+          'context': context,
+          'request': data,
         });
 }
 
@@ -89,7 +96,7 @@ typedef PendingGetVerifyCodeAction = FuturePendingAction<GetVerifyCodeAction>;
 class CheckVerifyCodeAction
     extends FutureAction<CheckVerifyCodeAction, CheckVerifyCodeResponse> {
   final CheckVerifyCodeRequest data;
-  final Function? onSuccess;
+  final Function(CheckVerifyCodeResponse)? onSuccess;
   final Function? onPending;
   final Function? onError;
   CheckVerifyCodeAction(

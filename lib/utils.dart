@@ -258,5 +258,5 @@ bool validateUsername(String username, String email) {
       username != email &&
       username.length >= minUsernameLength &&
       username.length <= maxUsernameLength &&
-      Uri.parse(username).hasScheme;
+      !Uri.parse(username).hasScheme;
 }

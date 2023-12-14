@@ -10,7 +10,8 @@ enum ApiType {
   getVerifyCode,
   checkVerifyCode,
   getUserInfo,
-  setUserInfo
+  setUserInfo,
+  changeProfileAfterSignUp
 }
 
 const int NetworkErrorCode = 0;

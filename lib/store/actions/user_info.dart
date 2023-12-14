@@ -61,15 +61,17 @@ typedef PendingGetUserInfoAction = FuturePendingAction<GetUserInfoAction>;
 class ChangeProfileAfterSignUpAction extends FutureAction<
     ChangeProfileAfterSignUpAction, ChangeProfileAfterSignUpResponse> {
   final ChangeProfileAfterSignUpRequest data;
-  final Function? onSuccess;
+  final Function(ChangeProfileAfterSignUpResponse)? onSuccess;
   final Function? onPending;
   final Function? onError;
+  final BuildContext context;
   ChangeProfileAfterSignUpAction(
-      {required this.data, this.onSuccess, this.onPending, this.onError})
+      {required this.data, required this.context, this.onSuccess, this.onPending, this.onError})
       : super(future: ApiModel.api.changeProfileAfterSignUp(data), extras: {
           'onSuccess': onSuccess,
-          'onPending': onPending,
           'onError': onError,
+          'onPending': onPending,
+          'context': context,
         });
 }
 

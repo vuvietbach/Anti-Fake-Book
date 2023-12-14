@@ -1,8 +1,11 @@
 import 'package:anti_fake_book/helper/helper.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/auth.dto.dart';
+import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
 import 'package:anti_fake_book/screen/sign_in/redux_actions.dart';
+import 'package:anti_fake_book/store/reducers/user_info.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/utils.dart';
+import 'package:anti_fake_book/widgets/common/image.dart';
 import 'package:anti_fake_book/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:anti_fake_book/styles.dart';
@@ -11,7 +14,8 @@ import 'package:go_router/go_router.dart';
 import 'package:redux/redux.dart';
 
 class SignIn extends StatefulWidget {
-  const SignIn({super.key});
+  const SignIn({super.key, this.onSuccess});
+  final Function(BuildContext context)? onSuccess;
 
   @override
   State<SignIn> createState() => _SignInState();
@@ -33,6 +37,8 @@ class _SignInState extends State<SignIn> {
   @override
   void dispose() {
     // Cancel or dispose of asynchronous resources
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 
@@ -41,17 +47,7 @@ class _SignInState extends State<SignIn> {
     return StoreBuilder(
         builder: (BuildContext context, Store<AntiFakeBookState> store) {
       return Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              color: Colors.black,
-            ),
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-          ),
+          appBar: const TransparentAppBar(),
           body: LayoutBuilder(builder: (context, constraints) {
             return SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -126,11 +122,15 @@ class _SignInState extends State<SignIn> {
                 : () async {
                     FocusManager.instance.primaryFocus?.unfocus();
                     if (_formKey.currentState!.validate()) {
-                      final state = StoreProvider.of<AntiFakeBookState>(context).state;
-                      signIn(context, SignInRequest(
-                          email: emailController.text,
-                          password: passwordController.text,
-                          uuid: await getDeviceId()));
+                      signIn(
+                          context,
+                          SignInRequest(
+                            email: emailController.text,
+                            password: passwordController.text,
+                            uuid: await getDeviceId(),
+                          ), onSuccess: (SignInResponse response) {
+                        widget.onSuccess?.call(context);
+                      });
                     }
                   },
             child: const Text('Đăng nhập'),
@@ -154,7 +154,8 @@ class _SignInState extends State<SignIn> {
 }
 
 class SignInWithAccount extends StatefulWidget {
-  const SignInWithAccount({super.key});
+  const SignInWithAccount({super.key, this.onSuccess});
+  final Function(BuildContext context)? onSuccess;
 
   @override
   State<SignInWithAccount> createState() => _SignInWithAccountState();
@@ -163,8 +164,6 @@ class SignInWithAccount extends StatefulWidget {
 class _SignInWithAccountState extends State<SignInWithAccount> {
   final _formKey = GlobalKey<FormState>();
   final passwordController = TextEditingController();
-  // TODO: How to get email for current login user
-  static const String fakeEmail = "bach@gmail.com";
   bool _isSubmitting = false;
 
   @override
@@ -175,61 +174,72 @@ class _SignInWithAccountState extends State<SignInWithAccount> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: const TransparentAppBar(),
-      body: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10),
-          child: Column(
-            children: [
-              const CircleAvatar(
-                radius: 60.0,
-                backgroundImage: AssetImage('assets/images/avatar.jpeg'),
-              ),
-              const SizedBox(
-                height: 15.0,
-              ),
-              const Text(
-                "Vu Viet Bach",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-              ),
-              const SizedBox(height: 10),
-              PasswordField(
-                isEnable: !_isSubmitting,
-                validator: (value) => validatePassword(value, fakeEmail),
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                width: double.infinity,
-                height: 40.0,
-                child: ElevatedButton(
-                  style: CustomButtonStyle.roundBorderButton(40.0),
-                  onPressed: _isSubmitting
-                      ? null
-                      : () async {
-                          FocusManager.instance.primaryFocus?.unfocus();
-                          if (_formKey.currentState!.validate()) {
-                            setState(() {
-                              _isSubmitting = true;
-                            });
-                            setState(() {
-                              _isSubmitting = false;
-                            });
-                          }
-                        },
-                  child: const Text("Đăng nhập"),
-                ),
-              ),
-              TextButton(
-                onPressed: () {},
-                child: const Text('Forgot Password'),
-              ),
-            ],
+    return StoreBuilder(
+        builder: (BuildContext context, Store<AntiFakeBookState> store) {
+      return Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: const TransparentAppBar(),
+        body: Form(
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10, right: 10),
+            child: StoreBuilder(builder:
+                (BuildContext context, Store<AntiFakeBookState> store) {
+              return Column(
+                children: [
+                  AvatarImage(
+                      imageUrl: store.state.userState.userInfo.avatar,
+                      height: 150.0),
+                  const SizedBox(
+                    height: 15.0,
+                  ),
+                  Text(
+                    store.state.userState.userInfo.username,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 20.0),
+                  ),
+                  const SizedBox(height: 10),
+                  PasswordField(
+                    isEnable: !_isSubmitting,
+                    textEditingController: passwordController,
+                    validator: (value) => validatePassword(
+                        value, store.state.userState.userInfo.email),
+                  ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 40.0,
+                    child: ElevatedButton(
+                      style: CustomButtonStyle.roundBorderButton(40.0),
+                      onPressed: _isSubmitting
+                          ? null
+                          : () async {
+                              FocusManager.instance.primaryFocus?.unfocus();
+                              if (_formKey.currentState!.validate()) {
+                                signIn(
+                                    context,
+                                    SignInRequest(
+                                        email: store
+                                            .state.userState.userInfo.email,
+                                        password: passwordController.text,
+                                        uuid: await getDeviceId()),
+                                    onSuccess: (response) =>
+                                        widget.onSuccess?.call(context));
+                              }
+                            },
+                      child: const Text("Đăng nhập"),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {},
+                    child: const Text('Quên mật khẩu?'),
+                  ),
+                ],
+              );
+            }),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
