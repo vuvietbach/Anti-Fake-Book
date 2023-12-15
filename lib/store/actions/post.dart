@@ -10,8 +10,17 @@ class CreatePostAction
     implements PostAction {
   AddPostRequestDTO postData;
 
-  CreatePostAction(this.postData)
-      : super(future: ApiModel.api.addPost(postData));
+  CreatePostAction(
+      this.postData, Function callbackOnPending, Function callbackOnSuccess)
+      : super(future: () async {
+          callbackOnPending();
+          AddPostResponseDTO rs =
+              await ApiModel.api.addPost(postData).catchError((onError) {
+            print(onError);
+          });
+          callbackOnSuccess();
+          return rs;
+        }());
 }
 
 typedef PendingCreatePostAction = FuturePendingAction<CreatePostAction>;
@@ -22,3 +31,14 @@ class SetSelectedPostAction extends PostAction {
   PostPayloadDTO post;
   SetSelectedPostAction(this.post);
 }
+
+class ReportPostAction extends FutureAction<ReportPostAction, ResponseDTO>
+    implements PostAction {
+  ReportPostRequestDto reportData;
+  ReportPostAction(this.reportData)
+      : super(future: ApiModel.api.reportPost(reportData));
+}
+
+typedef PendingReportPostAction = FuturePendingAction<ReportPostAction>;
+typedef SuccessReportPostAction
+    = FutureSucceededAction<ReportPostAction, ResponseDTO>;

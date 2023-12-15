@@ -1,40 +1,101 @@
-import 'package:anti_fake_book/constants/constants.dart';
-import 'package:anti_fake_book/disk.dart';
-import 'package:anti_fake_book/models/base_apis/dto/response/response.dto.dart';
+import 'package:anti_fake_book/helper/helper.dart';
+import 'package:anti_fake_book/models/base_apis/apis.dart';
+import 'package:anti_fake_book/models/saved_state.dto.dart';
+import 'package:anti_fake_book/services/save_to_disk_service.dart';
 import 'package:anti_fake_book/store/actions/auth.dart';
-import 'package:anti_fake_book/store/state/app.dart';
+import 'package:anti_fake_book/store/state/auth.dart';
 import 'package:anti_fake_book/store/state/index.dart';
-import 'package:anti_fake_book/store/state/user.dart';
 import 'package:anti_fake_book/utils.dart';
-import 'package:logger/logger.dart';
-
-AntiFakeBookState onSignInSuccess(
-    AntiFakeBookState state, SuccessSignInAction action) {
-  action.extras['onSuccess']!();
-  late UserState userState;
-  if (action.payload.code == 1000) {
-    userState = UserState.fromJson(action.payload.data);
-  } else {
-    userState = state.userState;
-  }
-  AntiFakeBookState newState = state.copyWith(
-    appState: AppState(status: AppStatus.loaded),
-    responseDTO:
-        ResponseDTO(code: action.payload.code, message: action.payload.message),
-    userState: userState,
-  );
-//   var logger = Logger(
-//   printer: PrettyPrinter(),
-// );
-//   logger.d(userState.email);
-  DiskStore.saveState(newState);
-  return newState;
-}
+import 'package:flutter/material.dart';
 
 AntiFakeBookState onSignInPending(
     AntiFakeBookState state, PendingSignInAction action) {
-  action.extras['onPending']!();
-  return state.copyWith(
-    appState: AppState(status: AppStatus.loading),
-  );
+  showLoadingDialog(action.extras['context']);
+  return state;
+}
+
+AntiFakeBookState onSignInSuccess(
+    AntiFakeBookState state, SuccessSignInAction action) {
+  Navigator.of(action.extras['context']).pop();
+  if (isSuccessCode(action.payload.code)) {
+    action.extras['onSuccess']?.call(action.payload);
+    AntiFakeBookState newState = state.copyWith(
+      token: action.payload.data.token,
+      userState: state.userState.copyWith(
+        userInfo: state.userState.userInfo.copyWith(
+          id: action.payload.data.id,
+          email: action.extras['request'].email,
+          username: action.payload.data.username,
+          avatar: action.payload.data.avatar,
+          active: action.payload.data.active,
+          coins: action.payload.data.coins,
+        ),
+      ),
+    );
+    // save state to disk
+    DiskStore.saveState(SavedState(
+        token: action.payload.data.token,
+        userInfo: newState.userState.userInfo));
+    //
+    ApiModel.api.update(action.payload.data.token);
+
+    return newState;
+  } else {
+    showErrorDialog(action.extras['context'], action.payload.code,
+        apiType: ApiType.signIn);
+    return state;
+  }
+}
+// AntiFakeBookState onSignInError(
+//     AntiFakeBookState state, ErrorSignInAction action) {
+//   Navigator.of(action.extras['context']).pop();
+//   showErrorDialog(action.extras['context'], action.payload.code, apiType: ApiType.signIn);
+//   return state;
+// }
+
+AntiFakeBookState onSignUpSuccess(
+    AntiFakeBookState state, SuccessSignUpAction action) {
+  Navigator.of(action.extras['context']).pop();
+  if (isSuccessCode(action.payload.code)) {
+    action.extras['onSuccess']?.call(action.payload);
+    return state.copyWith(
+        authState: state.authState.copyWith(
+            email: action.extras['request'].email,
+            password: action.extras['request'].password,
+            uuid: action.extras['request'].uuid));
+  } else {
+    showErrorDialog(action.extras['context'], action.payload.code,
+        apiType: ApiType.signUp);
+    return state;
+  }
+}
+
+AntiFakeBookState onSignUpPending(
+    AntiFakeBookState state, PendingSignUpAction action) {
+  showLoadingDialog(action.extras['context']);
+  return state;
+}
+
+AntiFakeBookState onSuccessCheckVerifyCode(
+    AntiFakeBookState state, SuccessCheckVerifyCodeAction action) {
+  action.extras['onSuccess']?.call(action.payload);
+  return state;
+}
+
+AntiFakeBookState onPendingCheckVerifyCode(
+    AntiFakeBookState state, PendingCheckVerifyCodeAction action) {
+  action.extras['onPending']?.call();
+  return state;
+}
+
+AntiFakeBookState onSuccessGetVerifyCode(
+    AntiFakeBookState state, SuccessGetVerifyCodeAction action) {
+  action.extras['onSuccess']?.call(action.payload);
+  return state;
+}
+
+AntiFakeBookState onPendingGetVerifyCode(
+    AntiFakeBookState state, PendingGetVerifyCodeAction action) {
+  action.extras['onPending']?.call();
+  return state;
 }

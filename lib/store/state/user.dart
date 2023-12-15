@@ -1,19 +1,17 @@
+import 'package:anti_fake_book/store/state/user_info.dart';
 import 'package:anti_fake_book/utils.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'user.freezed.dart';
 part 'user.g.dart';
 
+const _defaultUserInfo = UserInfo();
+
 @unfreezed
 class UserState with _$UserState {
   @customJsonSerializable
   factory UserState({
-    @Default("") String id,
-    @Default("") String username,
-    @Default("") String email,
-    @Default("") String token,
-    @Default("") String avatar,
-    @Default(0) int active,
-    @Default(0) int coins,
+    @Default(_defaultUserInfo) UserInfo userInfo,
+    @Default(_defaultUserInfo) UserInfo searchedUserInfo,
   }) = _UserState;
 
   factory UserState.fromJson(Map<String, dynamic> json) =>
@@ -22,5 +20,5 @@ class UserState with _$UserState {
 
 void main() {
   final user = UserState();
-  print(user.copyWith(coins: 10));
+  // print(user.copyWith(coins: 10));
 }

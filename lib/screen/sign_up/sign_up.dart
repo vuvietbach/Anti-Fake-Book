@@ -1,20 +1,21 @@
 import 'dart:math';
 
+import 'package:anti_fake_book/layout/default_layer.dart';
+import 'package:anti_fake_book/models/base_apis/dto/request/index.dart';
+import 'package:anti_fake_book/screen/profile/change_profile_after_signup_page.dart';
+import 'package:anti_fake_book/screen/sign_up/redux_actions.dart';
 import 'package:anti_fake_book/screen/sign_up/widget.dart';
+import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/utils.dart';
 import 'package:anti_fake_book/widgets/buttons.dart';
 import 'package:anti_fake_book/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:redux/redux.dart';
 import '../../styles.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
-// SignUp
-//  SignUpName
-//  SignUpBirthday
-//  SignUpEmail
-//  PasswordSignUp
-//  AcceptSignUp
 
 class BeginSignUp extends StatefulWidget {
   final PageController pageController;
@@ -204,9 +205,9 @@ class _SignUpAgeState extends State<SignUpAge> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text("Bạn chưa đủ tuổi"),
-              content:
-                  const Text("Bạn phải đủ 13 tuổi để sử dụng Anti-Fakebook"),
+              title: const Text("Tuổi không hợp lệ"),
+              content: const Text(
+                  "Người dùng phải từ 13 tuổi trở lên để sử dụng Anti-Fakebook"),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
@@ -288,7 +289,13 @@ class _SignUpAgeState extends State<SignUpAge> {
 
 class SignUpEmail extends StatefulWidget {
   final PageController pageController;
-  const SignUpEmail({super.key, required this.pageController});
+  final Function(String?)? onSave;
+  final String? initialValue;
+  const SignUpEmail(
+      {super.key,
+      required this.pageController,
+      this.onSave,
+      this.initialValue});
   static const message =
       "Nhập email có thể dùng để liên hệ với bạn. Thông tin này sẽ không hiển thị với ai khác trên trang cá nhân của bạn.";
   static const message2 =
@@ -322,12 +329,13 @@ class _SignUpEmailState extends State<SignUpEmail> {
             height: 10,
           ),
           TextFormField(
-            // initialValue: ref.read(signUpStateProvider).email,
+            initialValue: widget.initialValue,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Email',
             ),
             validator: validateEmail,
+            onSaved: widget.onSave,
           ),
           const SizedBox(
             height: 10,
@@ -344,6 +352,13 @@ class _SignUpEmailState extends State<SignUpEmail> {
             height: 10,
           ),
           ContinueButton(
+            validate: () {
+              bool ok = formKey.currentState!.validate();
+              if (ok) {
+                formKey.currentState!.save();
+              }
+              return ok;
+            },
             pageController: widget.pageController,
           )
         ],
@@ -354,7 +369,15 @@ class _SignUpEmailState extends State<SignUpEmail> {
 
 class SignUpPassword extends StatefulWidget {
   final PageController pageController;
-  const SignUpPassword({super.key, required this.pageController});
+  final Function(String?)? onSave;
+  final String? initialValue;
+  final String? email;
+  const SignUpPassword(
+      {super.key,
+      required this.pageController,
+      this.onSave,
+      this.initialValue,
+      this.email});
   static const message =
       "Tạo mật khẩu gồm ít nhất 6 chữ cái hoặc chữ số. Bạn nên chọn mật khẩu thật khó đoán.";
 
@@ -364,8 +387,15 @@ class SignUpPassword extends StatefulWidget {
 
 class _SignUpPasswordState extends State<SignUpPassword> {
   final formKey = GlobalKey<FormState>();
-  late String? password1;
-  late String? password2;
+  String? password1;
+  String? password2;
+  @override
+  void initState() {
+    super.initState();
+    password1 = widget.initialValue;
+    password2 = widget.initialValue;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -385,19 +415,19 @@ class _SignUpPasswordState extends State<SignUpPassword> {
             height: 10,
           ),
           PasswordField(
-            // initialValue: ref.read(signUpStateProvider).password,
+            initialValue: widget.initialValue,
             labelText: "Mật khẩu",
             validator: (value) {
-              String email = "test";
-              return validatePassword(value, email);
+              return validatePassword(value, widget.email);
             },
-            onChanged: (value) => password1 = value,
+            onChanged: (value) => setState(() => password1 = value),
+            onSaved: widget.onSave,
           ),
           const SizedBox(
             height: 10,
           ),
           PasswordField(
-              //initialValue: ref.read(signUpStateProvider).password,
+              initialValue: widget.initialValue,
               labelText: "Nhập lại mật khẩu",
               validator: (value) {
                 if (value != password1) {
@@ -405,20 +435,21 @@ class _SignUpPasswordState extends State<SignUpPassword> {
                 }
                 return null;
               },
-              onChanged: (value) => password2 = value),
+              onChanged: (value) => setState(() {
+                    password2 = value;
+                  })),
           const SizedBox(
             height: 10,
           ),
-          PrimaryButton(
-            text: "Tiếp tục",
-            onPressed: () {
-              if (formKey.currentState!.validate()) {
-                FocusScope.of(context).unfocus();
-                widget.pageController.nextPage(
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.ease);
+          ContinueButton(
+            validate: () {
+              bool ok = formKey.currentState!.validate();
+              if (ok) {
+                formKey.currentState!.save();
               }
+              return ok;
             },
+            pageController: widget.pageController,
           )
         ],
       ),
@@ -460,68 +491,122 @@ class SaveInfo extends StatelessWidget {
   }
 }
 
-class VerifyAccount extends StatefulWidget {
-  const VerifyAccount({super.key});
+class VerifyAccountPage extends StatefulWidget {
+  const VerifyAccountPage({super.key, required this.email});
+  final String email;
 
   @override
-  State<VerifyAccount> createState() => _VerifyAccountState();
+  State<VerifyAccountPage> createState() => _VerifyAccountPageState();
 }
 
-class _VerifyAccountState extends State<VerifyAccount> {
+class _VerifyAccountPageState extends State<VerifyAccountPage> {
   final controller = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
+  Widget _instruction() {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Xác nhận tài khoản", style: CustomTextStyle.titleStyle),
-        const SizedBox(
+        Text("Xác nhận tài khoản",
+            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+        SizedBox(
           height: 10,
         ),
         Text(
             "Chúng tôi đã gửi mã xác nhận tới email của bạn. Vui lòng kiểm tra email và nhập mã gồm 6 chữ số vào đây.",
-            style: CustomTextStyle.normalStyle),
-        const SizedBox(
-          height: 10,
-        ),
-        buildCodeField(),
-        const SizedBox(
-          height: 10,
-        ),
-        const PrimaryButton(
-          text: "Xác nhận",
-        ),
-        const SizedBox(
-          height: 10,
-        ),
+            style: TextStyle(fontSize: 16.0)),
         SizedBox(
-          height: 40.0,
-          width: double.infinity,
-          child: OutlinedButton(
-            onPressed: () {},
-            style: CustomButtonStyle.roundBorderButton(30.0),
-            child: const Text("Gửi lại mã"),
-          ),
-        )
+          height: 10,
+        ),
       ],
     );
   }
 
-  Widget buildCodeField() {
+  @override
+  Widget build(BuildContext context) {
+    return StoreBuilder(onInit: (Store<AntiFakeBookState> store) {
+      // getVerifyCode(context, store, GetVerifyCodeRequest(email: widget.email));
+    }, builder: (BuildContext context, Store<AntiFakeBookState> store) {
+      return EmptyLayout(
+        child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {},
+            ),
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+          ),
+          body: Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _instruction(),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  _codeField(),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  _confirmButton(context, store),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  _resendCodeButton(),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget _resendCodeButton() {
+    return ResendCodeButton(
+      onPressed: () {
+        getVerifyCode(
+            context,
+            StoreProvider.of<AntiFakeBookState>(context),
+            GetVerifyCodeRequest(
+              email: widget.email,
+            ));
+      },
+    );
+  }
+
+  PrimaryButton _confirmButton(
+      BuildContext context, Store<AntiFakeBookState> store) {
+    return PrimaryButton(
+      text: "Xác nhận",
+      onPressed: () {
+        if (_formKey.currentState!.validate()) {
+          checkVerifyCode(
+              context,
+              CheckVerifyCodeRequest(
+                  email: widget.email, codeVerify: controller.text));
+        }
+      },
+    );
+  }
+
+  Widget _codeField() {
     return Container(
       alignment: Alignment.center,
       child: SizedBox(
         width: 120.0,
-        child: TextField(
+        child: TextFormField(
           controller: controller,
           keyboardType: TextInputType.number,
           maxLength: 6, // Adjust to the desired code length
-
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
             counterText: '', // To hide the character count
@@ -531,6 +616,12 @@ class _VerifyAccountState extends State<VerifyAccount> {
             fontSize: 20.0,
             fontWeight: FontWeight.bold,
           ),
+          validator: (String? value) {
+            if (value == null || value.length != 6) {
+              return "Mã xác nhận phai có 6 chữ số";
+            }
+            return null;
+          },
         ),
       ),
     );
@@ -539,7 +630,8 @@ class _VerifyAccountState extends State<VerifyAccount> {
 
 class PolicyScreen extends StatefulWidget {
   final PageController pageController;
-  const PolicyScreen({super.key, required this.pageController});
+  final Function? onConfirm;
+  const PolicyScreen({super.key, required this.pageController, this.onConfirm});
 
   @override
   State<PolicyScreen> createState() => _PolicyScreenState();
@@ -553,11 +645,17 @@ class _PolicyScreenState extends State<PolicyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WebViewWidget(
-        controller: WebViewController()
-          ..setJavaScriptMode(JavaScriptMode.unrestricted)
-          ..addJavaScriptChannel("app",
-              onMessageReceived: (JavaScriptMessage message) async {})
-          ..loadFlutterAsset('assets/policy.html'));
+    return StoreBuilder(
+        builder: (BuildContext context, Store<AntiFakeBookState> store) {
+      return WebViewWidget(
+          controller: WebViewController()
+            ..setJavaScriptMode(JavaScriptMode.unrestricted)
+            ..addJavaScriptChannel("app",
+                onMessageReceived: (JavaScriptMessage message) async {
+              widget.onConfirm?.call();
+              // store.dispatch(SignUpAction)
+            })
+            ..loadFlutterAsset('assets/policy.html'));
+    });
   }
 }
