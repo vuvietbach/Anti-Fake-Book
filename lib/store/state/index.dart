@@ -1,5 +1,6 @@
 import 'package:anti_fake_book/models/base_apis/dto/response/response.dto.dart';
 import 'package:anti_fake_book/store/state/app.dart';
+import 'package:anti_fake_book/store/state/listposts.dart';
 import 'package:anti_fake_book/store/state/post.dart';
 import 'package:anti_fake_book/store/state/user.dart';
 import 'package:anti_fake_book/utils.dart';
@@ -15,6 +16,7 @@ class AntiFakeBookState with _$AntiFakeBookState {
     required AppState appState,
     required PostState postState,
     required UserState userState,
+    required ListPostsState listPostsState,
   }) = _AntiFakeBookState;
 
   factory AntiFakeBookState.initState() => AntiFakeBookState(
@@ -22,6 +24,7 @@ class AntiFakeBookState with _$AntiFakeBookState {
         postState: PostState(),
         userState: UserState(),
         responseDTO: ResponseDTO(),
+        listPostsState: ListPostsState(),
       );
 
   factory AntiFakeBookState.fromJson(Map<String, dynamic> json) =>

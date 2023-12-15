@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:anti_fake_book/constants/base_apis.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/sign_in.dto.dart';
@@ -6,14 +7,16 @@ import 'package:dio/dio.dart';
 
 import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
 
+import 'dto/request/get_list_posts.dart';
 import 'dto/request/index.dart';
+import 'dto/response/get_list_posts.dto.dart';
 
 class ApiModel {
   late final String _baseUrl;
   late final BaseOptions _baseOptions;
   late final Dio _dio;
   ApiModel() {
-    _baseUrl = 'https://21207cc3-5154-4640-8809-dd9b7a2e95f8.mock.pstmn.io';
+    _baseUrl = 'https://f2782c39-9f02-4230-9c31-8f458430943c.mock.pstmn.io';
     _baseOptions = BaseOptions(baseUrl: _baseUrl);
     _dio = Dio(_baseOptions);
     _dio.interceptors.add(InterceptorsWrapper(
@@ -68,5 +71,25 @@ class ApiModel {
     });
     SignInResponse signInResponse = SignInResponse.fromJson(response.data);
     return signInResponse;
+  }
+
+  Future<GetListPostsResponseDTO> GetListPosts(
+      GetListPostsRequestDTO data) async {
+    final response = await _dio.post(PathName.getListPosts, data: {
+      'token': data.token,
+      'user_id': data.user_id,
+      'in_campaign': data.in_campaign,
+      'latitude': data.latitude,
+      'longitude': data.longitude,
+      'last_id': data.last_id,
+      'index': data.index,
+      'count': data.count,
+    });
+
+    print('getListPosts');
+    // print(response.data);
+    // final responseDTO = GetListPostsResponseDTO.fromJson(response.data);
+    // print(responseDTO.code);
+    return GetListPostsResponseDTO.fromJson(response.data);
   }
 }

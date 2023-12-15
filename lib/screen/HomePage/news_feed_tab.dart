@@ -1,14 +1,22 @@
+import 'package:anti_fake_book/models/base_apis/dto/response/get_list_posts.dto.dart';
 import 'package:anti_fake_book/screen/HomePage/news_feed_subtab/detailed_post.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:go_router/go_router.dart';
+import 'package:redux/redux.dart';
 import 'dart:ui';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:video_player/video_player.dart';
 import 'package:faker/faker.dart';
 import 'dart:math';
 
+import '../../models/base_apis/dto/request/get_list_posts.dart';
+import '../../store/actions/listposts.dart';
+import '../../store/reducers/listposts.dart';
+import '../../store/state/index.dart';
+import '../../utils.dart';
 import '../../widgets/loading_widget.dart';
 
 final List<String> imageAssets = [
@@ -39,8 +47,8 @@ class Post {
   final String id;
   final String userName;
   final String content;
-  final String youtubeLink;
-  final String vietnamNetLink;
+  // final String youtubeLink;
+  // final String vietnamNetLink;
   final int kudosCount;
   final int disappointedCount;
   final int commentCount;
@@ -62,9 +70,9 @@ class Post {
       this.id,
       this.userName,
       this.content,
-      this.youtubeLink,
+      // this.youtubeLink,
       this.imageURL,
-      this.vietnamNetLink,
+      // this.vietnamNetLink,
       this.kudosCount,
       this.disappointedCount,
       this.commentCount,
@@ -126,12 +134,37 @@ class Post {
   }
 }
 
+Post getPostState(int listPostId, Store<AntiFakeBookState> store) {
+  listPostId = min(listPostId, store.state.listPostsState.post.length - 1);
+  EachPostPayloadDTO post = store.state.listPostsState.post[listPostId];
+  String id = post.id ?? "";
+  String username = post.author?.username ?? "";
+  String content = post.described ?? "";
+
+  final random = Random();
+  int kudosCount = random.nextInt(200);
+  int disappointedCount = random.nextInt(200);
+  int commentCount = random.nextInt(200);
+
+  List<String> imageURL = post.image;
+
+  DateTime start = DateTime.parse(post.created ?? "");
+  DateTime end = DateTime.now();
+
+  final difference = end.difference(start).inSeconds;
+  final randomSeconds = random.nextInt(difference);
+  DateTime PostDate = start.add(Duration(seconds: randomSeconds));
+
+  return Post(id, username, content, imageURL, kudosCount, disappointedCount,
+      commentCount, PostDate);
+}
+
 Post FakePost() {
   String id = faker.guid.guid();
   String username = faker.person.name();
   String content = faker.lorem.words(50).join(' ');
-  String youtubeLink = 'https://youtube.com/';
-  String vietnamNetLink = 'https://vietnamnet.vn/';
+  // String youtubeLink = 'https://youtube.com/';
+  // String vietnamNetLink = 'https://vietnamnet.vn/';
 
   final random = Random();
 
@@ -149,8 +182,8 @@ Post FakePost() {
   final randomSeconds = random.nextInt(difference);
   DateTime PostDate = start.add(Duration(seconds: randomSeconds));
 
-  return Post(id, username, content, youtubeLink, imageURL, vietnamNetLink,
-      kudosCount, disappointedCount, commentCount, PostDate);
+  return Post(id, username, content, imageURL, kudosCount, disappointedCount,
+      commentCount, PostDate);
 }
 
 class _PostHomePageContentState extends State<PostHomePageContent> {
@@ -159,10 +192,20 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
   bool isLoading = false;
 
   List<Post> listPost = [];
+  late Store<AntiFakeBookState> store;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    store = StoreProvider.of<AntiFakeBookState>(context);
+  }
 
   @override
   void initState() {
     super.initState();
+
+    // store = StoreProvider.of<AntiFakeBookState>(context);
+
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
               _scrollController.position.maxScrollExtent &&
@@ -185,16 +228,24 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
       isLoading = true;
     });
 
+    GetListPostsRequestDTO getListPosts = GetListPostsRequestDTO();
+
+    store.dispatch(GetListPostsAction(
+        postData: getListPosts, onSuccess: () {}, onPending: () {}));
+
     Future.delayed(Duration(seconds: 5), () {
       setState(() {
         numberOfContainers += 3;
         isLoading = false;
       });
+      for (int i = 0; i < 3; i++) {
+        listPost.add(getPostState(numberOfContainers - 3 + i, store));
+      }
     });
 
-    for (int i = 0; i < 3; i++) {
-      listPost.add(FakePost());
-    }
+    // for (int i = 0; i < 3; i++) {
+    //   listPost.add(FakePost());
+    // }
   }
 
   void reloadContainers() {
@@ -204,16 +255,18 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
       isLoading = true;
     });
 
-    Future.delayed(Duration(seconds: 5), () {
-      setState(() {
-        numberOfContainers = 3;
-        isLoading = false;
-      });
+    GetListPostsRequestDTO getListPosts = GetListPostsRequestDTO();
+
+    store.dispatch(GetListPostsAction(
+        postData: getListPosts, onSuccess: () {}, onPending: () {}));
+    setState(() {
+      numberOfContainers = 3;
+      isLoading = false;
     });
 
     listPost = [];
     for (int i = 0; i < 3; i++) {
-      listPost.add(FakePost());
+      listPost.add(getPostState(numberOfContainers - 3 + i, store));
     }
   }
 
@@ -248,277 +301,294 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
   Widget build(BuildContext context) {
     List<GlobalKey> _menuButtonKeys =
         List.generate(numberOfContainers, (index) => GlobalKey());
-    return Stack(children: [
-      Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              itemCount: numberOfContainers + 1,
-              itemBuilder: (BuildContext context, int indexOfAll) {
-                int index = indexOfAll - 1;
-                if (index == -1) {
-                  return ElevatedButton(
-                    onPressed: () {
-                      GoRouter.of(context).go('/create-post');
-                    },
-                    child: Text('Tạo bài viết'),
-                  );
-                } else if (index < numberOfContainers) {
-                  if (listPost[index].textSpans.length <= 30) {
-                    listPost[index].displayedText = listPost[index].textSpans;
-                  } else if (listPost[index].kudosCount < 100 &&
-                      listPost[index].commentCount < 100 &&
-                      listPost[index].imageURL.length <= 1) {
-                    listPost[index].displayedText = listPost[index].showAllText
-                        ? listPost[index].textSpans
-                        : listPost[index].textSpans.sublist(0, 30);
-                    if (!listPost[index].showAllText) {
-                      listPost[index].displayedText.add(
-                            TextSpan(
-                              text: '...',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          );
-                      listPost[index].displayedText.add(
-                            TextSpan(
-                              text: 'Xem thêm',
-                              style: TextStyle(color: Colors.grey),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  setState(() {
-                                    listPost[index].showAllText = true;
-                                  });
-                                },
-                            ),
-                          );
+    return StoreBuilder(
+        builder: (BuildContext context, Store<AntiFakeBookState> store) {
+      return Stack(children: [
+        Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                controller: _scrollController,
+                itemCount: numberOfContainers + 1,
+                itemBuilder: (BuildContext context, int indexOfAll) {
+                  int index = indexOfAll - 1;
+                  if (index == -1) {
+                    return ElevatedButton(
+                      onPressed: () {
+                        GoRouter.of(context).go('/create-post');
+                      },
+                      child: Text('Tạo bài viết'),
+                      // return ElevatedButton(
+                      //   onPressed: () {
+                      //     GetListPostsRequestDTO getListPosts =
+                      //         GetListPostsRequestDTO();
+                      //
+                      //     store.dispatch(GetListPostsAction(
+                      //         postData: getListPosts,
+                      //         onSuccess: () {},
+                      //         onPending: () {}));
+                      //   },
+                      //   child: Text('Tạo bài viết'),
+                    );
+                  } else if (index < numberOfContainers) {
+                    if (listPost[index].textSpans.length <= 30) {
+                      listPost[index].displayedText = listPost[index].textSpans;
+                    } else if (listPost[index].kudosCount < 100 &&
+                        listPost[index].commentCount < 100 &&
+                        listPost[index].imageURL.length <= 1) {
+                      listPost[index].displayedText =
+                          listPost[index].showAllText
+                              ? listPost[index].textSpans
+                              : listPost[index].textSpans.sublist(0, 30);
+                      if (!listPost[index].showAllText) {
+                        listPost[index].displayedText.add(
+                              TextSpan(
+                                text: '...',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            );
+                        listPost[index].displayedText.add(
+                              TextSpan(
+                                text: 'Xem thêm',
+                                style: TextStyle(color: Colors.grey),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    setState(() {
+                                      listPost[index].showAllText = true;
+                                    });
+                                  },
+                              ),
+                            );
+                      } else {
+                        listPost[index].displayedText.add(
+                              TextSpan(
+                                text: ' Thu gọn',
+                                style: TextStyle(color: Colors.grey),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    setState(() {
+                                      listPost[index].showAllText = false;
+                                    });
+                                  },
+                              ),
+                            );
+                      }
                     } else {
-                      listPost[index].displayedText.add(
-                            TextSpan(
-                              text: ' Thu gọn',
-                              style: TextStyle(color: Colors.grey),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  setState(() {
-                                    listPost[index].showAllText = false;
-                                  });
-                                },
-                            ),
-                          );
-                    }
-                  } else {
-                    listPost[index].displayedText = listPost[index].showAllText
-                        ? listPost[index].textSpans
-                        : listPost[index].textSpans.sublist(0, 30);
-                    if (!listPost[index].showAllText) {
-                      listPost[index].displayedText.add(
-                            TextSpan(
-                              text: '...',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          );
-                      listPost[index].displayedText.add(
-                            TextSpan(
-                              text: 'Xem thêm',
-                              style: TextStyle(color: Colors.grey),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          DetailedPost(post: listPost[index]),
-                                    ),
-                                  );
-                                },
-                            ),
-                          );
-                    }
-                  }
-                  return Container(
-                    color: Colors.white,
-                    margin: EdgeInsets.only(bottom: 10),
-                    padding: EdgeInsets.all(10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 20,
-                              backgroundColor: Colors.deepPurple,
-                            ),
-                            SizedBox(width: 10),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  listPost[index].userName,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      '${listPost[index].timeAgo} • ',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 10,
-                                      ),
-                                    ),
-                                    SizedBox(height: 20),
-                                    Icon(
-                                      Icons.public_rounded,
-                                      size: 10,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Spacer(),
-                            IconButton(
-                              key: _menuButtonKeys[index],
-                              icon: Icon(Icons.more_horiz),
-                              onPressed: () {
-                                final RenderBox buttonBox =
-                                    _menuButtonKeys[index]
-                                        .currentContext
-                                        ?.findRenderObject() as RenderBox;
-                                final Offset offset =
-                                    buttonBox.localToGlobal(Offset.zero);
-
-                                final Size screenSize = window.physicalSize /
-                                    window.devicePixelRatio;
-                                final double menuHeight =
-                                    menuOptions.length * 56.0;
-
-                                showMenu(
-                                  context: context,
-                                  position: RelativeRect.fromLTRB(
-                                    offset.dx,
-                                    screenSize.height - menuHeight,
-                                    offset.dx + buttonBox.size.width,
-                                    screenSize.height,
-                                  ),
-                                  items: menuOptions.map((option) {
-                                    return PopupMenuItem(
-                                      value: option['title'],
-                                      child: ListTile(
-                                        contentPadding: EdgeInsets.all(0),
-                                        leading: Icon(option['icon']),
-                                        title: Text(option['title']),
+                      listPost[index].displayedText =
+                          listPost[index].showAllText
+                              ? listPost[index].textSpans
+                              : listPost[index].textSpans.sublist(0, 30);
+                      if (!listPost[index].showAllText) {
+                        listPost[index].displayedText.add(
+                              TextSpan(
+                                text: '...',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            );
+                        listPost[index].displayedText.add(
+                              TextSpan(
+                                text: 'Xem thêm',
+                                style: TextStyle(color: Colors.grey),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            DetailedPost(post: listPost[index]),
                                       ),
                                     );
-                                  }).toList(),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10),
-                        // Post content (text)
-                        RichText(
-                          text:
-                              TextSpan(children: listPost[index].displayedText),
-                        ),
-                        SizedBox(height: 10),
-                        // Comment Count Section
-                        GridView.builder(
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
+                                  },
+                              ),
+                            );
+                      }
+                    }
+                    return Container(
+                      color: Colors.white,
+                      margin: EdgeInsets.only(bottom: 10),
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 20,
+                                backgroundColor: Colors.deepPurple,
+                              ),
+                              SizedBox(width: 10),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    listPost[index].userName,
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '${listPost[index].timeAgo} • ',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.normal,
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                      SizedBox(height: 20),
+                                      Icon(
+                                        Icons.public_rounded,
+                                        size: 10,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Spacer(),
+                              IconButton(
+                                key: _menuButtonKeys[index],
+                                icon: Icon(Icons.more_horiz),
+                                onPressed: () {
+                                  final RenderBox buttonBox =
+                                      _menuButtonKeys[index]
+                                          .currentContext
+                                          ?.findRenderObject() as RenderBox;
+                                  final Offset offset =
+                                      buttonBox.localToGlobal(Offset.zero);
+
+                                  final Size screenSize = window.physicalSize /
+                                      window.devicePixelRatio;
+                                  final double menuHeight =
+                                      menuOptions.length * 56.0;
+
+                                  showMenu(
+                                    context: context,
+                                    position: RelativeRect.fromLTRB(
+                                      offset.dx,
+                                      screenSize.height - menuHeight,
+                                      offset.dx + buttonBox.size.width,
+                                      screenSize.height,
+                                    ),
+                                    items: menuOptions.map((option) {
+                                      return PopupMenuItem(
+                                        value: option['title'],
+                                        child: ListTile(
+                                          contentPadding: EdgeInsets.all(0),
+                                          leading: Icon(option['icon']),
+                                          title: Text(option['title']),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  );
+                                },
+                              ),
+                            ],
                           ),
-                          itemCount: listPost[index].imageURL.length,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, imageIndex) {
-                            // Determine the layout based on the number of images
-                            if (listPost[index].imageURL.length == 1) {
-                              // If there's only one image, display it in one line
-                              return Image.asset(
-                                listPost[index].imageURL[imageIndex],
-                                fit: BoxFit.cover,
-                              );
-                            } else if (listPost[index].imageURL.length == 2) {
-                              // If there are two images, display them in two lines, one each
-                              return Image.asset(
-                                listPost[index].imageURL[imageIndex],
-                                fit: BoxFit.cover,
-                              );
-                            } else if (listPost[index].imageURL.length == 3) {
-                              if (imageIndex == 0) {
+                          SizedBox(height: 10),
+                          // Post content (text)
+                          RichText(
+                            text: TextSpan(
+                                children: listPost[index].displayedText),
+                          ),
+                          SizedBox(height: 10),
+                          // Comment Count Section
+                          GridView.builder(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                            ),
+                            itemCount: listPost[index].imageURL.length,
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, imageIndex) {
+                              // Determine the layout based on the number of images
+                              if (listPost[index].imageURL.length == 1) {
+                                // If there's only one image, display it in one line
                                 return Image.asset(
                                   listPost[index].imageURL[imageIndex],
                                   fit: BoxFit.cover,
                                 );
-                              } else {
+                              } else if (listPost[index].imageURL.length == 2) {
+                                // If there are two images, display them in two lines, one each
+                                return Image.asset(
+                                  listPost[index].imageURL[imageIndex],
+                                  fit: BoxFit.cover,
+                                );
+                              } else if (listPost[index].imageURL.length == 3) {
+                                if (imageIndex == 0) {
+                                  return Image.asset(
+                                    listPost[index].imageURL[imageIndex],
+                                    fit: BoxFit.cover,
+                                  );
+                                } else {
+                                  return Image.asset(
+                                    listPost[index].imageURL[imageIndex],
+                                    fit: BoxFit.cover,
+                                  );
+                                }
+                              } else if (listPost[index].imageURL.length == 4) {
                                 return Image.asset(
                                   listPost[index].imageURL[imageIndex],
                                   fit: BoxFit.cover,
                                 );
                               }
-                            } else if (listPost[index].imageURL.length == 4) {
-                              return Image.asset(
-                                listPost[index].imageURL[imageIndex],
-                                fit: BoxFit.cover,
-                              );
-                            }
-                            return Container(); // Return an empty container for other cases
-                          },
-                        ),
-                        AspectRatio(
-                          aspectRatio: 16 / 9,
-                          child: FlickVideoPlayer(
-                            flickManager: listPost[index].currentFlickManager,
+                              return Container(); // Return an empty container for other cases
+                            },
                           ),
-                        ),
-                        SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(Icons.thumb_up, color: Colors.blue),
-                                SizedBox(width: 5),
-                                Text(
-                                  'Kudos: ${formatCount(listPost[index].kudosCount)}',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ],
+                          AspectRatio(
+                            aspectRatio: 16 / 9,
+                            child: FlickVideoPlayer(
+                              flickManager: listPost[index].currentFlickManager,
                             ),
-                            Row(
-                              children: [
-                                Icon(Icons.comment, color: Colors.green),
-                                SizedBox(width: 5),
-                                Text(
-                                  'Comments: ${formatCount(listPost[index].commentCount)}',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Icon(Icons.thumb_down, color: Colors.red),
-                                SizedBox(width: 5),
-                                Text(
-                                  'Disappointed: ${formatCount(listPost[index].disappointedCount)}',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        // Add additional content
-                      ],
-                    ),
-                  );
-                }
-              },
+                          ),
+                          SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(Icons.thumb_up, color: Colors.blue),
+                                  SizedBox(width: 5),
+                                  Text(
+                                    'Kudos: ${formatCount(listPost[index].kudosCount)}',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Icon(Icons.comment, color: Colors.green),
+                                  SizedBox(width: 5),
+                                  Text(
+                                    'Comments: ${formatCount(listPost[index].commentCount)}',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Icon(Icons.thumb_down, color: Colors.red),
+                                  SizedBox(width: 5),
+                                  Text(
+                                    'Disappointed: ${formatCount(listPost[index].disappointedCount)}',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          // Add additional content
+                        ],
+                      ),
+                    );
+                  }
+                },
+              ),
             ),
-          ),
-        ],
-      ),
-      if (isLoading) LoadingWidget(),
-    ]);
+          ],
+        ),
+        if (isLoading) LoadingWidget(),
+      ]);
+    });
   }
 }
 
