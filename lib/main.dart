@@ -102,9 +102,9 @@ void main() async {
   await DiskStore.init();
   final initialState =
       await DiskStore.loadAndMergeState(AntiFakeBookState.initState());
-  const apiKey =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcxLCJkZXZpY2VfaWQiOiJzdHJpbmciLCJpYXQiOjE3MDI0NDgwMjB9.FltcHnENAetAGM6RP82korgL_W8heGpM90ZrN4WkAfY";
-  ApiModel.api.update(apiKey);
+  // const apiKey =
+  //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcxLCJkZXZpY2VfaWQiOiJzdHJpbmciLCJpYXQiOjE3MDI0NDgwMjB9.FltcHnENAetAGM6RP82korgL_W8heGpM90ZrN4WkAfY";
+  // ApiModel.api.update(apiKey);
 
   await NotificationService.init();
   await initCached();

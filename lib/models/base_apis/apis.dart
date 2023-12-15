@@ -15,10 +15,10 @@ class ApiModel {
   late final String _baseUrl;
   late final BaseOptions _baseOptions;
   late final Dio _dio;
-  String token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ODU2LCJkZXZpY2VfaWQiOiIxMjM0IiwiaWF0IjoxNzAyODgyNDEyfQ.HifAwkupHgZTErQQoxHIPj9-CO0Rjl4PvQiRl_ajxrw';
+  static String token = "";
   ApiModel() {
-    _baseUrl = 'https://it4788.catan.io.vn';
+    _baseUrl =
+        'https://1985-2001-ee0-4a77-2bf0-8593-5c3e-c34f-60ed.ngrok-free.app';
     _baseOptions = BaseOptions(baseUrl: _baseUrl);
     _dio = Dio(_baseOptions);
     _dio.interceptors.add(InterceptorsWrapper(
@@ -58,20 +58,24 @@ class ApiModel {
   void update(String token) {
     _dio.interceptors.clear();
     _dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
-        //todo: set header to request
-        options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
-        return handler.next(options);
-      },
-      onError: (DioException e, ErrorInterceptorHandler handler) {
-        const String? refreshToken = null;
-        if (refreshToken != null &&
-            e.response?.statusCode == HttpStatus.unauthorized) {
-          //todo: retry call api
-        }
-        return handler.next(e);
-      },
-    ));
+        onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
+      //todo: set header to request
+      options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
+      return handler.next(options);
+    }, onError: (DioException e, ErrorInterceptorHandler handler) {
+      const String? refreshToken = null;
+      if (refreshToken != null &&
+          e.response?.statusCode == HttpStatus.unauthorized) {
+        //todo: retry call api
+      }
+      /*
+        if loi = 400
+          EmptyLayout.handleError();
+        */
+      return handler.next(e);
+    }, onResponse: (Response response, ResponseInterceptorHandler handler) {
+      return handler.next(response);
+    }));
   }
 
   static ApiModel api = ApiModel();
