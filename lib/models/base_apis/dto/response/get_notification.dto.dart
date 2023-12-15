@@ -24,7 +24,7 @@ class NotificationPayloadDto {
   String notificationId = '';
   DateTime created = DateTime.now();
   String avatar =
-      'https://store.bbcosplay.com/news/2023/04/15/hatsune-miku-la-ai-co-ca-si-ao-tai-nhat-ban-co-luong-fan-khung.jpg';
+      'https://youtooz.com/cdn/shop/products/4r5m1q4r16.png?v=1698780965';
   @JsonKey()
   TypeGroup group = TypeGroup.notification;
   @JsonKey()

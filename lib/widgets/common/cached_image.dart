@@ -18,29 +18,36 @@ class CachedImageWidget extends StatefulWidget {
 }
 
 class _CachedImageWidgetState extends State<CachedImageWidget> {
-  Uint8List? imageRaw;
-  _CachedImageWidgetState() {
-    //lấy ảnh từ url
-    cachedRequest
-        .get('https://gstatic.gvn360.com/2021/08/Hatsune-Miku_-32-scaled.jpg',
-            options: Options(responseType: ResponseType.bytes))
-        .then((value) {
-      setState(() {
-        imageRaw = Uint8List.fromList(value.data as List<int>);
-      });
-    }).catchError((onError) {
-      print(onError);
-    });
+  Future<Uint8List> loadImage() async {
+    try {
+      var response = await cachedRequest.get(widget.url,
+          options: Options(responseType: ResponseType.bytes));
+      return Uint8List.fromList(response.data as List<int>);
+    } catch (e) {
+      print(e);
+      throw e;
+    }
   }
+
   @override
   Widget build(BuildContext context) {
-    if (imageRaw == null) {
-      return const SizedBox();
-    } else {
-      return Image(
-        image: MemoryImage(imageRaw!),
-        fit: BoxFit.fill,
-      );
-    }
+    return FutureBuilder<Uint8List>(
+      future: loadImage(),
+      builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const SizedBox(); // or a loading spinner
+        } else if (snapshot.hasError) {
+          return Image.asset(
+            'assets/images/default_cached_image.png',
+            fit: BoxFit.fill,
+          );
+        } else {
+          return Image.memory(
+            snapshot.data!,
+            fit: BoxFit.fill,
+          );
+        }
+      },
+    );
   }
 }
