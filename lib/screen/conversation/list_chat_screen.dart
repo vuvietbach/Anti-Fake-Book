@@ -25,7 +25,7 @@ class ChatMainPage extends StatelessWidget {
         data: GetListConversationRequest(
           index: '$DEFAULT_INDEX',
           count: '$DEFAULT_COUNT',
-          token: store.state.userState.token,
+          token: store.state.token,
         ),
       ));
     }, builder: (BuildContext context, Store<AntiFakeBookState> store) {

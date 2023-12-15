@@ -24,6 +24,7 @@ class UserInfo with _$UserInfo {
     @Default(0) int isFriend,
     @Default(0) int online,
     @Default(0) int coins,
+    @Default(0) int active,
   }) = _UserInfo;
 
   factory UserInfo.fromJson(Map<String, dynamic> json) =>

@@ -227,9 +227,9 @@ Future<void> writeJson(String path, Map<String, dynamic> data) async {
     // Write the JSON string to the file
     final file = File(path);
     await file.writeAsString(jsonString);
-    print('JSON data saved successfully!');
+    // print('JSON data saved successfully!');
   } catch (error) {
-    print('Error saving JSON data: $error');
+    // print('Error saving JSON data: $error');
   }
 }
 
@@ -241,7 +241,7 @@ Future<Map<String, dynamic>> readJson(String filePath) async {
     // Decode the JSON string back into a Map
     return jsonDecode(jsonString);
   } catch (error) {
-    print('Error reading JSON data: $error');
+    // print('Error reading JSON data: $error');
     return {}; // Return an empty Map if an error occurs
   }
 }
@@ -258,5 +258,5 @@ bool validateUsername(String username, String email) {
       username != email &&
       username.length >= minUsernameLength &&
       username.length <= maxUsernameLength &&
-      Uri.parse(username).hasScheme;
+      !Uri.parse(username).hasScheme;
 }

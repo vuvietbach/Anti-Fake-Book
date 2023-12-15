@@ -98,7 +98,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return StoreBuilder(onInit: (Store<AntiFakeBookState> store) {
       // getUserInfo(store);
-      getConversation(store);
+      // getConversation(store);
     }, builder: (BuildContext context, Store<AntiFakeBookState> store) {
       return Scaffold(
         appBar: AppBar(

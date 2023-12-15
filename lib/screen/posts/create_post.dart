@@ -49,14 +49,14 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             .then((value) {
           return value != null ? value.files : [];
         });
-        result.forEach((element) {
+        for (var element in result) {
           if (Platform.isAndroid) {
             final file = File(element.path!);
             vm.addImage(file.readAsBytesSync());
           } else {
             vm.addImage(element.bytes!);
           }
-        });
+        }
       } on Exception catch (e) {
         print(e);
       }
@@ -155,15 +155,15 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                           Row(
                             children: [
                               CircleAvatar(
-                                backgroundImage:
-                                    NetworkImage(vm.userInfomation.avatar),
+                                backgroundImage: NetworkImage(
+                                    vm.userInfomation.userInfo.avatar),
                               ),
                               const SizedBox(width: 8.0),
                               Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      vm.userInfomation.username,
+                                      vm.userInfomation.userInfo.username,
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,

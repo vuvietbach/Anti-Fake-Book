@@ -10,10 +10,6 @@ const _defaultUserInfo = UserInfo();
 class UserState with _$UserState {
   @customJsonSerializable
   factory UserState({
-    @Default("") String email,
-    @Default("") String token,
-    @Default("") String username,
-    @Default("") String avatar,
     @Default(_defaultUserInfo) UserInfo userInfo,
     @Default(_defaultUserInfo) UserInfo searchedUserInfo,
   }) = _UserState;
