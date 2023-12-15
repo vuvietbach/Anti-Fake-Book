@@ -1,6 +1,5 @@
 //Lib
 import 'package:anti_fake_book/models/base_apis/apis.dart';
-import 'package:anti_fake_book/screen/profile/profile.dart';
 import 'package:anti_fake_book/services/save_to_disk_service.dart';
 import 'package:anti_fake_book/services/notification_service.dart';
 import 'package:anti_fake_book/models/cached_http_request.dart';
@@ -11,7 +10,7 @@ import 'package:anti_fake_book/screen/profile/routes.dart';
 import 'package:anti_fake_book/screen/search_page/search_page.dart';
 import 'package:anti_fake_book/screen/sign_in/routes.dart';
 import 'package:anti_fake_book/screen/sign_up/routes.dart';
-import 'package:anti_fake_book/screen/welcome_screen.dart';
+import 'package:anti_fake_book/screen/welcome_screen/welcome_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +31,10 @@ final GoRouter _router = GoRouter(routes: [
   GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState stage) {
-        return const EmptyLayout(child: CheckLoginWrapper(child: HomePage()));
+        // return const EmptyLayout(child: CheckLoginWrapper(child: HomePage()));
+        return const EmptyLayout(
+          child: WelcomeScreen(),
+        );
       },
       routes: [
         GoRoute(
@@ -100,6 +102,10 @@ void main() async {
   await DiskStore.init();
   final initialState =
       await DiskStore.loadAndMergeState(AntiFakeBookState.initState());
+  const apiKey =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcxLCJkZXZpY2VfaWQiOiJzdHJpbmciLCJpYXQiOjE3MDI0NDgwMjB9.FltcHnENAetAGM6RP82korgL_W8heGpM90ZrN4WkAfY";
+  ApiModel.api.update(apiKey);
+
   await NotificationService.init();
   await initCached();
   final store = Store<AntiFakeBookState>(antiFakeBookReducers,

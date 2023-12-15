@@ -2,12 +2,9 @@ import 'package:anti_fake_book/helper/helper.dart';
 import 'package:anti_fake_book/layout/default_layer.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/index.dart';
 import 'package:anti_fake_book/screen/profile/redux_actions.dart';
-import 'package:anti_fake_book/store/actions/user_info.dart';
-import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/utils.dart';
 import 'package:anti_fake_book/widgets/common/image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 
 class ChangeProfileAfterSignUpPage extends StatefulWidget {
   final String email;
@@ -43,6 +40,7 @@ class _ChangeProfilePageState extends State<ChangeProfileAfterSignUpPage> {
     return SizedBox(
       width: 200,
       child: TextField(
+        textAlign: TextAlign.center,
         maxLines: 1,
         maxLength: maxUsernameLength,
         controller: usernameController,

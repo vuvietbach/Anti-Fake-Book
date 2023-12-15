@@ -10,7 +10,8 @@ enum ApiType {
   getVerifyCode,
   checkVerifyCode,
   getUserInfo,
-  setUserInfo
+  setUserInfo,
+  changeProfileAfterSignUp
 }
 
 const int NetworkErrorCode = 0;
@@ -111,7 +112,7 @@ Future showLoadingDialog(BuildContext context) async {
 }
 
 bool isLogin(AntiFakeBookState state) {
-  return state.userState.token != "";
+  return state.token != "";
 }
 
 Future<String> getDeviceId() async {

@@ -196,8 +196,11 @@ class ApiModel {
             filename: 'avatar',
           )));
     }
-    final response =
-        await _dio.post(PathName.changeProfileAfterSignUp, data: formData);
+    var options = Options(
+      contentType: 'multipart/form-data',
+    );
+    final response = await _dio.post(PathName.changeProfileAfterSignUp,
+        data: formData, options: options);
     ChangeProfileAfterSignUpResponse changeInfoAfterSignUpResponse =
         ChangeProfileAfterSignUpResponse.fromJson(response.data);
     return changeInfoAfterSignUpResponse;

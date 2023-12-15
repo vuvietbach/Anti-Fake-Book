@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:anti_fake_book/screen/welcome_screen.dart';
+import 'package:anti_fake_book/screen/welcome_screen/welcome_screen.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/utils.dart';
 import 'package:flutter/material.dart';

@@ -23,17 +23,24 @@ class AvatarImage extends StatefulWidget {
 class _AvatarImageState extends State<AvatarImage> {
   String? imagePath;
   _decorationImage() {
-    if (widget.allowEdit && imagePath != null) {
-      return DecorationImage(
-        image: FileImage(File(imagePath!)),
-        fit: BoxFit.cover,
-      );
-    } else if (widget.imageUrl != null && widget.imageUrl!.isNotEmpty) {
-      return DecorationImage(
-        image: NetworkImage(widget.imageUrl!),
-        fit: BoxFit.cover,
-      );
-    } else {
+    try {
+      if (widget.allowEdit && imagePath != null) {
+        return DecorationImage(
+          image: FileImage(File(imagePath!)),
+          fit: BoxFit.cover,
+        );
+      } else if (widget.imageUrl != null && widget.imageUrl!.isNotEmpty) {
+        return DecorationImage(
+          image: NetworkImage(widget.imageUrl!),
+          fit: BoxFit.cover,
+        );
+      } else {
+        return const DecorationImage(
+          image: AssetImage('assets/images/default_avatar.jpeg'),
+          fit: BoxFit.cover,
+        );
+      }
+    } catch (e) {
       return const DecorationImage(
         image: AssetImage('assets/images/default_avatar.jpeg'),
         fit: BoxFit.cover,
