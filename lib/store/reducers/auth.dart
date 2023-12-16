@@ -19,8 +19,9 @@ AntiFakeBookState onSignInSuccess(
   Navigator.of(action.extras['context']).pop();
   if (isSuccessCode(action.payload.code)) {
     action.extras['onSuccess']?.call(action.payload);
+    ApiModel.token = action.payload.data.token;
+    print("sign in token: ${ApiModel.token}");
     AntiFakeBookState newState = state.copyWith(
-      token: action.payload.data.token,
       userState: state.userState.copyWith(
         userInfo: state.userState.userInfo.copyWith(
           id: action.payload.data.id,
@@ -32,13 +33,6 @@ AntiFakeBookState onSignInSuccess(
         ),
       ),
     );
-    // save state to disk
-    DiskStore.saveState(SavedState(
-        token: action.payload.data.token,
-        userInfo: newState.userState.userInfo));
-    //
-    ApiModel.api.update(action.payload.data.token);
-
     return newState;
   } else {
     showErrorDialog(action.extras['context'], action.payload.code,

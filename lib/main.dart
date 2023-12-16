@@ -1,5 +1,5 @@
 //Lib
-import 'package:anti_fake_book/models/base_apis/apis.dart';
+import 'package:anti_fake_book/app_state_observer.dart';
 import 'package:anti_fake_book/services/save_to_disk_service.dart';
 import 'package:anti_fake_book/services/notification_service.dart';
 import 'package:anti_fake_book/models/cached_http_request.dart';
@@ -105,11 +105,12 @@ void main() async {
   // const apiKey =
   //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcxLCJkZXZpY2VfaWQiOiJzdHJpbmciLCJpYXQiOjE3MDI0NDgwMjB9.FltcHnENAetAGM6RP82korgL_W8heGpM90ZrN4WkAfY";
   // ApiModel.api.update(apiKey);
-
   await NotificationService.init();
   await initCached();
   final store = Store<AntiFakeBookState>(antiFakeBookReducers,
       initialState: initialState, middleware: [futureMiddleware]);
+  WidgetsBinding.instance.addObserver(AppStateObserver(store: store));
+
   runApp(AntiFakeBookApp(store: store));
 }
 
@@ -121,13 +122,19 @@ class AntiFakeBookApp extends StatelessWidget {
     // TODO: implement build
     return StoreProvider<AntiFakeBookState>(
         store: store,
-        child: MaterialApp.router(localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ], supportedLocales: const [
-          Locale('en', ''),
-          Locale('vi', ''),
-        ], debugShowCheckedModeBanner: false, routerConfig: _router));
+        child: MaterialApp.router(
+            theme: ThemeData.light(useMaterial3: false),
+            darkTheme: ThemeData.dark(),
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en', ''),
+              Locale('vi', ''),
+            ],
+            debugShowCheckedModeBanner: false,
+            routerConfig: _router));
   }
 }

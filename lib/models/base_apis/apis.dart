@@ -17,8 +17,7 @@ class ApiModel {
   late final Dio _dio;
   static String token = "";
   ApiModel() {
-    _baseUrl =
-        'https://1985-2001-ee0-4a77-2bf0-8593-5c3e-c34f-60ed.ngrok-free.app';
+    _baseUrl = 'https://it4788.catan.io.vn';
     _baseOptions = BaseOptions(baseUrl: _baseUrl);
     _dio = Dio(_baseOptions);
     _dio.interceptors.add(InterceptorsWrapper(
