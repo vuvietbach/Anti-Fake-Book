@@ -13,7 +13,9 @@ import 'package:redux/redux.dart';
 import 'package:redux_future_middleware/redux_future_middleware.dart';
 
 import '../actions/index.dart';
+import '../actions/listposts.dart';
 import '../state/index.dart';
+import 'listposts.dart';
 
 //hàm in ra FailureCreatePostAction
 AntiFakeBookState failureCreatePostAction(
@@ -68,6 +70,10 @@ final antiFakeBookReducers = combineReducers<AntiFakeBookState>([
       onSuccessGetConversation),
   TypedReducer<AntiFakeBookState, SuccessChangeProfileAfterSignUpAction>(
       onSuccessChangeProfileAfterSignUp),
+  TypedReducer<AntiFakeBookState, SuccessGetListPostsAction>(
+      onGetListPostsSuccess),
+  TypedReducer<AntiFakeBookState, PendingGetListPostsAction>(
+      onGetListPostsPending),
 
   // TypedReducer<AntiFakeBookState, PendingSetReadMessageAction>(onPendingSetReadMessage),
   // TypedReducer<AntiFakeBookState, SuccessSetReadMessageAction>(onSuccessSetReadMessage),

@@ -1,5 +1,7 @@
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 import '../news_feed_tab.dart';
 import 'dart:ui';
 
@@ -86,10 +88,18 @@ class _DetailedPostState extends State<DetailedPost> {
                   children: [
                     Row(
                       children: [
-                        CircleAvatar(
-                          radius: 20,
-                          backgroundColor: Colors.deepPurple,
-                        ),
+                        if (widget.post.userAvatar != '' &&
+                            widget.post.userAvatar != null)
+                          CircleAvatar(
+                            radius: 20,
+                            backgroundImage:
+                                NetworkImage(widget.post.userAvatar),
+                          )
+                        else
+                          const CircleAvatar(
+                            radius: 20,
+                            backgroundColor: Colors.deepPurple,
+                          ),
                         SizedBox(width: 10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,91 +170,119 @@ class _DetailedPostState extends State<DetailedPost> {
                       text: TextSpan(children: widget.post.displayedText),
                     ),
                     SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(Icons.thumb_up, color: Colors.blue),
-                            SizedBox(width: 5),
-                            Text(
-                              'Kudos: ${formatCount(widget.post.kudosCount)}',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Icon(Icons.comment, color: Colors.green),
-                            SizedBox(width: 5),
-                            Text(
-                              'Comments: ${formatCount(widget.post.commentCount)}',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Icon(Icons.thumb_down, color: Colors.red),
-                            SizedBox(width: 5),
-                            Text(
-                              'Disappointed: ${formatCount(widget.post.disappointedCount)}',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    // Comment Count Section
                     GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                       ),
                       itemCount: widget.post.imageURL.length,
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, imageIndex) {
-                        // Determine the layout based on the number of images
-                        if (widget.post.imageURL.length == 1) {
-                          // If there's only one image, display it in one line
-                          return Image.asset(
-                            widget.post.imageURL[imageIndex],
-                            fit: BoxFit.cover,
-                          );
-                        } else if (widget.post.imageURL.length == 2) {
-                          // If there are two images, display them in two lines, one each
-                          return Image.asset(
-                            widget.post.imageURL[imageIndex],
-                            fit: BoxFit.cover,
-                          );
-                        } else if (widget.post.imageURL.length == 3) {
-                          if (imageIndex == 0) {
-                            return Image.asset(
-                              widget.post.imageURL[imageIndex],
-                              fit: BoxFit.cover,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (contextImage, imageIndex) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              contextImage,
+                              MaterialPageRoute(
+                                builder: (contextImage) => Scaffold(
+                                  body: PhotoViewGallery.builder(
+                                    itemCount: widget.post.imageURL.length,
+                                    builder: (contextImage, indexImage) {
+                                      return PhotoViewGalleryPageOptions(
+                                        imageProvider: NetworkImage(
+                                          widget.post.imageURL[indexImage],
+                                        ),
+                                        minScale:
+                                            PhotoViewComputedScale.contained,
+                                        maxScale:
+                                            PhotoViewComputedScale.covered * 2,
+                                        initialScale:
+                                            PhotoViewComputedScale.contained,
+                                        heroAttributes: PhotoViewHeroAttributes(
+                                          tag: widget.post.imageURL[indexImage],
+                                        ),
+                                      );
+                                    },
+                                    backgroundDecoration: const BoxDecoration(
+                                      color: Colors.black,
+                                    ),
+                                    scrollPhysics:
+                                        const BouncingScrollPhysics(),
+                                    pageController:
+                                        PageController(initialPage: imageIndex),
+                                  ),
+                                ),
+                              ),
                             );
-                          } else {
-                            return Image.asset(
-                              widget.post.imageURL[imageIndex],
-                              fit: BoxFit.cover,
-                            );
-                          }
-                        } else if (widget.post.imageURL.length == 4) {
-                          return Image.asset(
+                          },
+                          child: Image.network(
                             widget.post.imageURL[imageIndex],
                             fit: BoxFit.cover,
-                          );
-                        }
-                        return Container(); // Return an empty container for other cases
+                          ),
+                        );
                       },
                     ),
-                    AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: FlickVideoPlayer(
-                        flickManager: widget.post.currentFlickManager,
-                      ),
-                    )
-                    // Add additional content
+                    widget.post.loadedVideo,
+                    Row(
+                      children: [
+                        Container(width: 5),
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              primary: widget.post.is_felt == "0"
+                                  ? Colors.blue
+                                  : Colors.white,
+                              onPrimary: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                // handleLikeButtonPress(index);
+                              });
+                            },
+                            icon: Icon(
+                              Icons.thumb_up,
+                              color: widget.post.is_felt == "0"
+                                  ? Colors.white
+                                  : Colors.blue,
+                            ),
+                            label: Text(
+                              formatCount(widget.post.kudosCount),
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: widget.post.is_felt == "0"
+                                    ? Colors.white
+                                    : Colors.blue,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(width: 5), // 5px-width box
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.green,
+                              onPrimary: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                            onPressed: () {
+                              // Add functionality for the Comment button
+                              // You can navigate to a chat screen or perform any other action
+                            },
+                            icon: Icon(Icons.message),
+                            label: Text(
+                              formatCount(widget.post.commentCount),
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ),
+                        ),
+                        Container(width: 5), // 5px-width box
+                      ],
+                    ),
                   ],
                 ),
               )),

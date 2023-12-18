@@ -41,4 +41,5 @@ abstract class PathName {
   static String deleteMessage =
       '/delete_message'; // da xong, nhung lieu co truong data
   static String deleteConversation = '/delete_conversation'; //
+  static String getListPosts = '/get_list_posts';
 }
