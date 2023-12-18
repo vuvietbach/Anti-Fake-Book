@@ -1,8 +1,13 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:anti_fake_book/constants/base_apis.dart';
 import 'package:dio/dio.dart';
 
+import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
+
+import 'dto/request/get_list_posts.dart';
 import 'dto/request/index.dart';
+import 'dto/response/get_list_posts.dto.dart';
 import 'dto/response/index.dart';
 import 'package:anti_fake_book/utils.dart';
 
@@ -33,6 +38,23 @@ class ApiModel {
       },
     ));
   }
+
+  String convertDioRequestToCurl(RequestOptions options) {
+    // Extract headers
+    final headers = options.headers
+            ?.map((key, value) => MapEntry(key, '-H "$key: $value"')) ??
+        '';
+
+    // Extract request method
+    final method = options.method ?? 'GET';
+
+    // Extract request body if it exists
+    final data = options.data != null ? '-d \'${options.data}\' ' : '';
+
+    // Combine everything to create the curl command
+    return 'curl -X $method $headers $data${options.baseUrl}${options.path}';
+  }
+
   void update(String token) {
     _dio.interceptors.clear();
     _dio.interceptors.add(InterceptorsWrapper(
@@ -318,6 +340,36 @@ class ApiModel {
     DeleteConversationResponse deleteConversationResponse =
         DeleteConversationResponse.fromJson(response.data);
     return deleteConversationResponse;
+  }
+
+  Future<GetListPostsResponseDTO> GetListPosts(
+      GetListPostsRequestDTO data) async {
+    final response = await _dio.post(
+      PathName.getListPosts,
+      data: {
+        'in_campaign': data.in_campaign,
+        'campaign_id': data.campaign_id,
+        'latitude': data.latitude,
+        'longitude': data.longitude,
+        'last_id': data.last_id,
+        'index': data.index,
+        'count': data.count,
+      },
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer ${data.token}',
+        },
+      ),
+    );
+
+    // print('getListPosts');
+    // print(response.statusCode);
+    // print(response.realUri);
+    // print(ApiModel.api.convertDioRequestToCurl(response.requestOptions));
+    // print(response.requestOptions);
+    // print(response.data);
+    // print(response.data.runtimeType);
+    return GetListPostsResponseDTO.fromJson(response.data);
   }
 }
 
