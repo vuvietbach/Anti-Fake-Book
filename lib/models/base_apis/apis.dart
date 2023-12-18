@@ -18,7 +18,8 @@ class ApiModel {
   late final String _baseUrl;
   late final BaseOptions _baseOptions;
   late final Dio _dio;
-  static String token = "";
+  String token =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ODU2LCJkZXZpY2VfaWQiOiIxMjM0IiwiaWF0IjoxNzAyODgyNDEyfQ.HifAwkupHgZTErQQoxHIPj9-CO0Rjl4PvQiRl_ajxrw';
   ApiModel() {
     _baseUrl = 'https://it4788.catan.io.vn';
     _baseOptions = BaseOptions(baseUrl: _baseUrl);
