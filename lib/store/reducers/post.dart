@@ -27,6 +27,5 @@ AntiFakeBookState onReportPostPending(
 
 AntiFakeBookState onReportPostSuccess(
     AntiFakeBookState preState, SuccessReportPostAction action) {
-  print(action.payload.toJson());
   return preState;
 }

@@ -113,7 +113,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             }, () {
               EmptyLayoutState.of(context).touchLoading(false);
               context.pop();
-            }),
+            }, context),
         builder: (BuildContext context, _CreatePostViewModel vm) {
           return WillPopScope(
             onWillPop: () async {
@@ -273,9 +273,10 @@ class _CreatePostViewModel {
   late final Function onClearPost;
   final Function onPendingLoading;
   final Function onSuccessLoading;
+  final BuildContext context;
 
   _CreatePostViewModel(Store<AntiFakeBookState> store, this.onPendingLoading,
-      this.onSuccessLoading) {
+      this.onSuccessLoading, this.context) {
     addImage = (Uint8List file) {
       final images = [
         ...store.state.postState.selected.images,
@@ -300,8 +301,8 @@ class _CreatePostViewModel {
     };
 
     onCreatePost = () {
-      store.dispatch(
-          CreatePostAction(postData, onPendingLoading, onSuccessLoading));
+      store.dispatch(CreatePostAction(
+          postData, onPendingLoading, onSuccessLoading, {'context': context}));
       onClearPost();
     };
 

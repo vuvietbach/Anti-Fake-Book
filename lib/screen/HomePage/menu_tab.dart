@@ -62,7 +62,7 @@ class MenuContent extends StatelessWidget {
                     width: 50,
                     height: 50,
                     child: CachedImageWidget(
-                      url: store.state.userState.avatar,
+                      url: store.state.userState.userInfo.avatar,
                     ),
                   ),
                 ),
@@ -73,7 +73,7 @@ class MenuContent extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(store.state.userState.username,
+                    Text(store.state.userState.userInfo.username,
                         style: const TextStyle(
                             color: Colors.black,
                             fontSize: 20,

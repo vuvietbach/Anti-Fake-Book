@@ -1,8 +1,9 @@
+import 'package:anti_fake_book/utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part "response.dto.g.dart";
 
-@JsonSerializable()
+@customJsonSerializable
 class ResponseDTO {
   static const int DEFAULT_CODE = 0;
   static const String DEFAULT_MESSAGE = "";
