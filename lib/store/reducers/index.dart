@@ -1,3 +1,5 @@
+import 'package:anti_fake_book/helper/helper.dart';
+import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
 import 'package:anti_fake_book/store/actions/auth.dart';
 import 'package:anti_fake_book/store/actions/common.dart';
 import 'package:anti_fake_book/store/actions/conversation.dart';
@@ -9,6 +11,7 @@ import 'package:anti_fake_book/store/reducers/conversation.dart';
 import 'package:anti_fake_book/store/reducers/post.dart';
 import 'package:anti_fake_book/store/reducers/search.dart';
 import 'package:anti_fake_book/store/reducers/user_info.dart';
+import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_future_middleware/redux_future_middleware.dart';
 
@@ -18,16 +21,49 @@ import '../state/index.dart';
 import 'listposts.dart';
 
 //hàm in ra FailureCreatePostAction
-AntiFakeBookState failureCreatePostAction(
+AntiFakeBookState onDefaultFaulureAction(
     AntiFakeBookState state, FutureFailedAction action) {
-  print(action.error);
+  print(action.extras['context']);
+  if (action.extras['context'] == null) {
+    print(action.error);
+    return state;
+  }
+  BuildContext context = action.extras['context'];
+  bool isStandardError = true;
+  ResponseDTO? responseDTO;
+  try {
+    print(action.error.response!.data);
+    responseDTO = ResponseDTO.fromJson(action.error.response!.data);
+  } catch (e) {
+    print(e);
+    isStandardError = false;
+  }
+  showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: !isStandardError
+              ? Text('Something wrong')
+              : Text(responseDTO!.code.toString()),
+          content: !isStandardError
+              ? Text(action.error.toString())
+              : Text(responseDTO!.message),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK"))
+          ],
+        );
+      });
   return state;
 }
 
 final antiFakeBookReducers = combineReducers<AntiFakeBookState>([
   TypedReducer<AntiFakeBookState, PendingCreatePostAction>(onCreatePostPending),
   TypedReducer<AntiFakeBookState, SuccessCreatePostAction>(onCreatePostSuccess),
-  TypedReducer<AntiFakeBookState, FutureFailedAction>(failureCreatePostAction),
+  TypedReducer<AntiFakeBookState, FutureFailedAction>(onDefaultFaulureAction),
   TypedReducer<AntiFakeBookState, SetSelectedPostAction>(onSetSellectedPost),
   TypedReducer<AntiFakeBookState, SuccessSignInAction>(onSignInSuccess),
   TypedReducer<AntiFakeBookState, PendingSignInAction>(onSignInPending),

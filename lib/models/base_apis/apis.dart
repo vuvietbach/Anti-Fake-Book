@@ -16,13 +16,10 @@ class ApiModel {
   late final BaseOptions _baseOptions;
   late final Dio _dio;
   String token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZGV2aWNlX2lkIjoic3RyaW5nIiwiaWF0IjoxNzAyNzkwMzEyfQ.Cwf1H2WZ5IERJdlzKA95yW-bKm4bawUXUE22Z4TeJIA';
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ODU2LCJkZXZpY2VfaWQiOiIxMjM0IiwiaWF0IjoxNzAyODgyNDEyfQ.HifAwkupHgZTErQQoxHIPj9-CO0Rjl4PvQiRl_ajxrw';
   ApiModel() {
-    // _baseUrl =
-    //     'https://1985-2001-ee0-4a77-2bf0-8593-5c3e-c34f-60ed.ngrok-free.app';
     _baseUrl = 'https://it4788.catan.io.vn';
-    _baseOptions =
-        BaseOptions(baseUrl: _baseUrl, validateStatus: (value) => true);
+    _baseOptions = BaseOptions(baseUrl: _baseUrl);
     _dio = Dio(_baseOptions);
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
@@ -80,7 +77,7 @@ class ApiModel {
   static ApiModel api = ApiModel();
 
   Future<AddPostResponseDTO> addPost(AddPostRequestDTO addPostData) async {
-    //Chuyển addPostData thành FormData
+    //Chuyển addPostData thành FormDataf
     final formData = convertUint8ListToMultipartFile(addPostData.toJson());
     final response = await _dio.post(PathName.addPost, data: formData);
     AddPostResponseDTO addPostResponseDTO =
