@@ -4,6 +4,7 @@ import 'package:anti_fake_book/models/saved_state.dto.dart';
 import 'package:anti_fake_book/store/state/app.dart';
 import 'package:anti_fake_book/store/state/auth.dart';
 import 'package:anti_fake_book/store/state/conversation/conversation.dart';
+import 'package:anti_fake_book/store/state/listposts.dart';
 import 'package:anti_fake_book/store/state/post.dart';
 import 'package:anti_fake_book/store/state/search/search.dart';
 import 'package:anti_fake_book/store/state/user.dart';
@@ -24,6 +25,7 @@ class AntiFakeBookState with _$AntiFakeBookState {
     required UserState userState,
     required SearchState searchState,
     required ConversationState conversationState,
+    required ListPostsState listPostsState,
   }) = _AntiFakeBookState;
 
   factory AntiFakeBookState.initState() => AntiFakeBookState(
@@ -35,6 +37,7 @@ class AntiFakeBookState with _$AntiFakeBookState {
         responseDTO: ResponseDTO(),
         searchState: const SearchState(),
         conversationState: ConversationState(),
+        listPostsState: ListPostsState(),
       );
 
   factory AntiFakeBookState.fromJson(Map<String, dynamic> json) =>
