@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:anti_fake_book/constants/base_apis.dart';
+import 'package:anti_fake_book/models/base_apis/dto/request/friend.dto.dart';
+import 'package:anti_fake_book/models/base_apis/dto/response/friend.dto.dart';
 import 'package:dio/dio.dart';
 
 import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
@@ -15,8 +18,7 @@ class ApiModel {
   late final String _baseUrl;
   late final BaseOptions _baseOptions;
   late final Dio _dio;
-  String token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ODU2LCJkZXZpY2VfaWQiOiIxMjM0IiwiaWF0IjoxNzAyODgyNDEyfQ.HifAwkupHgZTErQQoxHIPj9-CO0Rjl4PvQiRl_ajxrw';
+  static String token = "";
   ApiModel() {
     _baseUrl = 'https://it4788.catan.io.vn';
     _baseOptions = BaseOptions(baseUrl: _baseUrl);
@@ -58,20 +60,24 @@ class ApiModel {
   void update(String token) {
     _dio.interceptors.clear();
     _dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
-        //todo: set header to request
-        options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
-        return handler.next(options);
-      },
-      onError: (DioException e, ErrorInterceptorHandler handler) {
-        const String? refreshToken = null;
-        if (refreshToken != null &&
-            e.response?.statusCode == HttpStatus.unauthorized) {
-          //todo: retry call api
-        }
-        return handler.next(e);
-      },
-    ));
+        onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
+      //todo: set header to request
+      options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
+      return handler.next(options);
+    }, onError: (DioException e, ErrorInterceptorHandler handler) {
+      const String? refreshToken = null;
+      if (refreshToken != null &&
+          e.response?.statusCode == HttpStatus.unauthorized) {
+        //todo: retry call api
+      }
+      /*
+        if loi = 400
+          EmptyLayout.handleError();
+        */
+      return handler.next(e);
+    }, onResponse: (Response response, ResponseInterceptorHandler handler) {
+      return handler.next(response);
+    }));
   }
 
   static ApiModel api = ApiModel();
@@ -174,9 +180,7 @@ class ApiModel {
   Future<SignInResponse> signIn(SignInRequest data) async {
     final response = await _dio.post(PathName.signIn, data: data.toJson());
     SignInResponse signInResponse = SignInResponse.fromJson(response.data);
-    if (signInResponse.code == 1000) {
-      token = signInResponse.data.token;
-    }
+    token = signInResponse.data.token;
     return signInResponse;
   }
 
@@ -244,6 +248,19 @@ class ApiModel {
     return delSavedSearchResponse;
   }
 
+  Future<GetUserFriendsResponse> getUserFriends(
+      GetUserFriendsRequest data) async {
+    final response =
+        await _dio.post(PathName.getUserFriends, data: data.toJson());
+    GetUserFriendsResponse getUserFriendsResponse =
+        GetUserFriendsResponse.fromJson(response.data['data']);
+    return getUserFriendsResponse;
+  }
+
+  Future unfriend(UnfriendRequest data) async {
+    await _dio.post(PathName.unfriend, data: data.toJson());
+  }
+
   // Future<SetDevtokenResponse> setDevtoken(SetDevtokenRequest data) async {
   //   final response = await _dio.post(PathName.setDevToken, data: data.toJson());
   //   SetDevtokenResponse setDevtokenResponse =
@@ -261,19 +278,21 @@ class ApiModel {
   Future<SetUserInfoResponse> setUserInfo(SetUserInfoRequest data) async {
     FormData formData = FormData.fromMap(data.toJson());
     if (data.avatar != null) {
+      final Uint8List avatar = await File(data.avatar!).readAsBytes();
       formData.files.add(MapEntry(
           'avatar',
-          await MultipartFile.fromFile(
-            data.avatar!,
-            filename: 'avatar',
+          MultipartFile.fromBytes(
+            avatar,
+            filename: 'avatar.jpg',
           )));
     }
     if (data.coverImage != null) {
+      final Uint8List coverImage = await File(data.coverImage!).readAsBytes();
       formData.files.add(MapEntry(
           'coverImage',
-          await MultipartFile.fromFile(
-            data.coverImage!,
-            filename: 'coverImage',
+          MultipartFile.fromBytes(
+            coverImage,
+            filename: 'coverImage.jpg',
           )));
     }
     var options = Options(
@@ -396,9 +415,13 @@ class ApiModel {
 }
 
 void main() async {
-  final data = AddPostRequestDTO();
-  final rs = await ApiModel.api.addPost(data).catchError((e) {
-    print(e);
-  });
-  print(rs.toJson());
+  ApiModel.token =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZGV2aWNlX2lkIjoic3RyaW5nIiwiaWF0IjoxNzAyOTEwODUwfQ.nKLHDoJ0r4Ft1A3fdiLVQES5ppGX7qQj4ifalksiWOY';
+  final x = await ApiModel.api.getUserFriends(GetUserFriendsRequest(
+    index: 0,
+    count: 10,
+  ));
+  print(x.total);
+  // final y = await ApiModel.api.unfriend(UnfriendRequest(userId: 1));
+  // print(y.code);
 }

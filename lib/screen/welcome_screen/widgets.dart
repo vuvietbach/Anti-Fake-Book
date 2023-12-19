@@ -1,5 +1,6 @@
 import 'package:anti_fake_book/screen/sign_in/sign_in.dart';
 import 'package:anti_fake_book/store/state/index.dart';
+import 'package:anti_fake_book/widgets/common/image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:go_router/go_router.dart';
@@ -51,7 +52,8 @@ class AccountCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreBuilder(
         builder: (BuildContext context, Store<AntiFakeBookState> store) {
-      if (store.state.userState.userInfo.username == "") {
+      if (store.state.userState.userInfo.username == "" ||
+          store.state.userState.userInfo.email == "") {
         return const SizedBox();
       } else {
         final name = store.state.userState.userInfo.username;
@@ -64,9 +66,9 @@ class AccountCard extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10),
               child: ListTile(
-                leading: CircleAvatar(
-                  radius: 30.0,
-                  backgroundImage: NetworkImage(avatarUrl),
+                leading: AvatarImage(
+                  imageUrl: avatarUrl,
+                  height: 50.0,
                 ),
                 title: Text(
                   name,

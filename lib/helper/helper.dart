@@ -147,3 +147,7 @@ void showConfirmDialog(BuildContext context, String? title, String? content,
         );
       });
 }
+
+bool isAccountOwner(String? userId, AntiFakeBookState state) {
+  return userId == null || userId == state.userState.userInfo.id;
+}

@@ -1,10 +1,12 @@
 import 'package:anti_fake_book/helper/helper.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/response.dto.dart';
 import 'package:anti_fake_book/models/saved_state.dto.dart';
+import 'package:anti_fake_book/screen/HomePage/friend_tab.dart';
 import 'package:anti_fake_book/store/state/app.dart';
 import 'package:anti_fake_book/store/state/auth.dart';
 import 'package:anti_fake_book/store/state/conversation/conversation.dart';
 import 'package:anti_fake_book/store/state/listposts.dart';
+import 'package:anti_fake_book/store/state/friend/friend.dart';
 import 'package:anti_fake_book/store/state/post.dart';
 import 'package:anti_fake_book/store/state/requested_friends.dart';
 import 'package:anti_fake_book/store/state/search/search.dart';
@@ -28,6 +30,7 @@ class AntiFakeBookState with _$AntiFakeBookState {
     required ConversationState conversationState,
     required ListPostsState listPostsState,
     required RequestedFriendsState requestedFriendsState,
+    required FriendState friendState,
   }) = _AntiFakeBookState;
 
   factory AntiFakeBookState.initState() => AntiFakeBookState(
@@ -41,6 +44,7 @@ class AntiFakeBookState with _$AntiFakeBookState {
         conversationState: ConversationState(),
         listPostsState: ListPostsState(),
         requestedFriendsState: RequestedFriendsState(),
+        friendState: FriendState(),
       );
 
   factory AntiFakeBookState.fromJson(Map<String, dynamic> json) =>
