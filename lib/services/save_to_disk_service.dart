@@ -18,7 +18,7 @@ class DiskStore {
       AntiFakeBookState prevState) async {
     var savedState = await readJson(filePath);
     ApiModel.token = savedState["token"] ?? "";
-    print("loadAndMergeState: $savedState");
+    // print("loadAndMergeState: $savedState");
     return prevState.copyWith(
         userState: prevState.userState
             .copyWith(userInfo: UserInfo.fromJson(savedState["userInfo"] ?? {})));
@@ -29,7 +29,7 @@ class DiskStore {
       "token": ApiModel.token,
       "userInfo": state.userState.userInfo.toJson()
     };
-    print("saveState: $data");
+    // print("saveState: $data");
     await writeJson(filePath, data);
   }
 }

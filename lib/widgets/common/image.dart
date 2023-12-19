@@ -1,5 +1,6 @@
 import 'dart:ffi';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,13 +8,17 @@ import 'package:image_picker/image_picker.dart';
 class AvatarImage extends StatefulWidget {
   final double height;
   final String? imageUrl;
+  final String? localImagePath;
   final bool allowEdit;
+  final Function(String?)? onImageChanged;
 
   const AvatarImage({
     super.key,
     this.imageUrl,
     this.height = 200.0,
     this.allowEdit = false,
+    this.onImageChanged,
+    this.localImagePath,
   });
 
   @override
@@ -34,11 +39,14 @@ class _AvatarImageState extends State<AvatarImage> {
           image: NetworkImage(widget.imageUrl!),
           fit: BoxFit.cover,
         );
-      } else {
-        return const DecorationImage(
-          image: AssetImage('assets/images/default_avatar.jpeg'),
+      } else if (widget.localImagePath != null &&
+          widget.localImagePath!.isNotEmpty) {
+        return DecorationImage(
+          image: FileImage(File(widget.localImagePath!)),
           fit: BoxFit.cover,
         );
+      } else {
+        throw Exception();
       }
     } catch (e) {
       return const DecorationImage(
@@ -54,6 +62,7 @@ class _AvatarImageState extends State<AvatarImage> {
     setState(() {
       imagePath = pickedFile?.path;
     });
+    widget.onImageChanged?.call(pickedFile?.path);
   }
 
   Future _pickImageFromCamera() async {
@@ -62,6 +71,7 @@ class _AvatarImageState extends State<AvatarImage> {
     setState(() {
       imagePath = pickedFile?.path;
     });
+    widget.onImageChanged?.call(pickedFile?.path);
   }
 
   @override

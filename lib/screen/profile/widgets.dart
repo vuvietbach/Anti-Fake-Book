@@ -6,6 +6,7 @@ import 'package:anti_fake_book/store/state/user_info.dart';
 import 'package:anti_fake_book/widgets/common/image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:redux/redux.dart';
 
 class AccountBackgroundImage extends StatelessWidget {
@@ -144,23 +145,26 @@ class AccountAvatar extends StatelessWidget {
 class AccountImage extends StatelessWidget {
   const AccountImage({
     super.key,
+    required this.avatar,
+    required this.coverImage,
+    required this.username,
   });
+  final String? coverImage;
+  final String? avatar;
+  final String username;
 
   static const backgroundHeight = 200.0;
   static const photoIconHeight = 40.0;
 
   @override
   Widget build(BuildContext context) {
-    return StoreBuilder(
-        builder: (BuildContext context, Store<AntiFakeBookState> store) {
-      UserInfo userInfo = store.state.userState.searchedUserInfo;
       return Stack(
         children: [
           Column(
             children: [
               BackgroundImage(
                 height: 200,
-                imageUrl: userInfo.coverImage,
+                imageUrl: coverImage,
               ),
               Container(
                 height: 90,
@@ -176,10 +180,10 @@ class AccountImage extends StatelessWidget {
                   children: [
                     AvatarImage(
                       height: 140,
-                      imageUrl: userInfo.avatar,
+                      imageUrl: avatar,
                     ),
                     Text(
-                      userInfo.username,
+                      username,
                       style: const TextStyle(
                           fontSize: 20, fontWeight: FontWeight.bold),
                     )
@@ -188,8 +192,7 @@ class AccountImage extends StatelessWidget {
               )),
         ],
       );
-    });
-  }
+    }
 }
 
 class GeneralInfo extends StatelessWidget {
@@ -264,29 +267,26 @@ class BackgroundImage extends StatelessWidget {
 }
 
 class GeneralInfoSection extends StatelessWidget {
-  final int userType;
+  final String? city;
+  final String? address;
+  final String? country;
 
   /// userType: 0 is the owner user, 1 is the searched user
-  const GeneralInfoSection({super.key, required this.userType});
+  const GeneralInfoSection({super.key, this.city, this.address, this.country});
 
   @override
   Widget build(BuildContext context) {
-    return StoreBuilder(
-        builder: (BuildContext context, Store<AntiFakeBookState> store) {
-      UserInfo userInfo = (userType == 0)
-          ? store.state.userState.userInfo
-          : store.state.userState.searchedUserInfo;
+  
       return Column(
         children: [
-          _item(Icons.work, "Làm việc tại", userInfo.city),
-          _item(Icons.house, "Sống tại", userInfo.address),
-          _item(Icons.location_on, "Đến từ", userInfo.country)
+          _item(Icons.work, "Làm việc tại", city),
+          _item(Icons.house, "Sống tại", address),
+          _item(Icons.location_on, "Đến từ", country)
         ],
       );
-    });
   }
 
-  Widget _item(IconData icon, String text, String mainInfo) => Padding(
+  Widget _item(IconData icon, String text, String? mainInfo) => Padding(
         padding: const EdgeInsets.only(bottom: 5.0),
         child: Row(
           children: [

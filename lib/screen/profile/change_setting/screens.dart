@@ -238,21 +238,24 @@ class EditPage extends StatelessWidget {
       ),
       body: child,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: SizedBox(
-        width: double.infinity,
-        height: 60.0,
-        child: FloatingActionButton(
-          onPressed: () async {
-            bool confirm = await _showConfirmDialog(context);
-            if (confirm) {
-              onConfirm?.call();
-            } else {
-              onCancel?.call();
-            }
-          },
-          child: const Text(
-            "Cập nhập",
-            style: TextStyle(fontSize: 20.0),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: SizedBox(
+          width: double.infinity,
+          height: 40.0,
+          child: ElevatedButton(
+            onPressed: () async {
+              bool confirm = await _showConfirmDialog(context);
+              if (confirm) {
+                onConfirm?.call();
+              } else {
+                onCancel?.call();
+              }
+            },
+            child: const Text(
+              "Cập nhập",
+              style: TextStyle(fontSize: 20.0),
+            ),
           ),
         ),
       ),
@@ -431,8 +434,7 @@ class _EditAvatarPageState extends State<EditAvatarPage> {
 
   Widget _avatar(String imageUrl) {
     return pickedFile != null
-        ? CircleAvatar(
-            radius: 65.0, backgroundImage: FileImage(File(pickedFile!)))
+        ? AvatarImage(height: 130.0, localImagePath: pickedFile!)
         : AvatarImage(
             height: 130.0,
             imageUrl: imageUrl,
@@ -609,9 +611,7 @@ class EditGeneralInfoSection extends StatelessWidget {
           builder: (context) => const EditGeneralInfoPage(),
         ),
       ),
-      child: const GeneralInfoSection(
-        userType: 0,
-      ),
+      child: const GeneralInfoSection(),
     );
   }
 }

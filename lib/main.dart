@@ -1,5 +1,7 @@
 //Lib
 import 'package:anti_fake_book/app_state_observer.dart';
+import 'package:anti_fake_book/models/base_apis/apis.dart';
+import 'package:anti_fake_book/screen/profile/profile.dart';
 import 'package:anti_fake_book/services/save_to_disk_service.dart';
 import 'package:anti_fake_book/services/notification_service.dart';
 import 'package:anti_fake_book/models/cached_http_request.dart';
@@ -33,7 +35,8 @@ final GoRouter _router = GoRouter(routes: [
       builder: (BuildContext context, GoRouterState stage) {
         // return const EmptyLayout(child: CheckLoginWrapper(child: HomePage()));
         return const EmptyLayout(
-          child: WelcomeScreen(),
+          // child: ChangeProfileAfterSignUpPage(email: "b4@email.com"),
+          child: ProfilePage(),
         );
       },
       routes: [
@@ -93,7 +96,7 @@ final GoRouter _router = GoRouter(routes: [
           builder: (BuildContext context, GoRouterState stage) =>
               const SearchPage(),
         ),
-        profileRoutes,
+        ...profileRoutes,
       ]),
 ]);
 
@@ -102,15 +105,13 @@ void main() async {
   await DiskStore.init();
   final initialState =
       await DiskStore.loadAndMergeState(AntiFakeBookState.initState());
-  // const apiKey =
-  //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcxLCJkZXZpY2VfaWQiOiJzdHJpbmciLCJpYXQiOjE3MDI0NDgwMjB9.FltcHnENAetAGM6RP82korgL_W8heGpM90ZrN4WkAfY";
-  // ApiModel.api.update(apiKey);
   await NotificationService.init();
   await initCached();
   final store = Store<AntiFakeBookState>(antiFakeBookReducers,
       initialState: initialState, middleware: [futureMiddleware]);
   WidgetsBinding.instance.addObserver(AppStateObserver(store: store));
-
+  ApiModel.token =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcxLCJkZXZpY2VfaWQiOiJzdHJpbmciLCJpYXQiOjE3MDMwMDQyMTZ9.TS_uh61n2ZyAwE5ub9oCtQ56-v6A80eL0WMSv_NV0rA';
   runApp(AntiFakeBookApp(store: store));
 }
 

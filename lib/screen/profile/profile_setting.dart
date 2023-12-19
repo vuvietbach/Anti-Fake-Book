@@ -1,10 +1,15 @@
+import 'package:anti_fake_book/helper/helper.dart';
+import 'package:anti_fake_book/screen/profile/redux_actions.dart';
+import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/widgets/common/divider.dart';
-import 'package:anti_fake_book/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:go_router/go_router.dart';
+import 'package:redux/redux.dart';
 
-class ProfileSetting extends StatelessWidget {
-  const ProfileSetting({super.key});
+class ProfileSettingPage extends StatelessWidget {
+  final String? userId;
+  const ProfileSettingPage({super.key, required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +31,10 @@ class ProfileSetting extends StatelessWidget {
       ),
       body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const CustomDivider(),
-        const Option(
-          path: "/profile/setting/change_setting",
-          icon: Icon(Icons.edit),
-          title: "Chỉnh sửa trang cá nhân",
-        ),
-        const CustomDivider(),
-        const Option(
-            path: "/profile/setting/search",
-            icon: Icon(Icons.search),
+        firstOption(context),
+        Option(
+            callback: () => context.go("/profile/setting/search"),
+            icon: const Icon(Icons.search),
             title: "Tìm kiếm trên trang cá nhân"),
         const CustomDivider(),
         Padding(
@@ -70,6 +70,22 @@ class ProfileSetting extends StatelessWidget {
       ]),
     );
   }
+
+  Widget firstOption(BuildContext context) {
+    Store<AntiFakeBookState> store =
+        StoreProvider.of<AntiFakeBookState>(context);
+    bool isOwner = isAccountOwner(userId, store.state);
+    return isOwner
+        ? Option(
+            callback: () => context.go("/change_profile_setting"),
+            icon: const Icon(Icons.edit),
+            title: "Chỉnh sửa trang cá nhân",
+          )
+        : Option(
+            icon: const Icon(Icons.block),
+            title: "chặn",
+            callback: () => blockUser());
+  }
 }
 
 MaterialStateProperty<Color> getColor(Color colorPressed) {
@@ -86,19 +102,22 @@ MaterialStateProperty<Color> getColor(Color colorPressed) {
 class Option extends StatelessWidget {
   final Widget icon;
   final String title;
-  final String path;
+  final Function? callback;
   const Option(
-      {super.key, required this.icon, required this.title, required this.path});
+      {super.key, required this.icon, required this.title, this.callback});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => context.go(path),
+      onTap: callback as void Function()?,
       highlightColor: Colors.grey.withOpacity(0.2),
       child: ListTile(
-        leading: icon,
-        title: Text(title),
-      ),
+          leading: icon,
+          title: Text(title),
+          shape: Border(
+              bottom: BorderSide(
+            color: Colors.grey.withOpacity(0.2),
+          ))),
     );
   }
 }

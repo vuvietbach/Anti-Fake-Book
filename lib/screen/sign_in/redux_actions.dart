@@ -9,6 +9,7 @@ void signIn(BuildContext context, SignInRequest request,
     {Function(SignInResponse)? onSuccess,
     Function? onPending,
     Function? onError}) {
+  print("redux action ${request.toJson()}");
   StoreProvider.of<AntiFakeBookState>(context).dispatch(SignInAction(
       data: request,
       context: context,

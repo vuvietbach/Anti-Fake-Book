@@ -113,3 +113,6 @@ typedef SuccessCheckVerifyCodeAction
 typedef PendingCheckVerifyCodeAction
     = FuturePendingAction<CheckVerifyCodeAction>;
 typedef ErrorCheckVerifyCodeAction = FutureFailedAction<CheckVerifyCodeAction>;
+
+
+class DeleteTokenAction {}

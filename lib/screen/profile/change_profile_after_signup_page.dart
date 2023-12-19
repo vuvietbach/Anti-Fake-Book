@@ -5,6 +5,7 @@ import 'package:anti_fake_book/screen/profile/redux_actions.dart';
 import 'package:anti_fake_book/utils.dart';
 import 'package:anti_fake_book/widgets/common/image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ChangeProfileAfterSignUpPage extends StatefulWidget {
   final String email;
@@ -21,7 +22,17 @@ class _ChangeProfilePageState extends State<ChangeProfileAfterSignUpPage> {
   TextEditingController usernameController = TextEditingController();
 
   Widget _avatar() {
-    return const AvatarImage(height: 170, allowEdit: true);
+    return AvatarImage(
+      height: 170,
+      allowEdit: true,
+      onImageChanged: _onImageChanged,
+    );
+  }
+
+  _onImageChanged(String? avatarUrl) {
+    setState(() {
+      avatar = avatarUrl;
+    });
   }
 
   @override
@@ -38,7 +49,7 @@ class _ChangeProfilePageState extends State<ChangeProfileAfterSignUpPage> {
 
   Widget _username() {
     return SizedBox(
-      width: 200,
+      width: 220,
       child: TextField(
         textAlign: TextAlign.center,
         maxLines: 1,
@@ -67,7 +78,8 @@ class _ChangeProfilePageState extends State<ChangeProfileAfterSignUpPage> {
                   changeProfileAfterSignUp(
                       context,
                       ChangeProfileAfterSignUpRequest(
-                          username: usernameController.text, avatar: avatar));
+                          username: usernameController.text, avatar: avatar),
+                          onSuccess: () => context.go('/home'));
                 });
               } else {
                 showDialog(

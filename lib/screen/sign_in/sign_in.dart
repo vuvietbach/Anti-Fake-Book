@@ -129,7 +129,7 @@ class _SignInState extends State<SignIn> {
                             password: passwordController.text,
                             uuid: await getDeviceId(),
                           ), onSuccess: (SignInResponse response) {
-                        widget.onSuccess?.call(context);
+                        context.go('/home');
                       });
                     }
                   },
@@ -224,7 +224,7 @@ class _SignInWithAccountState extends State<SignInWithAccount> {
                                         password: passwordController.text,
                                         uuid: await getDeviceId()),
                                     onSuccess: (response) =>
-                                        widget.onSuccess?.call(context));
+                                        context.go("/home"));
                               }
                             },
                       child: const Text("Đăng nhập"),

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:anti_fake_book/store/state/friend/friend_list.dart';
 import 'package:dio/dio.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -260,3 +261,10 @@ bool validateUsername(String username, String email) {
       username.length <= maxUsernameLength &&
       !Uri.parse(username).hasScheme;
 }
+
+int compareDateTimeString(String a, String b) {
+  final aDateTime = DateTime.parse(a);
+  final bDateTime = DateTime.parse(b);
+  return aDateTime.compareTo(bDateTime);
+}
+

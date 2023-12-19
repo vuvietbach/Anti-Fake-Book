@@ -2,11 +2,8 @@ import 'package:anti_fake_book/helper/helper.dart';
 import 'package:anti_fake_book/layout/default_layer.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/auth.dto.dart';
 import 'package:anti_fake_book/screen/sign_up/redux_actions.dart';
-import 'package:anti_fake_book/store/state/index.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:go_router/go_router.dart';
-import 'package:redux/redux.dart';
 
 import 'sign_up.dart';
 
@@ -97,20 +94,15 @@ class _SignUpState extends State<SignUp> {
   }
 
   Widget _policyScreen() {
-    return StoreBuilder(
-        builder: (BuildContext context, Store<AntiFakeBookState> store) {
-      return PolicyScreen(
-        onConfirm: () async {
-          signUp(
-            context,
-            SignUpRequest(
-                email: _email!,
-                password: _password!,
-                uuid: await getDeviceId()),
-          );
-        },
-        pageController: _pageController,
-      );
-    });
+    return PolicyScreen(
+      onConfirm: () async {
+        signUp(
+          context,
+          SignUpRequest(
+              email: _email!, password: _password!, uuid: await getDeviceId()),
+        );
+      },
+      pageController: _pageController,
+    );
   }
 }

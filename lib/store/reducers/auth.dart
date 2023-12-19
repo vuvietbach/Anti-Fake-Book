@@ -93,3 +93,9 @@ AntiFakeBookState onPendingGetVerifyCode(
   action.extras['onPending']?.call();
   return state;
 }
+
+AntiFakeBookState onDeleteToken(
+    AntiFakeBookState state, DeleteTokenAction action) {
+  ApiModel.token = "";
+  return state.copyWith(token: "");
+}
