@@ -267,4 +267,3 @@ int compareDateTimeString(String a, String b) {
   final bDateTime = DateTime.parse(b);
   return aDateTime.compareTo(bDateTime);
 }
-

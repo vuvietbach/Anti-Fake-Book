@@ -36,7 +36,7 @@ final GoRouter _router = GoRouter(routes: [
         // return const EmptyLayout(child: CheckLoginWrapper(child: HomePage()));
         return const EmptyLayout(
           // child: ChangeProfileAfterSignUpPage(email: "b4@email.com"),
-          child: ProfilePage(),
+          child: WelcomeScreen(),
         );
       },
       routes: [
@@ -110,8 +110,8 @@ void main() async {
   final store = Store<AntiFakeBookState>(antiFakeBookReducers,
       initialState: initialState, middleware: [futureMiddleware]);
   WidgetsBinding.instance.addObserver(AppStateObserver(store: store));
-  ApiModel.token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcxLCJkZXZpY2VfaWQiOiJzdHJpbmciLCJpYXQiOjE3MDMwMDQyMTZ9.TS_uh61n2ZyAwE5ub9oCtQ56-v6A80eL0WMSv_NV0rA';
+  // ApiModel.token =
+  //     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcxLCJkZXZpY2VfaWQiOiJzdHJpbmciLCJpYXQiOjE3MDMwMDQyMTZ9.TS_uh61n2ZyAwE5ub9oCtQ56-v6A80eL0WMSv_NV0rA';
   runApp(AntiFakeBookApp(store: store));
 }
 

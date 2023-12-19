@@ -48,7 +48,7 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
   // Widget _signInWithOtherAccountButton(BuildContext context) {
-  
+
   // }
 
   Widget buildCreateAccountButton(BuildContext context) {

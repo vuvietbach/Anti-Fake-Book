@@ -1,10 +1,8 @@
-
 import 'package:anti_fake_book/models/base_apis/dto/response/friend.dto.dart';
 import 'package:anti_fake_book/utils.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'friend.freezed.dart';
 part 'friend.g.dart';
-
 
 @Freezed(makeCollectionsUnmodifiable: false)
 class FriendState with _$FriendState {

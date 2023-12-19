@@ -79,7 +79,7 @@ class _ChangeProfilePageState extends State<ChangeProfileAfterSignUpPage> {
                       context,
                       ChangeProfileAfterSignUpRequest(
                           username: usernameController.text, avatar: avatar),
-                          onSuccess: () => context.go('/home'));
+                      onSuccess: () => context.go('/home'));
                 });
               } else {
                 showDialog(

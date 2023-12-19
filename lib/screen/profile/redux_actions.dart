@@ -34,7 +34,9 @@ void getUserInfo(BuildContext context, GetUserInfoRequest data,
 void blockUser() {}
 
 void getUserFriends(BuildContext context, String? userId, bool isFirstTime,
-    {Function(GetUserFriendsResponse)? onSuccess, Function? onPending, Function? onError}) {
+    {Function(GetUserFriendsResponse)? onSuccess,
+    Function? onPending,
+    Function? onError}) {
   AntiFakeBookState state = StoreProvider.of<AntiFakeBookState>(context).state;
   GetUserFriendsRequest data;
   if (isFirstTime) {

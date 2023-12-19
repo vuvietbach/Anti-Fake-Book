@@ -20,8 +20,8 @@ class DiskStore {
     ApiModel.token = savedState["token"] ?? "";
     // print("loadAndMergeState: $savedState");
     return prevState.copyWith(
-        userState: prevState.userState
-            .copyWith(userInfo: UserInfo.fromJson(savedState["userInfo"] ?? {})));
+        userState: prevState.userState.copyWith(
+            userInfo: UserInfo.fromJson(savedState["userInfo"] ?? {})));
   }
 
   static Future<void> saveState(AntiFakeBookState state) async {

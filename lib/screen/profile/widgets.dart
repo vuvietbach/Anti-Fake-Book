@@ -158,41 +158,41 @@ class AccountImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      return Stack(
-        children: [
-          Column(
-            children: [
-              BackgroundImage(
-                height: 200,
-                imageUrl: coverImage,
+    return Stack(
+      children: [
+        Column(
+          children: [
+            BackgroundImage(
+              height: 200,
+              imageUrl: coverImage,
+            ),
+            Container(
+              height: 90,
+            )
+          ],
+        ),
+        Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Column(
+                children: [
+                  AvatarImage(
+                    height: 140,
+                    imageUrl: avatar,
+                  ),
+                  Text(
+                    username,
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
+                  )
+                ],
               ),
-              Container(
-                height: 90,
-              )
-            ],
-          ),
-          Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Column(
-                  children: [
-                    AvatarImage(
-                      height: 140,
-                      imageUrl: avatar,
-                    ),
-                    Text(
-                      username,
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold),
-                    )
-                  ],
-                ),
-              )),
-        ],
-      );
-    }
+            )),
+      ],
+    );
+  }
 }
 
 class GeneralInfo extends StatelessWidget {
@@ -276,14 +276,13 @@ class GeneralInfoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  
-      return Column(
-        children: [
-          _item(Icons.work, "Làm việc tại", city),
-          _item(Icons.house, "Sống tại", address),
-          _item(Icons.location_on, "Đến từ", country)
-        ],
-      );
+    return Column(
+      children: [
+        _item(Icons.work, "Làm việc tại", city),
+        _item(Icons.house, "Sống tại", address),
+        _item(Icons.location_on, "Đến từ", country)
+      ],
+    );
   }
 
   Widget _item(IconData icon, String text, String? mainInfo) => Padding(

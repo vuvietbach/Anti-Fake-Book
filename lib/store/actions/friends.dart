@@ -28,9 +28,11 @@ class UnfriendAction extends FutureAction<UnfriendAction, void> {
   final Function? onSuccess;
 
   UnfriendAction({required this.data, required this.context, this.onSuccess})
-      : super(
-            future: ApiModel.api.unfriend(data),
-            extras: {'context': context, 'request': data, 'onSuccess': onSuccess});
+      : super(future: ApiModel.api.unfriend(data), extras: {
+          'context': context,
+          'request': data,
+          'onSuccess': onSuccess
+        });
 }
 
 typedef SuccessUnfriendAction
