@@ -242,8 +242,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     store = StoreProvider.of<AntiFakeBookState>(context);
-    // Ensure store is initialized before calling methods that use it
-    // reloadContainers();
+    reloadContainers();
   }
 
   @override
@@ -259,7 +258,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
       }
     });
     // store = StoreProvider.of<AntiFakeBookState>(context);
-
+    // reloadContainers();
     listPost = List.generate(numberOfContainers, (index) {
       return FakePost();
     });

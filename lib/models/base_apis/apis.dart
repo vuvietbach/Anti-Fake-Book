@@ -371,6 +371,28 @@ class ApiModel {
     // print(response.data.runtimeType);
     return GetListPostsResponseDTO.fromJson(response.data);
   }
+
+  Future<GetRequestedFriendsResponseDTO> GetRequestedFriends(
+      GetRequestedFriendsRequestDTO data) async {
+    final response = await _dio.post(
+      PathName.getRequestedFriends,
+      data: {
+        'index': data.index,
+        'count': data.count,
+      },
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer ${data.token}',
+        },
+      ),
+    );
+    // print('ok');
+    // print(response.statusCode);
+    // print(response.data);
+    // print(GetRequestedFriendsResponseDTO.fromJson(response.data));
+
+    return GetRequestedFriendsResponseDTO.fromJson(response.data);
+  }
 }
 
 void main() async {

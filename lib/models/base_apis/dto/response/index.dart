@@ -15,3 +15,4 @@ export 'user_info.dto.dart';
 export 'notification.dto.dart';
 export 'search.dto.dart';
 export 'get_list_posts.dto.dart';
+export 'get_requested_friends.dto.dart';
