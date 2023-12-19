@@ -3,12 +3,14 @@ import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
 import 'package:anti_fake_book/store/actions/auth.dart';
 import 'package:anti_fake_book/store/actions/common.dart';
 import 'package:anti_fake_book/store/actions/conversation.dart';
+import 'package:anti_fake_book/store/actions/requested_friends.dart';
 import 'package:anti_fake_book/store/actions/search.dart';
 import 'package:anti_fake_book/store/actions/user_info.dart';
 import 'package:anti_fake_book/store/reducers/auth.dart';
 import 'package:anti_fake_book/store/reducers/common.dart';
 import 'package:anti_fake_book/store/reducers/conversation.dart';
 import 'package:anti_fake_book/store/reducers/post.dart';
+import 'package:anti_fake_book/store/reducers/requested_friends.dart';
 import 'package:anti_fake_book/store/reducers/search.dart';
 import 'package:anti_fake_book/store/reducers/user_info.dart';
 import 'package:flutter/material.dart';
@@ -110,6 +112,10 @@ final antiFakeBookReducers = combineReducers<AntiFakeBookState>([
       onGetListPostsSuccess),
   TypedReducer<AntiFakeBookState, PendingGetListPostsAction>(
       onGetListPostsPending),
+  TypedReducer<AntiFakeBookState, SuccessGetRequestedFriendsAction>(
+      onGetRequestedFriendsSuccess),
+  TypedReducer<AntiFakeBookState, PendingGetRequestedFriendsAction>(
+      onGetRequestedFriendsPending),
 
   // TypedReducer<AntiFakeBookState, PendingSetReadMessageAction>(onPendingSetReadMessage),
   // TypedReducer<AntiFakeBookState, SuccessSetReadMessageAction>(onSuccessSetReadMessage),

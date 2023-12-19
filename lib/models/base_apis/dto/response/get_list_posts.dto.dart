@@ -30,7 +30,9 @@ class GetListPostsResponseDTO {
 class DataPayloadDTO {
   @JsonKey(name: 'post')
   final List<EachPostPayloadDTO> post;
+  @JsonKey(name: 'new_items')
   final String? newItems;
+  @JsonKey(name: 'last_id')
   final String? lastId;
 
   DataPayloadDTO({
@@ -56,9 +58,13 @@ class EachPostPayloadDTO {
   final String? described;
   final String? created;
   final String? feel;
+  @JsonKey(name: 'comment_mark')
   final String? commentMark;
+  @JsonKey(name: 'is_felt')
   final String? isFelt;
+  @JsonKey(name: 'is_blocked')
   final String? isBlocked;
+  @JsonKey(name: 'can_edit')
   final String? canEdit;
   final String? banned;
   final String? state;
