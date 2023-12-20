@@ -25,10 +25,10 @@ import '../../utils.dart';
 import '../../widgets/loading_widget.dart';
 
 final List<String> imageAssets = [
-  "https://it4788.catan.io.vn/files/image-1702754561794-367705462.jpg",
-  "https://it4788.catan.io.vn/files/avatar-1701792559489-506632748.png",
-  "https://it4788.catan.io.vn/files/image-1702753432014-3454262.jpg",
-  "https://it4788.catan.io.vn/files/image-1702753432015-740386668.jpg",
+  "https://it4788.catan.io.vn/files/image-1703013217511-26499064.jpg",
+  "https://it4788.catan.io.vn/files/image-1703010349974-901183860.jpg",
+  "https://it4788.catan.io.vn/files/image-1703010350019-240406983.jpg",
+  "https://it4788.catan.io.vn/files/image-1703008899334-936284309.png",
 ];
 
 class PostHomePageContent extends StatefulWidget {
@@ -230,6 +230,402 @@ Post FakePost() {
       commentCount, postDate, '', "-1");
 }
 
+class PostWidget extends StatefulWidget {
+  final Post post;
+  final bool isDetailedPost;
+
+  const PostWidget({
+    required this.post,
+    this.isDetailedPost = false,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  _PostWidgetState createState() => _PostWidgetState();
+}
+
+String formatCount(int count) {
+  if (count >= 1000000) {
+    double millionCount = count / 1000000.0;
+    return '${millionCount.toStringAsFixed(1)}M';
+  } else if (count >= 1000) {
+    double thousandCount = count / 1000.0;
+    return '${thousandCount.toStringAsFixed(1)}K';
+  } else {
+    return count.toString();
+  }
+}
+
+List<Map<String, dynamic>> menuOptions = [
+  {
+    'icon': Icons.notifications_off,
+    'title': "Tắt thông báo về bài viết này",
+  },
+  {
+    'icon': Icons.delete,
+    'title': "Xóa",
+  },
+  {
+    'icon': Icons.edit,
+    'title': "Chỉnh sửa bài viết",
+  },
+];
+
+class _PostWidgetState extends State<PostWidget> {
+  void handleLikeButtonPress() {
+    if (widget.post.is_felt == "0") {
+      setState(() {
+        widget.post.kudosCount -= 1;
+        widget.post.is_felt = "-1";
+      });
+    } else {
+      setState(() {
+        widget.post.kudosCount += 1;
+        widget.post.is_felt = "0";
+      });
+    }
+    // EachPostPayloadDTO updatedPost = EachPostPayloadDTO(
+    //   id: widget.post.id,
+    //   isFelt: widget.post.is_felt,
+    // );
+    //
+    // store.dispatch(UpdateListPostAction(updatedPost, index));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    GlobalKey _menuButtonKeys = GlobalKey();
+
+    if (widget.post.textSpans.length <= 30) {
+      widget.post.displayedText = widget.post.textSpans;
+    } else if (widget.post.kudosCount < 100 &&
+        widget.post.commentCount < 100 &&
+        widget.post.imageURL.length <= 1) {
+      widget.post.displayedText = widget.post.showAllText
+          ? widget.post.textSpans
+          : widget.post.textSpans.sublist(0, 30);
+      if (!widget.post.showAllText) {
+        widget.post.displayedText.add(
+          const TextSpan(
+            text: '...',
+            style: TextStyle(color: Colors.black),
+          ),
+        );
+        widget.post.displayedText.add(
+          TextSpan(
+            text: 'Xem thêm',
+            style: const TextStyle(color: Colors.grey),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                setState(() {
+                  widget.post.showAllText = true;
+                });
+              },
+          ),
+        );
+      } else {
+        widget.post.displayedText.add(
+          TextSpan(
+            text: ' Thu gọn',
+            style: const TextStyle(color: Colors.grey),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                setState(() {
+                  widget.post.showAllText = false;
+                });
+              },
+          ),
+        );
+      }
+    } else {
+      widget.post.displayedText = widget.post.showAllText
+          ? widget.post.textSpans
+          : widget.post.textSpans.sublist(0, 30);
+      if (!widget.post.showAllText) {
+        widget.post.displayedText.add(
+          const TextSpan(
+            text: '...',
+            style: TextStyle(color: Colors.black),
+          ),
+        );
+        widget.post.displayedText.add(
+          TextSpan(
+            text: 'Xem thêm',
+            style: const TextStyle(color: Colors.grey),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailedPost(post: widget.post),
+                  ),
+                );
+              },
+          ),
+        );
+      }
+    }
+    return Container(
+      color: Colors.white,
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              if (widget.post.userAvatar != '' &&
+                  widget.post.userAvatar != null)
+                CircleAvatar(
+                  radius: 20,
+                  backgroundImage: NetworkImage(widget.post.userAvatar),
+                )
+              else
+                const CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Colors.deepPurple,
+                ),
+              const SizedBox(width: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.post.userName,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        '${widget.post.timeAgo} • ',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 10,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Icon(
+                        Icons.public_rounded,
+                        size: 10,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const Spacer(),
+              IconButton(
+                key: _menuButtonKeys,
+                icon: const Icon(Icons.more_horiz),
+                onPressed: () {
+                  final RenderBox buttonBox = _menuButtonKeys.currentContext
+                      ?.findRenderObject() as RenderBox;
+                  final Offset offset = buttonBox.localToGlobal(Offset.zero);
+
+                  final Size screenSize =
+                      window.physicalSize / window.devicePixelRatio;
+                  final double menuHeight = menuOptions.length * 56.0;
+
+                  showMenu(
+                    context: context,
+                    position: RelativeRect.fromLTRB(
+                      offset.dx,
+                      screenSize.height - menuHeight,
+                      offset.dx + buttonBox.size.width,
+                      screenSize.height,
+                    ),
+                    items: menuOptions.map((option) {
+                      return PopupMenuItem(
+                        value: option['title'],
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.all(0),
+                          leading: Icon(option['icon']),
+                          title: Text(option['title']),
+                        ),
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          RichText(
+            text: TextSpan(children: widget.post.displayedText),
+          ),
+          const SizedBox(height: 10),
+          GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+            ),
+            itemCount: widget.post.imageURL.length,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (contextImage, imageIndex) {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    contextImage,
+                    MaterialPageRoute(
+                      builder: (contextImage) => Scaffold(
+                        body: PhotoViewGallery.builder(
+                          itemCount: widget.post.imageURL.length,
+                          builder: (contextImage, indexImage) {
+                            return PhotoViewGalleryPageOptions(
+                              imageProvider: NetworkImage(
+                                widget.post.imageURL[indexImage],
+                              ),
+                              minScale: PhotoViewComputedScale.contained,
+                              maxScale: PhotoViewComputedScale.covered * 2,
+                              initialScale: PhotoViewComputedScale.contained,
+                              heroAttributes: PhotoViewHeroAttributes(
+                                tag: widget.post.imageURL[indexImage],
+                              ),
+                            );
+                          },
+                          backgroundDecoration: const BoxDecoration(
+                            color: Colors.black,
+                          ),
+                          scrollPhysics: const BouncingScrollPhysics(),
+                          pageController:
+                              PageController(initialPage: imageIndex),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                child: Image.network(
+                  widget.post.imageURL[imageIndex],
+                  fit: BoxFit.cover,
+                ),
+              );
+            },
+          ),
+          widget.post.loadedVideo,
+          Row(
+            children: [
+              Container(width: 5), // 5px-width box
+              Expanded(
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    primary:
+                        widget.post.is_felt == "0" ? Colors.blue : Colors.white,
+                    onPrimary: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      handleLikeButtonPress();
+                    });
+                  },
+                  icon: Icon(
+                    Icons.thumb_up,
+                    color:
+                        widget.post.is_felt == "0" ? Colors.white : Colors.blue,
+                  ),
+                  label: Text(
+                    formatCount(widget.post.kudosCount),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: widget.post.is_felt == "0"
+                          ? Colors.white
+                          : Colors.blue,
+                    ),
+                  ),
+                ),
+              ),
+              Container(width: 5), // 5px-width box
+              Expanded(
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green,
+                    onPrimary: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  onPressed: () {
+                    // Add functionality for the Comment button
+                    // You can navigate to a chat screen or perform any other action
+                  },
+                  icon: const Icon(Icons.message),
+                  label: Text(
+                    formatCount(widget.post.commentCount),
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ),
+              ),
+              Container(width: 5), // 5px-width box
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ListPost extends StatelessWidget {
+  final List<Post> listPost;
+  final Function? onReload;
+  final Function? onAddMore;
+  final bool createPostButton;
+
+  const ListPost({
+    super.key,
+    required this.listPost,
+    this.onReload,
+    this.onAddMore,
+    this.createPostButton = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    ScrollController _scrollController = ScrollController();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+              _scrollController.position.maxScrollExtent &&
+          onAddMore != null) {
+        onAddMore!();
+      } else if (_scrollController.position.pixels == 0 && onReload != null) {
+        onReload!();
+      }
+    });
+    int fl = 0;
+    if (createPostButton == true) {
+      fl = 1;
+    }
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            controller: _scrollController,
+            itemCount: listPost.length + fl,
+            itemBuilder: (BuildContext context, int indexOfAll) {
+              int index = indexOfAll - fl;
+              if (index == -1) {
+                return Row(
+                  children: [
+                    Expanded(
+                        child: ElevatedButton(
+                      child: const Text('Tạo bài viết'),
+                      onPressed: () {
+                        GoRouter.of(context).go('/create-post');
+                      },
+                    ))
+                  ],
+                );
+              }
+              return PostWidget(
+                post: listPost[index],
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _PostHomePageContentState extends State<PostHomePageContent> {
   final ScrollController _scrollController = ScrollController();
   int numberOfContainers = 10;
@@ -242,7 +638,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     store = StoreProvider.of<AntiFakeBookState>(context);
-    reloadContainers();
+    // reloadContainers();
   }
 
   @override
@@ -360,33 +756,6 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
     }
   }
 
-  void handleLikeButtonPress(int index) {
-    if (listPost[index].is_felt == "0") {
-      // If the button is currently pressed (liked), decrement kudosCount
-      setState(() {
-        listPost[index].kudosCount -= 1;
-        listPost[index].is_felt = "-1";
-      });
-    } else {
-      // If the button is not pressed (not liked), increment kudosCount
-      setState(() {
-        listPost[index].kudosCount += 1;
-        listPost[index].is_felt = "0";
-      });
-    }
-  }
-
-  void updateStore(int index) {
-    // Update the store with the modified post
-    EachPostPayloadDTO updatedPost = EachPostPayloadDTO(
-      id: listPost[index].id,
-      isFelt: listPost[index].is_felt,
-      // Include other properties that might be updated
-    );
-
-    store.dispatch(UpdateListPostAction(updatedPost, index));
-  }
-
   String formatCount(int count) {
     if (count >= 1000000) {
       double millionCount = count / 1000000.0;
@@ -416,321 +785,17 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
 
   @override
   Widget build(BuildContext context) {
-    List<GlobalKey> _menuButtonKeys =
-        List.generate(numberOfContainers, (index) => GlobalKey());
     return StoreBuilder(
         builder: (BuildContext context, Store<AntiFakeBookState> store) {
       return Stack(children: [
         Column(
           children: [
             Expanded(
-              child: ListView.builder(
-                controller: _scrollController,
-                itemCount: numberOfContainers + 1,
-                itemBuilder: (BuildContext context, int indexOfAll) {
-                  int index = indexOfAll - 1;
-                  if (index == -1) {
-                    return ElevatedButton(
-                      onPressed: () {
-                        GoRouter.of(context).go('/create-post');
-                      },
-                      child: const Text('Tạo bài viết'),
-                    );
-                  } else if (index < numberOfContainers) {
-                    if (listPost[index].textSpans.length <= 30) {
-                      listPost[index].displayedText = listPost[index].textSpans;
-                    } else if (listPost[index].kudosCount < 100 &&
-                        listPost[index].commentCount < 100 &&
-                        listPost[index].imageURL.length <= 1) {
-                      listPost[index].displayedText =
-                          listPost[index].showAllText
-                              ? listPost[index].textSpans
-                              : listPost[index].textSpans.sublist(0, 30);
-                      if (!listPost[index].showAllText) {
-                        listPost[index].displayedText.add(
-                              const TextSpan(
-                                text: '...',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            );
-                        listPost[index].displayedText.add(
-                              TextSpan(
-                                text: 'Xem thêm',
-                                style: const TextStyle(color: Colors.grey),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    setState(() {
-                                      listPost[index].showAllText = true;
-                                    });
-                                  },
-                              ),
-                            );
-                      } else {
-                        listPost[index].displayedText.add(
-                              TextSpan(
-                                text: ' Thu gọn',
-                                style: const TextStyle(color: Colors.grey),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    setState(() {
-                                      listPost[index].showAllText = false;
-                                    });
-                                  },
-                              ),
-                            );
-                      }
-                    } else {
-                      listPost[index].displayedText =
-                          listPost[index].showAllText
-                              ? listPost[index].textSpans
-                              : listPost[index].textSpans.sublist(0, 30);
-                      if (!listPost[index].showAllText) {
-                        listPost[index].displayedText.add(
-                              const TextSpan(
-                                text: '...',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            );
-                        listPost[index].displayedText.add(
-                              TextSpan(
-                                text: 'Xem thêm',
-                                style: const TextStyle(color: Colors.grey),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            DetailedPost(post: listPost[index]),
-                                      ),
-                                    );
-                                  },
-                              ),
-                            );
-                      }
-                    }
-
-                    return Container(
-                      color: Colors.white,
-                      margin: const EdgeInsets.only(bottom: 10),
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              if (listPost[index].userAvatar != '' &&
-                                  listPost[index].userAvatar != null)
-                                CircleAvatar(
-                                  radius: 20,
-                                  backgroundImage:
-                                      NetworkImage(listPost[index].userAvatar),
-                                )
-                              else
-                                const CircleAvatar(
-                                  radius: 20,
-                                  backgroundColor: Colors.deepPurple,
-                                ),
-                              const SizedBox(width: 10),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    listPost[index].userName,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        '${listPost[index].timeAgo} • ',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.normal,
-                                          fontSize: 10,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 20),
-                                      const Icon(
-                                        Icons.public_rounded,
-                                        size: 10,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              const Spacer(),
-                              IconButton(
-                                key: _menuButtonKeys[index],
-                                icon: const Icon(Icons.more_horiz),
-                                onPressed: () {
-                                  final RenderBox buttonBox =
-                                      _menuButtonKeys[index]
-                                          .currentContext
-                                          ?.findRenderObject() as RenderBox;
-                                  final Offset offset =
-                                      buttonBox.localToGlobal(Offset.zero);
-
-                                  final Size screenSize = window.physicalSize /
-                                      window.devicePixelRatio;
-                                  final double menuHeight =
-                                      menuOptions.length * 56.0;
-
-                                  showMenu(
-                                    context: context,
-                                    position: RelativeRect.fromLTRB(
-                                      offset.dx,
-                                      screenSize.height - menuHeight,
-                                      offset.dx + buttonBox.size.width,
-                                      screenSize.height,
-                                    ),
-                                    items: menuOptions.map((option) {
-                                      return PopupMenuItem(
-                                        value: option['title'],
-                                        child: ListTile(
-                                          contentPadding:
-                                              const EdgeInsets.all(0),
-                                          leading: Icon(option['icon']),
-                                          title: Text(option['title']),
-                                        ),
-                                      );
-                                    }).toList(),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          // Post content (text)
-                          RichText(
-                            text: TextSpan(
-                                children: listPost[index].displayedText),
-                          ),
-                          const SizedBox(height: 10),
-                          GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                            ),
-                            itemCount: listPost[index].imageURL.length,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (contextImage, imageIndex) {
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    contextImage,
-                                    MaterialPageRoute(
-                                      builder: (contextImage) => Scaffold(
-                                        body: PhotoViewGallery.builder(
-                                          itemCount:
-                                              listPost[index].imageURL.length,
-                                          builder: (contextImage, indexImage) {
-                                            return PhotoViewGalleryPageOptions(
-                                              imageProvider: NetworkImage(
-                                                listPost[index]
-                                                    .imageURL[indexImage],
-                                              ),
-                                              minScale: PhotoViewComputedScale
-                                                  .contained,
-                                              maxScale: PhotoViewComputedScale
-                                                      .covered *
-                                                  2,
-                                              initialScale:
-                                                  PhotoViewComputedScale
-                                                      .contained,
-                                              heroAttributes:
-                                                  PhotoViewHeroAttributes(
-                                                tag: listPost[index]
-                                                    .imageURL[indexImage],
-                                              ),
-                                            );
-                                          },
-                                          backgroundDecoration:
-                                              const BoxDecoration(
-                                            color: Colors.black,
-                                          ),
-                                          scrollPhysics:
-                                              const BouncingScrollPhysics(),
-                                          pageController: PageController(
-                                              initialPage: imageIndex),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: Image.network(
-                                  listPost[index].imageURL[imageIndex],
-                                  fit: BoxFit.cover,
-                                ),
-                              );
-                            },
-                          ),
-                          listPost[index].loadedVideo,
-                          Row(
-                            children: [
-                              Container(width: 5), // 5px-width box
-                              Expanded(
-                                child: ElevatedButton.icon(
-                                  style: ElevatedButton.styleFrom(
-                                    primary: listPost[index].is_felt == "0"
-                                        ? Colors.blue
-                                        : Colors.white,
-                                    onPrimary: Colors.black,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      handleLikeButtonPress(index);
-                                    });
-                                  },
-                                  icon: Icon(
-                                    Icons.thumb_up,
-                                    color: listPost[index].is_felt == "0"
-                                        ? Colors.white
-                                        : Colors.blue,
-                                  ),
-                                  label: Text(
-                                    formatCount(listPost[index].kudosCount),
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: listPost[index].is_felt == "0"
-                                          ? Colors.white
-                                          : Colors.blue,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(width: 5), // 5px-width box
-                              Expanded(
-                                child: ElevatedButton.icon(
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Colors.green,
-                                    onPrimary: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    // Add functionality for the Comment button
-                                    // You can navigate to a chat screen or perform any other action
-                                  },
-                                  icon: Icon(Icons.message),
-                                  label: Text(
-                                    formatCount(listPost[index].commentCount),
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ),
-                              ),
-                              Container(width: 5), // 5px-width box
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                },
+              child: ListPost(
+                listPost: listPost,
+                onReload: reloadContainers,
+                onAddMore: loadMoreContainers,
+                createPostButton: true,
               ),
             ),
           ],
