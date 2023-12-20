@@ -7,6 +7,7 @@ import 'package:anti_fake_book/models/base_apis/dto/response/friend.dto.dart';
 import 'package:dio/dio.dart';
 
 import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
+import 'package:http_parser/http_parser.dart';
 
 import 'dto/request/get_list_posts.dart';
 import 'dto/request/index.dart';
@@ -46,7 +47,7 @@ class ApiModel {
   String convertDioRequestToCurl(RequestOptions options) {
     // Extract headers
     final headers = options.headers
-            ?.map((key, value) => MapEntry(key, '-H "$key: $value"')) ??
+            .map((key, value) => MapEntry(key, '-H "$key: $value"')) ??
         '';
 
     // Extract request method
@@ -215,10 +216,12 @@ class ApiModel {
       'username': data.username,
     });
     if (data.avatar != null) {
+      final avatar = await File(data.avatar!).readAsBytes();
       formData.files.add(MapEntry(
           'avatar',
-          await MultipartFile.fromFile(
-            data.avatar!,
+          MultipartFile.fromBytes(
+            avatar,
+            contentType: MediaType('image', 'jpg'),
             filename: 'avatar',
           )));
     }
@@ -285,6 +288,7 @@ class ApiModel {
           'avatar',
           MultipartFile.fromBytes(
             avatar,
+            contentType: MediaType('image', 'jpg'),
             filename: 'avatar.jpg',
           )));
     }
@@ -294,6 +298,7 @@ class ApiModel {
           'coverImage',
           MultipartFile.fromBytes(
             coverImage,
+            contentType: MediaType('image', 'jpg'),
             filename: 'coverImage.jpg',
           )));
     }

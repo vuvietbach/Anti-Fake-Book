@@ -69,8 +69,8 @@ class _ChangeProfilePageState extends State<ChangeProfileAfterSignUpPage> {
         height: 40.0,
         child: ElevatedButton(
             onPressed: () {
-              if (usernameController.text != defaultUsername &&
-                  validateUsername(usernameController.text, widget.email)) {
+              if (validateUsername(usernameController.text, widget.email) &&
+                  usernameController.text.compareTo(defaultUsername) != 0) {
                 String title = "Lưu thông tin";
                 String content =
                     "Bạn có thể thay đổi thông tin cá nhân sau này";

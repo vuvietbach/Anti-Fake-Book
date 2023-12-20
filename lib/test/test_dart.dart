@@ -32,34 +32,7 @@ void main() {
   // final highlightedText = highlightPhoneNumbers(text);
   // print(highlightedText);
   // final text1 = "This is underlined text\u0332.\u0332";
-  // print(text1); // This is underlined text.
-  var x = {
-    "avatar":
-        "https://it4788.catan.io.vn/files/avatar-1702266687586-221771519.jpeg",
-    "cover_image":
-        "https://it4788.catan.io.vn/files/cover_image-1702266687587-52138296.jpeg",
-    "link": "link.com",
-    "city": "halong",
-    "country": "viet nam"
-  };
-
-  var x4 = UserInfoData.fromJson(x);
-  var x5 = x4.toJson();
-  print(x5);
-
-  var data = {
-    "code": "1000",
-    "message": "OK",
-    "data": {
-      "avatar":
-          "https://it4788.catan.io.vn/files/avatar-1702266687586-221771519.jpeg",
-      "cover_image":
-          "https://it4788.catan.io.vn/files/cover_image-1702266687587-52138296.jpeg",
-      "link": "link.com",
-      "city": "halong",
-      "country": "viet nam"
-    }
-  };
-  var data1 = SetUserInfoResponse.fromJson(data);
-  // print(data1);
+  String a = "abc";
+  String b = "abc";
+  print(a.compareTo(b));
 }
