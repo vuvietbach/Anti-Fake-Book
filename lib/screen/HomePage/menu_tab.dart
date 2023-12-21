@@ -1,4 +1,5 @@
 import 'package:anti_fake_book/store/state/index.dart';
+import 'package:anti_fake_book/widgets/common/app_drop_down_menu.dart';
 import 'package:anti_fake_book/widgets/common/cached_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -88,7 +89,7 @@ class MenuContent extends StatelessWidget {
               ]),
             ),
             WrapperBlockSetting(),
-            DropdownMenu(
+            AppDropdownMenu(
               title: 'Xem thêm',
               icon: const Icon(
                 CupertinoIcons.add,
@@ -101,12 +102,12 @@ class MenuContent extends StatelessWidget {
               children: [
                 Wrap(
                   children: [
-                    DropdownMenu(
+                    AppDropdownMenu(
                       icon: const Icon(CupertinoIcons.question_circle_fill,
                           color: Colors.cyan),
                       title: 'Trợ giúp và hỗ trợ',
                       children: [
-                        DropdownMenu(
+                        AppDropdownMenu(
                           icon:
                               const Icon(Icons.policy, color: Colors.blueGrey),
                           title: 'Điều khoản và chính sách',
@@ -114,28 +115,31 @@ class MenuContent extends StatelessWidget {
                         )
                       ],
                     ),
-                    DropdownMenu(
+                    AppDropdownMenu(
                       icon: const Icon(CupertinoIcons.gear_alt_fill,
                           color: Colors.cyan),
                       title: 'Cài đặt và quyền riêng tư',
                       children: [
-                        DropdownMenu(
+                        AppDropdownMenu(
                           icon: const Icon(
                               CupertinoIcons.person_alt_circle_fill,
                               color: Colors.blueGrey),
                           title: 'Cài đặt',
                           isShowLeading: false,
+                          onPressed: () {
+                            context.go('/setting');
+                          },
                         )
                       ],
                     ),
                   ],
                 ),
-                DropdownMenu(
+                AppDropdownMenu(
                   icon: const Icon(Icons.logout, color: Colors.cyan),
                   title: 'Đăng xuất',
                   isShowLeading: false,
                 ),
-                DropdownMenu(
+                AppDropdownMenu(
                   icon: const Icon(Icons.dangerous, color: Colors.redAccent),
                   title: 'Thoát',
                   isShowLeading: false,
@@ -282,82 +286,5 @@ class WrapperBlockSetting extends StatelessWidget {
                     .toList(),
               )),
         ]);
-  }
-}
-
-class DropdownMenu extends StatefulWidget {
-  final Icon? icon;
-  final String title;
-  final List<Widget> children;
-  final Function()? onPressed;
-  final bool isShowLeading;
-  final Color backgroundColor;
-  DropdownMenu(
-      {Key? key,
-      this.icon,
-      required this.title,
-      this.children = const [],
-      this.isShowLeading = true,
-      this.backgroundColor = const Color.fromRGBO(207, 216, 220, 1),
-      this.onPressed})
-      : super(key: key);
-  @override
-  _DropdownMenuState createState() => _DropdownMenuState();
-}
-
-class _DropdownMenuState extends State<DropdownMenu> {
-  bool isShow = false;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(5),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: widget.backgroundColor,
-      ),
-      child: Wrap(
-        children: [
-          ElevatedButton(
-              // ko có màu nền, khi nhấn thì có đường màu đen chạy
-              style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(Colors.transparent),
-                  shadowColor: MaterialStateProperty.all(Colors.transparent),
-                  elevation: MaterialStateProperty.all(0)),
-              onPressed: () {
-                setState(() {
-                  if (widget.onPressed != null) widget.onPressed!();
-                  isShow = !isShow;
-                });
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      if (widget.icon != null) widget.icon!,
-                      if (widget.icon != null) const SizedBox(width: 10),
-                      Text(widget.title,
-                          style: const TextStyle(color: Colors.black)),
-                    ],
-                  ),
-                  if (widget.isShowLeading)
-                    Icon(
-                        !isShow
-                            ? CupertinoIcons.chevron_down
-                            : CupertinoIcons.chevron_up,
-                        color: Colors.black)
-                ],
-              )),
-          if (isShow)
-            Column(
-              children: widget.children,
-            )
-        ],
-      ),
-    );
   }
 }

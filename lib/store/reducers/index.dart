@@ -1,6 +1,8 @@
 import 'package:anti_fake_book/helper/helper.dart';
+import 'package:anti_fake_book/layout/default_layer.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
 import 'package:anti_fake_book/store/actions/auth.dart';
+import 'package:anti_fake_book/store/actions/block.dart';
 import 'package:anti_fake_book/store/actions/common.dart';
 import 'package:anti_fake_book/store/actions/conversation.dart';
 import 'package:anti_fake_book/store/actions/requested_friends.dart';
@@ -8,6 +10,7 @@ import 'package:anti_fake_book/store/actions/friends.dart';
 import 'package:anti_fake_book/store/actions/search.dart';
 import 'package:anti_fake_book/store/actions/user_info.dart';
 import 'package:anti_fake_book/store/reducers/auth.dart';
+import 'package:anti_fake_book/store/reducers/block.dart';
 import 'package:anti_fake_book/store/reducers/common.dart';
 import 'package:anti_fake_book/store/reducers/conversation.dart';
 import 'package:anti_fake_book/store/reducers/friend.dart';
@@ -33,6 +36,7 @@ AntiFakeBookState onDefaultFaulureAction(
     return state;
   }
   BuildContext context = action.extras['context'];
+  EmptyLayoutState.of(context).touchLoading(false);
   bool isStandardError = true;
   ResponseDTO? responseDTO;
   try {
@@ -65,6 +69,10 @@ AntiFakeBookState onDefaultFaulureAction(
 }
 
 final antiFakeBookReducers = combineReducers<AntiFakeBookState>([
+  TypedReducer<AntiFakeBookState, SuccessGetListBlocksAction>(
+      onSuccessGetListBlocksAction),
+  TypedReducer<AntiFakeBookState, SuccessSetBlockAction>(
+      onSuccessSetBlockAction),
   TypedReducer<AntiFakeBookState, PendingCreatePostAction>(onCreatePostPending),
   TypedReducer<AntiFakeBookState, SuccessCreatePostAction>(onCreatePostSuccess),
   TypedReducer<AntiFakeBookState, FutureFailedAction>(onDefaultFaulureAction),
