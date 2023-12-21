@@ -13,6 +13,8 @@ abstract class PathName {
   static String checkNewVersion = '/check_new_version';
   static String getPushSettings = '/get_push_settings';
   static String setBlock = '/set_block';
+  static String unblock = '/unblock';
+  static String getListBlocks = '/get_list_blocks';
   static String getNotification = '/get_notification';
   static String getUserInfo = '/get_user_info'; // da xong
   static String signIn = '/login'; // da xong

@@ -13,13 +13,14 @@ import 'dto/request/index.dart';
 import 'dto/response/get_list_posts.dto.dart';
 import 'dto/response/index.dart';
 import 'package:anti_fake_book/utils.dart';
+import 'package:anti_fake_book/global_type/user/user_summary.entity.dart';
 
 class ApiModel {
   late final String _baseUrl;
   late final BaseOptions _baseOptions;
   late final Dio _dio;
   String token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ODU2LCJkZXZpY2VfaWQiOiIxMjM0IiwiaWF0IjoxNzAyODgyNDEyfQ.HifAwkupHgZTErQQoxHIPj9-CO0Rjl4PvQiRl_ajxrw';
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAxOSwiZGV2aWNlX2lkIjoiMTIzNCIsImlhdCI6MTcwMzE0Njk2N30.bODgdcRVUFvdw2I7siEBoEeO4LzTfx_hmapWU_B71-0';
   ApiModel() {
     _baseUrl = 'https://it4788.catan.io.vn';
     _baseOptions = BaseOptions(baseUrl: _baseUrl);
@@ -413,16 +414,31 @@ class ApiModel {
 
     return GetRequestedFriendsResponseDTO.fromJson(response.data);
   }
+
+  Future<ResponseDTO> setBlock(String userId, bool isBlock) {
+    return _dio.post(isBlock ? PathName.setBlock : PathName.unblock, data: {
+      'user_id': userId,
+    }).then((rawResponse) => ResponseDTO.fromJson(rawResponse.data));
+  }
+
+  Future<List<UserSummaryEntity>> getListBlocks(int index, int count) async {
+    var rawResponse = await _dio.post(PathName.getListBlocks, data: {
+      'index': index,
+      'count': count,
+    }).then((rawResponse) => rawResponse.data['data']) as List<dynamic>;
+    final data = rawResponse.map((e) => UserSummaryEntity.fromJson(e)).toList();
+    return data;
+  }
 }
 
 void main() async {
-  ApiModel.token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZGV2aWNlX2lkIjoic3RyaW5nIiwiaWF0IjoxNzAyOTEwODUwfQ.nKLHDoJ0r4Ft1A3fdiLVQES5ppGX7qQj4ifalksiWOY';
-  final x = await ApiModel.api.getUserFriends(GetUserFriendsRequest(
-    index: 0,
-    count: 10,
-  ));
-  print(x.total);
+  // ApiModel.token =
+  //     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZGV2aWNlX2lkIjoic3RyaW5nIiwiaWF0IjoxNzAyOTEwODUwfQ.nKLHDoJ0r4Ft1A3fdiLVQES5ppGX7qQj4ifalksiWOY';
+  // final x = await ApiModel.api.getUserFriends(GetUserFriendsRequest(
+  //   index: 0,
+  //   count: 10,
+  // ));
+  // print(x.total);
   // final y = await ApiModel.api.unfriend(UnfriendRequest(userId: 1));
   // print(y.code);
 }

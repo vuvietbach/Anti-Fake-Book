@@ -1,3 +1,4 @@
+import 'package:anti_fake_book/global_type/user/user_summary.entity.dart';
 import 'package:anti_fake_book/store/state/user_info.dart';
 import 'package:anti_fake_book/utils.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -12,6 +13,7 @@ class UserState with _$UserState {
   factory UserState({
     @Default(_defaultUserInfo) UserInfo userInfo,
     @Default(_defaultUserInfo) UserInfo searchedUserInfo,
+    @Default([]) List<UserSummaryEntity> blocks,
   }) = _UserState;
 
   factory UserState.fromJson(Map<String, dynamic> json) =>

@@ -19,7 +19,7 @@ class EmptyLayoutState extends State<EmptyLayout> {
 
   touchLoading(bool value) {
     setState(() {
-      isLoading = !isLoading;
+      isLoading = value;
     });
   }
 
