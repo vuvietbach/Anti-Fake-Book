@@ -19,7 +19,6 @@ AntiFakeBookState onSuccessGetUserFriends(
   bool isOwner = isAccountOwner(action.extras['request'].userId, state);
   if (isOwner) {
     var friendList = state.friendState.userFriends;
-
     if (action.extras['request'].index == 0) {
       friendList = action.payload.friends;
     } else {
