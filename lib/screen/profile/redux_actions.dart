@@ -33,23 +33,10 @@ void getUserInfo(BuildContext context, GetUserInfoRequest data,
 
 void blockUser() {}
 
-void getUserFriends(BuildContext context, String? userId, bool isFirstTime,
+void getUserFriends(BuildContext context, GetUserFriendsRequest data,
     {Function(GetUserFriendsResponse)? onSuccess,
     Function? onPending,
     Function? onError}) {
-  AntiFakeBookState state = StoreProvider.of<AntiFakeBookState>(context).state;
-  GetUserFriendsRequest data;
-  if (isFirstTime) {
-    data = GetUserFriendsRequest(
-        index: 0, count: NUM_QUERY_PER_REQUEST, userId: userId);
-  } else {
-    bool isOwner = isAccountOwner(userId, state);
-    int index = isOwner
-        ? state.friendState.userFriends.length
-        : state.friendState.searchedUserFriends.length;
-    data = GetUserFriendsRequest(
-        index: index, count: NUM_QUERY_PER_REQUEST, userId: userId);
-  }
   StoreProvider.of<AntiFakeBookState>(context).dispatch(GetUserFriendsAction(
     context: context,
     data: data,

@@ -1,4 +1,6 @@
 import 'package:anti_fake_book/constants/constants.dart';
+import 'package:anti_fake_book/helper/helper.dart';
+import 'package:anti_fake_book/models/base_apis/apis.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/friend.dto.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/user_info.dto.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/friend.dto.dart';
@@ -12,9 +14,9 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
 class FriendState {
-  List<Friend> friends;
-  int total;
-  String? userId;
+  final List<Friend> friends;
+  final int total;
+  final String? userId;
   FriendState({this.friends = const [], this.total = 0, required this.userId});
   void sortFriendsByName() {
     friends.sort((a, b) => a.username.compareTo(b.username));
@@ -22,13 +24,6 @@ class FriendState {
 
   void onSuccessLoadMore(GetUserFriendsResponse response, bool isFirstTime,
       Function(FriendState)? callback) {
-    if (isFirstTime) {
-      friends = response.friends;
-      total = response.total;
-    } else {
-      friends.addAll(response.friends);
-      total = response.total;
-    }
     sortFriendsByName();
     callback?.call(this);
   }
@@ -64,25 +59,31 @@ class FriendState {
 
   void _onSuccessUnfriend(String userId, Function(FriendState)? callback) {
     friends.removeWhere((element) => element.id == userId);
-    total -= 1;
+    // total -= 1;
     callback?.call(this);
+  }
+
+  Future<void> getUserFriends(GetUserFriendsRequest request,
+      {Function(FriendState)? callback}) async {
+    final response = await ApiModel.api.getUserFriends(request);
+    final newState = FriendState(
+        friends: response.friends,
+        total: response.total,
+        userId: request.userId);
+    callback?.call(newState);
   }
 }
 
 class UserState {
-  String? userId;
-  UserInfo userInfo = const UserInfo();
-  UserState({this.userId});
-  void reload(BuildContext context, {Function(UserState)? callback}) {
-    Store<AntiFakeBookState> store =
-        StoreProvider.of<AntiFakeBookState>(context);
-    store.dispatch(GetUserInfoAction(
-      context: context,
-      data: GetUserInfoRequest(userId: userId),
-      onSuccess: (GetUserInfoResponse response) {
-        userInfo = UserInfo.fromJson(response.data.toJson());
-        callback?.call(this);
-      },
-    ));
+  final String? userId;
+  final UserInfo userInfo;
+  UserState({this.userId, this.userInfo = const UserInfo()});
+
+  Future<void> getUserInfo({Function(UserState)? callback}) async {
+    final response =
+        await ApiModel.api.getUserInfo(GetUserInfoRequest(userId: userId));
+    final newState = UserState(
+        userId: userId, userInfo: UserInfo.fromJson(response.data.toJson()));
+    callback?.call(newState);
   }
 }

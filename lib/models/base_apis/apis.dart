@@ -7,6 +7,7 @@ import 'package:anti_fake_book/models/base_apis/dto/response/friend.dto.dart';
 import 'package:dio/dio.dart';
 
 import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
+import 'package:http_parser/http_parser.dart';
 
 import 'dto/request/get_list_posts.dart';
 import 'dto/request/index.dart';
@@ -46,7 +47,7 @@ class ApiModel {
   String convertDioRequestToCurl(RequestOptions options) {
     // Extract headers
     final headers = options.headers
-            ?.map((key, value) => MapEntry(key, '-H "$key: $value"')) ??
+            .map((key, value) => MapEntry(key, '-H "$key: $value"')) ??
         '';
 
     // Extract request method
@@ -57,29 +58,6 @@ class ApiModel {
 
     // Combine everything to create the curl command
     return 'curl -X $method $headers $data${options.baseUrl}${options.path}';
-  }
-
-  void update(String token) {
-    _dio.interceptors.clear();
-    _dio.interceptors.add(InterceptorsWrapper(
-        onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
-      //todo: set header to request
-      options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
-      return handler.next(options);
-    }, onError: (DioException e, ErrorInterceptorHandler handler) {
-      const String? refreshToken = null;
-      if (refreshToken != null &&
-          e.response?.statusCode == HttpStatus.unauthorized) {
-        //todo: retry call api
-      }
-      /*
-        if loi = 400
-          EmptyLayout.handleError();
-        */
-      return handler.next(e);
-    }, onResponse: (Response response, ResponseInterceptorHandler handler) {
-      return handler.next(response);
-    }));
   }
 
   static ApiModel api = ApiModel();
@@ -215,10 +193,12 @@ class ApiModel {
       'username': data.username,
     });
     if (data.avatar != null) {
+      final avatar = await File(data.avatar!).readAsBytes();
       formData.files.add(MapEntry(
           'avatar',
-          await MultipartFile.fromFile(
-            data.avatar!,
+          MultipartFile.fromBytes(
+            avatar,
+            contentType: MediaType('image', 'jpg'),
             filename: 'avatar',
           )));
     }
@@ -285,6 +265,7 @@ class ApiModel {
           'avatar',
           MultipartFile.fromBytes(
             avatar,
+            contentType: MediaType('image', 'jpg'),
             filename: 'avatar.jpg',
           )));
     }
@@ -294,6 +275,7 @@ class ApiModel {
           'coverImage',
           MultipartFile.fromBytes(
             coverImage,
+            contentType: MediaType('image', 'jpg'),
             filename: 'coverImage.jpg',
           )));
     }

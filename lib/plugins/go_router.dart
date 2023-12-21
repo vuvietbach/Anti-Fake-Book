@@ -1,3 +1,4 @@
+import 'package:anti_fake_book/screen/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -23,10 +24,7 @@ final GoRouter router = GoRouter(routes: [
   GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState stage) {
-        return const EmptyLayout(child: HomePage());
-        // return const EmptyLayout(
-        //   child: WelcomeScreen(),
-        // );
+        return const EmptyLayout(child: SearchPage());
       },
       routes: [
         GoRoute(
@@ -116,6 +114,16 @@ final GoRouter router = GoRouter(routes: [
           builder: (BuildContext context, GoRouterState stage) =>
               const SearchPage(),
         ),
+        GoRoute(
+            path: 'profile/:userId',
+            builder: (context, state) {
+              return ProfilePage(userId: state.pathParameters['userId']);
+            }),
         ...profileRoutes,
+        GoRoute(
+          path: 'search',
+          builder: (BuildContext context, GoRouterState stage) =>
+              const SearchPage(),
+        )
       ]),
 ]);

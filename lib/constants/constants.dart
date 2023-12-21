@@ -18,3 +18,4 @@ class CodeActive {
 }
 
 const int NUM_QUERY_PER_REQUEST = 20;
+const int MAX_USERNAME_LENGTH = 30;
