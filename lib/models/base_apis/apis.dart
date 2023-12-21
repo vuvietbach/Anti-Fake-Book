@@ -60,7 +60,6 @@ class ApiModel {
     return 'curl -X $method $headers $data${options.baseUrl}${options.path}';
   }
 
-
   static ApiModel api = ApiModel();
 
   Future<AddPostResponseDTO> addPost(AddPostRequestDTO addPostData) async {

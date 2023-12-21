@@ -25,7 +25,6 @@ final GoRouter router = GoRouter(routes: [
       path: '/',
       builder: (BuildContext context, GoRouterState stage) {
         return const EmptyLayout(child: SearchPage());
-
       },
       routes: [
         GoRoute(

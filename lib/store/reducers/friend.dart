@@ -15,10 +15,11 @@ List<Friend> sortFriendList(List<Friend> friendList) {
 AntiFakeBookState onSuccessGetUserFriends(
     AntiFakeBookState state, SuccessGetUserFriendsAction action) {
   action.extras['onSuccess']?.call(action.payload);
-  
+
   bool isOwner = isAccountOwner(action.extras['request'].userId, state);
-  if(isOwner) {
-    var friendList = state.friendState.userFriends; ;
+  if (isOwner) {
+    var friendList = state.friendState.userFriends;
+    ;
     if (action.extras['request'].index == 0) {
       friendList = action.payload.friends;
     } else {

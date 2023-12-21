@@ -37,16 +37,17 @@ class AntiFakeBookApp extends StatelessWidget {
     return StoreProvider<AntiFakeBookState>(
         store: store,
         child: MaterialApp.router(
-          theme: ThemeData(
-            useMaterial3: false
-          ),
-          localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ], supportedLocales: const [
-          Locale('en', ''),
-          Locale('vi', ''),
-        ], debugShowCheckedModeBanner: false, routerConfig: Plugins.goRouter));
+            theme: ThemeData(useMaterial3: false),
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en', ''),
+              Locale('vi', ''),
+            ],
+            debugShowCheckedModeBanner: false,
+            routerConfig: Plugins.goRouter));
   }
 }
