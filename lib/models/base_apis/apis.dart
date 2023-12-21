@@ -60,28 +60,6 @@ class ApiModel {
     return 'curl -X $method $headers $data${options.baseUrl}${options.path}';
   }
 
-  void update(String token) {
-    _dio.interceptors.clear();
-    _dio.interceptors.add(InterceptorsWrapper(
-        onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
-      //todo: set header to request
-      options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
-      return handler.next(options);
-    }, onError: (DioException e, ErrorInterceptorHandler handler) {
-      const String? refreshToken = null;
-      if (refreshToken != null &&
-          e.response?.statusCode == HttpStatus.unauthorized) {
-        //todo: retry call api
-      }
-      /*
-        if loi = 400
-          EmptyLayout.handleError();
-        */
-      return handler.next(e);
-    }, onResponse: (Response response, ResponseInterceptorHandler handler) {
-      return handler.next(response);
-    }));
-  }
 
   static ApiModel api = ApiModel();
 

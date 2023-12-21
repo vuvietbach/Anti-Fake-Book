@@ -18,21 +18,16 @@ AntiFakeBookState onSuccessGetUserInfo(
     if (action.extras['onSuccess'] != null) {
       action.extras['onSuccess']!(action.payload);
     }
-    AntiFakeBookState newState = state;
-    if (isSuccessCode(action.payload.code)) {
-      UserInfo userInfo = state.userState.userInfo;
-      if (action.extras['request'].userId == null ||
-          action.extras['request'].userId == state.userState.userInfo.id) {
-        userInfo = UserInfo.fromJson(action.payload.data.toJson());
-      }
-      newState = state.copyWith(
+    if (isAccountOwner(action.extras['request'].userId, state)) {
+      UserInfo userInfo = UserInfo.fromJson(action.payload.data.toJson());
+      return state.copyWith(
         userState: state.userState.copyWith(
           userInfo: userInfo,
-          searchedUserInfo: UserInfo.fromJson(action.payload.data.toJson()),
         ),
       );
+    } else {
+      return state;
     }
-    return newState;
   } else {
     showErrorDialog(action.extras['context'], action.payload.code,
         apiType: ApiType.getUserInfo);
@@ -64,7 +59,6 @@ AntiFakeBookState onSuccessSetUserInfo(
         userInfo: UserInfo.fromJson(userInfo),
       ),
     );
-    print(newState.userState.userInfo.toJson());
     return newState;
   } else {
     showErrorDialog(action.extras['context'], action.payload.code,

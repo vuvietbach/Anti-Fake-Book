@@ -1,5 +1,7 @@
+import 'package:anti_fake_book/models/base_apis/dto/response/response.dto.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -150,4 +152,46 @@ void showConfirmDialog(BuildContext context, String? title, String? content,
 
 bool isAccountOwner(String? userId, AntiFakeBookState state) {
   return userId == null || userId == state.userState.userInfo.id;
+}
+
+void showUsernameErrorDialog(BuildContext context) async {
+  await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Tên người dùng không hợp lệ"),
+          content: const Text(
+              "Tên người dùng không được để trống, không được chứa ký tự đặc biệt, độ dài từ 6 đến 30 ký tự, không được trùng với email"),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Đóng"))
+          ],
+        );
+      });
+}
+
+void showError(BuildContext context, DioException e) {
+  bool isStandardError = true;
+  late ResponseDTO responseDTO;
+  try {
+    responseDTO = ResponseDTO.fromJson(e.response!.data);
+  } catch (e) {
+    isStandardError = false;
+  }
+  String title = isStandardError ? responseDTO.code.toString() : "Lỗi";
+  String content = isStandardError ? responseDTO.message : e.toString();
+  showDialog(context: context, builder: (context) {
+    return AlertDialog(
+      title: Text(title),
+      content: Text(content),
+      actions: [
+        TextButton(onPressed: () {
+          Navigator.of(context).pop();
+        }, child: const Text("Đóng"))
+      ],
+    );
+  });
 }

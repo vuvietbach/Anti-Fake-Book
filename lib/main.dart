@@ -1,4 +1,5 @@
 //Lib
+import 'package:anti_fake_book/app_state_observer.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -22,6 +23,9 @@ void main() async {
   await initCached();
   Plugins.antiFakeBookStore = Store<AntiFakeBookState>(antiFakeBookReducers,
       initialState: initialState, middleware: [futureMiddleware]);
+  WidgetsBinding.instance
+      .addObserver(AppStateObserver(store: Plugins.antiFakeBookStore!));
+
   runApp(AntiFakeBookApp(store: Plugins.antiFakeBookStore!));
 }
 
@@ -32,7 +36,11 @@ class AntiFakeBookApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreProvider<AntiFakeBookState>(
         store: store,
-        child: MaterialApp.router(localizationsDelegates: const [
+        child: MaterialApp.router(
+          theme: ThemeData(
+            useMaterial3: false
+          ),
+          localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,

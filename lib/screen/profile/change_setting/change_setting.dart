@@ -35,6 +35,10 @@ class ChangeSettingPage extends StatelessWidget {
               Divider(
                 height: 2.0,
               ),
+              EditUsernameSection(),
+              Divider(
+                height: 2.0,
+              ),
               EditDescriptionSection(),
               Divider(
                 height: 2.0,
