@@ -116,6 +116,6 @@ final GoRouter router = GoRouter(routes: [
           builder: (BuildContext context, GoRouterState stage) =>
               const SearchPage(),
         ),
-        profileRoutes,
+        ...profileRoutes,
       ]),
 ]);
