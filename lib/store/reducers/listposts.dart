@@ -2,6 +2,7 @@ import 'package:anti_fake_book/store/state/listposts.dart';
 
 import '../../constants/constants.dart';
 import '../../models/base_apis/dto/response/response.dto.dart';
+import '../../screen/HomePage/news_feed_tab.dart';
 import '../actions/listposts.dart';
 import '../state/app.dart';
 import '../state/index.dart';
@@ -19,32 +20,13 @@ AntiFakeBookState onGetListPostsSuccess(
   action.extras['onSuccess']!();
   late ListPostsState listPostsState;
   print(action.payload.code);
+  // print(action.payload.data.toJson());
+  // print(action.payload.toJson());
+  // print('ok');
+  // print(convertFromResponseToListPost(action.payload.toJson()));
   if (action.payload.code == "1000") {
     Map<String, dynamic> rawData = action.payload.data.toJson();
-    List<Map<String, dynamic>> result = [];
-    int postLength = rawData['post'].length;
-    // print(postLength);
-    // print('here');
-    for (int i = 0; i < postLength; i++) {
-      List<Map<String, dynamic>> resImage = [];
-      // print('here');
-      // print(rawData['post'][i]);
-      Map<String, dynamic> thisPost = rawData['post'][i].toJson();
-      // print(thisPost);
-      for (int j = 0; j < thisPost['image'].length; j++) {
-        // print(j);
-        resImage.add(thisPost['image'][j].toJson());
-      }
-      // print('here');
-      if (thisPost['video'] != null) {
-        thisPost['video'] = thisPost['video'].toJson();
-      }
-      thisPost['image'] = resImage;
-      thisPost['author'] = thisPost['author'].toJson();
-      // print(thisPost);
-      result.add(thisPost);
-      // print('passed');
-    }
+    List<Map<String, dynamic>> result = rawData['post'];
     listPostsState = ListPostsState.fromJson({'post': result});
     listPostsState.newItems = rawData['new_items'];
     listPostsState.lastId = rawData['last_id'];

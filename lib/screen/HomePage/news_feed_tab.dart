@@ -68,6 +68,32 @@ String calculateTimeAgo(DateTime postDate) {
   return res;
 }
 
+List<Post> convertFromResponseToListPost(Map<String, dynamic> response) {
+  List<Post> res = [];
+  // print(response);
+  List<Map<String, dynamic>> rawData = response['data']['post'];
+  int lengthListPost = rawData.length;
+  for (int i = 0; i < lengthListPost; i++) {
+    Map<String, dynamic> thisPost = rawData[i];
+    List<String> imageUrls = thisPost['image']
+        .map((item) => item['url'].toString())
+        .toList()
+        .cast<String>();
+    res.add(Post(
+        thisPost['id'],
+        thisPost['author']['id'],
+        thisPost['described'],
+        imageUrls,
+        thisPost['video'] ?? '',
+        int.parse(thisPost['feel']),
+        int.parse(thisPost['comment_mark']),
+        DateTime.parse(thisPost['created']),
+        thisPost['author']['avatar'],
+        thisPost['is_felt'] ?? '-1'));
+  }
+  return res;
+}
+
 class Post {
   final String id;
   final String userName;
@@ -104,20 +130,6 @@ class Post {
       this.userAvatar,
       this.is_felt) {
     timeAgo = calculateTimeAgo(PostDate);
-    // if (videoURL != '') {
-    //   loadedVideo = AspectRatio(
-    //       aspectRatio: 9 / 16,
-    //       child: FlickVideoPlayer(
-    //           flickManager: FlickManager(
-    //         videoPlayerController: VideoPlayerController.networkUrl(
-    //           Uri.parse(
-    //             videoURL,
-    //           ),
-    //         ),
-    //       )));
-    // } else {
-    //   loadedVideo = Container();
-    // }
 
     if (videoURL != '') {
       VideoPlayerController _videoPlayerController =
@@ -191,8 +203,8 @@ Post getPostState(int listPostId, Store<AntiFakeBookState> store) {
   int commentCount = int.parse(post.commentMark ?? "0");
 
   List<String> imageURL = [];
-  for (int i = 0; i < post.images.length; i++) {
-    imageURL.add(post.images[i].url ?? "");
+  for (int i = 0; i < post.image.length; i++) {
+    imageURL.add(post.image[i].url ?? "");
   }
 
   String? videoURL = post.video?.url;
@@ -638,7 +650,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     store = StoreProvider.of<AntiFakeBookState>(context);
-    // reloadContainers();
+    reloadContainers();
   }
 
   @override

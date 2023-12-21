@@ -1,8 +1,9 @@
+import 'package:anti_fake_book/utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'get_list_posts.dto.g.dart';
 
-@JsonSerializable()
+@customJsonSerializable
 class GetListPostsResponseDTO {
   final String? code;
   final String? message;
@@ -14,25 +15,18 @@ class GetListPostsResponseDTO {
     required this.data,
   });
 
-  factory GetListPostsResponseDTO.fromJson(Map<String, dynamic> json) {
-    // try {
-    //   print(_$GetListPostsResponseDTOFromJson(json));
-    // } catch (e) {
-    //   print('ok');
-    //   print(json);
-    //   print(e);
-    // }
-    return _$GetListPostsResponseDTOFromJson(json);
-  }
+  factory GetListPostsResponseDTO.fromJson(Map<String, dynamic> json) =>
+      _$GetListPostsResponseDTOFromJson(json);
+  Map<String, dynamic> toJson() => _$GetListPostsResponseDTOToJson(this);
 }
 
-@JsonSerializable()
+@customJsonSerializable
 class DataPayloadDTO {
-  @JsonKey(name: 'post')
+  // @JsonKey(name: 'post')
   final List<EachPostPayloadDTO> post;
-  @JsonKey(name: 'new_items')
+  // @JsonKey(name: 'new_items')
   final String? newItems;
-  @JsonKey(name: 'last_id')
+  // @JsonKey(name: 'last_id')
   final String? lastId;
 
   DataPayloadDTO({
@@ -47,24 +41,24 @@ class DataPayloadDTO {
   Map<String, dynamic> toJson() => _$DataPayloadDTOToJson(this);
 }
 
-@JsonSerializable()
+@customJsonSerializable
 class EachPostPayloadDTO {
   final String? id;
   final String? name;
-  @JsonKey(name: 'image')
-  final List<ImageInEachPayloadDTO> images;
-  @JsonKey(name: 'video')
+  // @JsonKey(name: 'image')
+  final List<ImageInEachPayloadDTO> image;
+  // @JsonKey(name: 'video')
   final VideoInPostPayloadDTO? video;
   final String? described;
   final String? created;
   final String? feel;
-  @JsonKey(name: 'comment_mark')
+  // @JsonKey(name: 'comment_mark')
   final String? commentMark;
-  @JsonKey(name: 'is_felt')
+  // @JsonKey(name: 'is_felt')
   final String? isFelt;
-  @JsonKey(name: 'is_blocked')
+  // @JsonKey(name: 'is_blocked')
   final String? isBlocked;
-  @JsonKey(name: 'can_edit')
+  // @JsonKey(name: 'can_edit')
   final String? canEdit;
   final String? banned;
   final String? state;
@@ -73,7 +67,7 @@ class EachPostPayloadDTO {
   EachPostPayloadDTO({
     this.id,
     this.name,
-    this.images = const [],
+    this.image = const [],
     this.video,
     this.described,
     this.created,
@@ -93,7 +87,7 @@ class EachPostPayloadDTO {
   Map<String, dynamic> toJson() => _$EachPostPayloadDTOToJson(this);
 }
 
-@JsonSerializable()
+@customJsonSerializable
 class ImageInEachPayloadDTO {
   final String? id;
   final String? url;
@@ -106,7 +100,7 @@ class ImageInEachPayloadDTO {
   Map<String, dynamic> toJson() => _$ImageInEachPayloadDTOToJson(this);
 }
 
-@JsonSerializable()
+@customJsonSerializable
 class VideoInPostPayloadDTO {
   final String? url;
 
@@ -118,7 +112,7 @@ class VideoInPostPayloadDTO {
   Map<String, dynamic> toJson() => _$VideoInPostPayloadDTOToJson(this);
 }
 
-@JsonSerializable()
+@customJsonSerializable
 class AuthorPayloadDTO {
   final String? id;
   final String? name;
