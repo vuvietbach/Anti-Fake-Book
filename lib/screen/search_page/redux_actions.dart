@@ -4,7 +4,6 @@ import 'package:anti_fake_book/store/actions/search.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:redux/redux.dart';
 
 void getSavedSearch(BuildContext context, GetSavedSearchRequest data,
     {Function(GetSavedSearchResponse)? onSuccess}) {

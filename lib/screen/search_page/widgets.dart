@@ -29,7 +29,7 @@ class SearchHistoryItem extends StatelessWidget {
             child: IconButton(
                 onPressed: () {},
                 icon: const Icon(Icons.search),
-                color: Colors.grey),
+                color: Colors.white),
           ),
           const SizedBox(
             width: 15,
@@ -73,7 +73,32 @@ class SearchHistoryItem extends StatelessWidget {
     });
   }
 
-  _deleteSearch(BuildContext context, SavedSearchData data) {
-    delSavedSearch(context, DelSavedSearchRequest(searchId: data.id));
+  Future<bool> _showConfirmDialog(BuildContext context) async {
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Xoá tìm kiếm ${data.keyword}?"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, false);
+                  },
+                  child: const Text("Hủy")),
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, true);
+                  },
+                  child: const Text("Đồng ý")),
+            ],
+          );
+        });
+  }
+
+  _deleteSearch(BuildContext context, SavedSearchData data) async {
+    bool confirm = await _showConfirmDialog(context);
+    if (confirm) {
+      delSavedSearch(context, DelSavedSearchRequest(searchId: data.id));
+    }
   }
 }

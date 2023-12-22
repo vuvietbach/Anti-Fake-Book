@@ -1,8 +1,11 @@
 import 'package:anti_fake_book/constants/constants.dart';
+import 'package:anti_fake_book/helper/helper.dart';
 import 'package:anti_fake_book/layout/default_layer.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/index.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
+import 'package:anti_fake_book/screen/HomePage/news_feed_tab.dart';
 import 'package:anti_fake_book/screen/search_page/redux_actions.dart';
+import 'package:anti_fake_book/screen/search_page/states.dart';
 import 'package:anti_fake_book/screen/search_page/utils.dart';
 import 'package:anti_fake_book/screen/search_page/widgets.dart';
 import 'package:anti_fake_book/store/state/index.dart';
@@ -11,29 +14,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
-class SearchPage extends StatefulWidget {
+class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
 
-  @override
-  State<SearchPage> createState() => _SearchPageState();
-}
+  void _searchCallback(BuildContext context, String text) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return SearchResultPage(
+        keyword: text,
+      );
+    }));
+  }
 
-class _SearchPageState extends State<SearchPage> {
-  List<SavedSearchData> savedSearch = [];
   @override
   Widget build(BuildContext context) {
     return StoreBuilder(onInit: (Store<AntiFakeBookState> store) {
       getSavedSearch(
         context,
         GetSavedSearchRequest(index: 0, count: NUM_QUERY_PER_REQUEST),
-        onSuccess: (GetSavedSearchResponse response) {
-          var tmpList = getDisplaySearchHistory(response.data);
-          setState(() {
-            savedSearch = tmpList;
-          });
-        },
       );
     }, builder: (BuildContext context, Store<AntiFakeBookState> store) {
+      // final savedSearch0 = store.state.searchState.savedSearch;
+      // final savedSearch = getDisplaySearchHistory(savedSearch0);
+      final savedSearch =
+          getDisplaySearchHistory(store.state.searchState.savedSearch);
       return EmptyLayout(
         child: Scaffold(
           appBar: AppBar(
@@ -45,27 +48,31 @@ class _SearchPageState extends State<SearchPage> {
               },
               icon: const Icon(Icons.arrow_back, color: Colors.black),
             ),
-            title: CustomSearchBar(searchCallback: () {}),
+            title: CustomSearchBar(
+                searchCallback: (String text) =>
+                    _searchCallback(context, text)),
           ),
-          body: Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: savedSearch.length + 1,
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return _titleAndEditButton(context);
-                    } else {
-                      return ListTile(
-                        leading: const Icon(Icons.search),
-                        title: Text(savedSearch[index - 1].keyword),
-                      );
-                    }
-                  },
+          body: savedSearch.isEmpty
+              ? _defaultSearchScreen(context)
+              : Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: savedSearch.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index == 0) {
+                            return _titleAndEditButton(context);
+                          } else {
+                            return ListTile(
+                              leading: const Icon(Icons.search),
+                              title: Text(savedSearch[index - 1].keyword),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
         ),
       );
     });
@@ -98,10 +105,38 @@ class _SearchPageState extends State<SearchPage> {
       ),
     );
   }
+
+  Widget _defaultSearchScreen(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: double.infinity,
+      child: Center(
+        child: Column(children: [
+          Image.asset(
+            "assets/images/search_icon.png",
+            width: MediaQuery.of(context).size.width * 0.7,
+          ),
+          const SizedBox(
+            height: 20.0,
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30.0),
+            child: Text(
+              textAlign: TextAlign.center,
+              "Hãy nhập vài từ để tìm kiếm trên Anti-Fakebook",
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ]),
+      ),
+    );
+  }
 }
 
 class SearchResultPage extends StatefulWidget {
-  const SearchResultPage({super.key});
+  final String keyword;
+  final String? userId;
+  const SearchResultPage({super.key, required this.keyword, this.userId});
 
   static List<String> tabs = <String>[
     "Tất cả",
@@ -123,6 +158,41 @@ class SearchResultPage extends StatefulWidget {
 }
 
 class _SearchResultPageState extends State<SearchResultPage> {
+  late SearchState searchState;
+  @override
+  void initState() {
+    super.initState();
+    searchState = SearchState();
+    searchState.search(context, widget.keyword,
+        isFirstTime: true,
+        userId: widget.userId, callback: (SearchState newState) {
+      getSavedSearch(context,
+          GetSavedSearchRequest(index: 0, count: NUM_QUERY_PER_REQUEST));
+      setState(() {
+        searchState = newState;
+      });
+    });
+  }
+
+  void _onAddMore() {
+    searchState.search(context, widget.keyword,
+        isFirstTime: false,
+        userId: widget.userId, callback: (SearchState newState) {
+      setState(() {
+        searchState = newState;
+      });
+    });
+  }
+
+  Widget _listPost() {
+    final listPost =
+        searchState.searchResults.map((e) => convertToPost(e)).toList();
+    return ListPost(
+      listPost: listPost,
+      onAddMore: _onAddMore,
+    );
+  }
+
   int selectedTab = 0;
   @override
   Widget build(BuildContext context) {
@@ -136,75 +206,80 @@ class _SearchResultPageState extends State<SearchResultPage> {
           },
           icon: const Icon(Icons.arrow_back, color: Colors.black),
         ),
-        title: CustomSearchBar(onClear: () => Navigator.of(context).pop()),
+        title: CustomSearchBar(
+            placeholder: widget.keyword,
+            readOnly: true,
+            onClear: () => Navigator.of(context).pop()),
       ),
       body: Column(children: [
-        Container(
-            decoration: const BoxDecoration(color: Colors.white),
-            height: 40.0,
-            width: double.infinity,
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: SearchResultPage.tabs.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedTab = index;
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10.0, vertical: 10.0),
-                      child: Text(
-                        SearchResultPage.tabs[index],
-                        style: index == selectedTab
-                            ? TextStyle(color: Theme.of(context).primaryColor)
-                            : const TextStyle(color: Colors.grey),
-                      ),
-                    ),
-                  );
-                })),
-        Expanded(
-          child: Container(
-            width: double.infinity,
-            color: Colors.grey[200],
-            child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image(
-                    image: AssetImage("assets/images/no_internet.jpeg"),
-                    fit: BoxFit.cover,
-                    height: 150.0,
-                    width: 150.0,
-                  ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  Text("Không thể tải kết quả"),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [Icon(Icons.restart_alt), Text("Thử lại")],
-                  )
-                ]),
-          ),
+        _tab(),
+        _listPost()
+        // Expanded(
+        //   child: _internetErrorMessage(),
+        // )
+      ]),
+    );
+  }
+
+  Container _internetErrorMessage() {
+    return Container(
+      width: double.infinity,
+      color: Colors.grey[200],
+      child:
+          const Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Image(
+          image: AssetImage("assets/images/no_internet.jpeg"),
+          fit: BoxFit.cover,
+          height: 150.0,
+          width: 150.0,
+        ),
+        SizedBox(
+          height: 10.0,
+        ),
+        Text("Không thể tải kết quả"),
+        SizedBox(
+          height: 10.0,
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [Icon(Icons.restart_alt), Text("Thử lại")],
         )
       ]),
     );
   }
+
+  Container _tab() {
+    return Container(
+        decoration: const BoxDecoration(color: Colors.white),
+        height: 40.0,
+        width: double.infinity,
+        child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: SearchResultPage.tabs.length,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selectedTab = index;
+                  });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 10.0),
+                  child: Text(
+                    SearchResultPage.tabs[index],
+                    style: index == selectedTab
+                        ? TextStyle(color: Theme.of(context).primaryColor)
+                        : const TextStyle(color: Colors.grey),
+                  ),
+                ),
+              );
+            }));
+  }
 }
 
-class SearchHistory extends StatefulWidget {
+class SearchHistory extends StatelessWidget {
   const SearchHistory({super.key});
-
-  @override
-  State<SearchHistory> createState() => _SearchHistoryState();
-}
-
-class _SearchHistoryState extends State<SearchHistory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,4 +1,6 @@
 import 'package:anti_fake_book/models/base_apis/dto/response/response.dto.dart';
+import 'package:anti_fake_book/models/base_apis/dto/response/search.dto.dart';
+import 'package:anti_fake_book/screen/HomePage/news_feed_tab.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
@@ -198,4 +200,59 @@ void showError(BuildContext context, DioException e) {
           ],
         );
       });
+}
+
+void callAPI(BuildContext context, Future<void> Function() api,
+    {Function? finalCallback}) async {
+  try {
+    await api();
+  } on DioException catch (e) {
+    // ignore: use_build_context_synchronously
+    showError(context, e);
+  } finally {
+    if (finalCallback != null) {
+      finalCallback();
+    }
+  }
+}
+
+// List<Post> convertFromResponseToListPost() {
+//   List<Post> res = [];
+//   // print(response);
+//   List<Map<String, dynamic>> rawData = response;
+//   int lengthListPost = rawData.length;
+//   for (int i = 0; i < lengthListPost; i++) {
+//     Map<String, dynamic> thisPost = rawData[i];
+//     List<String> imageUrls = thisPost['image']
+//         .map((item) => item['url'].toString())
+//         .toList()
+//         .cast<String>();
+//     res.add(Post(
+//         thisPost['id'],
+//         thisPost['author']['id'],
+//         thisPost['described'],
+//         imageUrls,
+//         thisPost['video'] ?? '',
+//         int.parse(thisPost['feel']),
+//         int.parse(thisPost['comment_mark']),
+//         DateTime.parse(thisPost['created']),
+//         thisPost['author']['avatar'],
+//         thisPost['is_felt'] ?? '-1'));
+//   }
+//   return res;
+// }
+
+Post convertToPost(SearchResultItem item) {
+  List<String> imageUrls = item.image?.map((e) => e.url).toList() ?? [];
+  return Post(
+      item.id,
+      item.author.id,
+      item.described,
+      imageUrls,
+      item.video?.url ?? '',
+      item.feel,
+      item.markComment,
+      DateTime.parse(item.created),
+      item.author.avatar,
+      item.isFelt.toString());
 }
