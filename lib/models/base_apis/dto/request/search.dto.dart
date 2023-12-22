@@ -5,12 +5,12 @@ part 'search.dto.g.dart';
 @customJsonSerializable
 class SearchRequest {
   final String keyword;
-  final String userId;
+  final String? userId;
   final int index;
   final int count;
   SearchRequest(
       {required this.keyword,
-      required this.userId,
+      this.userId,
       required this.index,
       required this.count});
 

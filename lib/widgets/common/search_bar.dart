@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomSearchBar extends StatefulWidget {
   final String placeholder;
-  final Function? searchCallback;
+  final Function(String)? searchCallback;
   final Function? onClear;
   final bool readOnly;
   const CustomSearchBar(
@@ -21,11 +21,12 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: _controller,
       readOnly: widget.readOnly,
       onEditingComplete: () {
         FocusScope.of(context).unfocus();
         if (widget.searchCallback != null) {
-          widget.searchCallback!();
+          widget.searchCallback!.call(_controller.text);
         }
       },
       style: const TextStyle(color: Colors.black),

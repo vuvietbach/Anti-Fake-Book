@@ -32,6 +32,8 @@ final List<String> imageAssets = [
 ];
 
 class PostHomePageContent extends StatefulWidget {
+  const PostHomePageContent({super.key});
+
   @override
   _PostHomePageContentState createState() => _PostHomePageContentState();
 }
@@ -68,10 +70,10 @@ String calculateTimeAgo(DateTime postDate) {
   return res;
 }
 
-List<Post> convertFromResponseToListPost(Map<String, dynamic> response) {
+List<Post> convertFromResponseToListPost(List<Map<String, dynamic>> response) {
   List<Post> res = [];
   // print(response);
-  List<Map<String, dynamic>> rawData = response['data']['post'];
+  List<Map<String, dynamic>> rawData = response;
   int lengthListPost = rawData.length;
   for (int i = 0; i < lengthListPost; i++) {
     Map<String, dynamic> thisPost = rawData[i];
@@ -132,18 +134,18 @@ class Post {
     timeAgo = calculateTimeAgo(PostDate);
 
     if (videoURL != '') {
-      VideoPlayerController _videoPlayerController =
+      VideoPlayerController videoPlayerController =
           VideoPlayerController.network(videoURL);
 
-      ChewieController _chewieController = ChewieController(
-        videoPlayerController: _videoPlayerController,
+      ChewieController chewieController = ChewieController(
+        videoPlayerController: videoPlayerController,
         aspectRatio: null,
         autoPlay: false,
         looping: false,
       );
 
       loadedVideo = Chewie(
-        controller: _chewieController,
+        controller: chewieController,
       );
     } else {
       loadedVideo = Container();
@@ -212,10 +214,10 @@ Post getPostState(int listPostId, Store<AntiFakeBookState> store) {
   DateTime postDate = DateTime.parse(post.created ?? "");
   String userAvatar = post.author?.avatar ?? '';
 
-  String? is_felt = post.isFelt;
+  String? isFelt = post.isFelt;
 
   return Post(id, username, content, imageURL, videoURL ?? '', kudosCount,
-      commentCount, postDate, userAvatar, is_felt ?? "-1");
+      commentCount, postDate, userAvatar, isFelt ?? "-1");
 }
 
 Post FakePost() {
@@ -306,7 +308,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   @override
   Widget build(BuildContext context) {
-    GlobalKey _menuButtonKeys = GlobalKey();
+    GlobalKey menuButtonKeys = GlobalKey();
 
     if (widget.post.textSpans.length <= 30) {
       widget.post.displayedText = widget.post.textSpans;
@@ -386,8 +388,7 @@ class _PostWidgetState extends State<PostWidget> {
         children: [
           Row(
             children: [
-              if (widget.post.userAvatar != '' &&
-                  widget.post.userAvatar != null)
+              if (widget.post.userAvatar != '')
                 CircleAvatar(
                   radius: 20,
                   backgroundImage: NetworkImage(widget.post.userAvatar),
@@ -425,10 +426,10 @@ class _PostWidgetState extends State<PostWidget> {
               ),
               const Spacer(),
               IconButton(
-                key: _menuButtonKeys,
+                key: menuButtonKeys,
                 icon: const Icon(Icons.more_horiz),
                 onPressed: () {
-                  final RenderBox buttonBox = _menuButtonKeys.currentContext
+                  final RenderBox buttonBox = menuButtonKeys.currentContext
                       ?.findRenderObject() as RenderBox;
                   final Offset offset = buttonBox.localToGlobal(Offset.zero);
 
@@ -518,9 +519,9 @@ class _PostWidgetState extends State<PostWidget> {
               Expanded(
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
-                    primary:
+                    foregroundColor: Colors.black,
+                    backgroundColor:
                         widget.post.is_felt == "0" ? Colors.blue : Colors.white,
-                    onPrimary: Colors.black,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -550,8 +551,8 @@ class _PostWidgetState extends State<PostWidget> {
               Expanded(
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.green,
-                    onPrimary: Colors.white,
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.green,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -592,13 +593,13 @@ class ListPost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ScrollController _scrollController = ScrollController();
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-              _scrollController.position.maxScrollExtent &&
+    ScrollController scrollController = ScrollController();
+    scrollController.addListener(() {
+      if (scrollController.position.pixels ==
+              scrollController.position.maxScrollExtent &&
           onAddMore != null) {
         onAddMore!();
-      } else if (_scrollController.position.pixels == 0 && onReload != null) {
+      } else if (scrollController.position.pixels == 0 && onReload != null) {
         onReload!();
       }
     });
@@ -606,34 +607,30 @@ class ListPost extends StatelessWidget {
     if (createPostButton == true) {
       fl = 1;
     }
-    return Column(
-      children: [
-        Expanded(
-          child: ListView.builder(
-            controller: _scrollController,
-            itemCount: listPost.length + fl,
-            itemBuilder: (BuildContext context, int indexOfAll) {
-              int index = indexOfAll - fl;
-              if (index == -1) {
-                return Row(
-                  children: [
-                    Expanded(
-                        child: ElevatedButton(
-                      child: const Text('Tạo bài viết'),
-                      onPressed: () {
-                        GoRouter.of(context).go('/create-post');
-                      },
-                    ))
-                  ],
-                );
-              }
-              return PostWidget(
-                post: listPost[index],
-              );
-            },
-          ),
-        ),
-      ],
+    return Expanded(
+      child: ListView.builder(
+        controller: scrollController,
+        itemCount: listPost.length + fl,
+        itemBuilder: (BuildContext context, int indexOfAll) {
+          int index = indexOfAll - fl;
+          if (index == -1) {
+            return Row(
+              children: [
+                Expanded(
+                    child: ElevatedButton(
+                  child: const Text('Tạo bài viết'),
+                  onPressed: () {
+                    GoRouter.of(context).go('/create-post');
+                  },
+                ))
+              ],
+            );
+          }
+          return PostWidget(
+            post: listPost[index],
+          );
+        },
+      ),
     );
   }
 }
@@ -812,17 +809,17 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
             ),
           ],
         ),
-        if (isLoading) LoadingWidget(),
+        if (isLoading) const LoadingWidget(),
       ]);
     });
   }
 }
 
 class PostHomePage extends StatelessWidget {
-  const PostHomePage({Key? key});
+  const PostHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return PostHomePageContent();
+    return const PostHomePageContent();
   }
 }

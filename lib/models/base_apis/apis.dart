@@ -290,12 +290,8 @@ class ApiModel {
     return setUserInfoResponse;
   }
 
-  Future<SearchResponse> search(String token, SearchRequest data) async {
-    final options = Options(headers: {
-      HttpHeaders.authorizationHeader: 'Bearer $token',
-    });
-    final response =
-        await _dio.post(PathName.search, options: options, data: data.toJson());
+  Future<SearchResponse> search(SearchRequest data) async {
+    final response = await _dio.post(PathName.search, data: data.toJson());
     SearchResponse searchResponse = SearchResponse.fromJson(response.data);
     return searchResponse;
   }
@@ -414,13 +410,9 @@ class ApiModel {
 }
 
 void main() async {
-  // ApiModel.token =
-  //     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZGV2aWNlX2lkIjoic3RyaW5nIiwiaWF0IjoxNzAyOTEwODUwfQ.nKLHDoJ0r4Ft1A3fdiLVQES5ppGX7qQj4ifalksiWOY';
-  // final x = await ApiModel.api.getUserFriends(GetUserFriendsRequest(
-  //   index: 0,
-  //   count: 10,
-  // ));
-  // print(x.total);
-  // final y = await ApiModel.api.unfriend(UnfriendRequest(userId: 1));
-  // print(y.code);
+  ApiModel.token =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcxLCJkZXZpY2VfaWQiOiJzdHJpbmciLCJpYXQiOjE3MDMxNTI0Mjl9.bSPonlcYIbVaYy7WGSY_zzdkRgeqYzDFIUpZOJwv_fQ';
+  final response = await ApiModel.api
+      .search(SearchRequest(keyword: "hello", index: 0, count: 10));
+  print(response.toJson());
 }

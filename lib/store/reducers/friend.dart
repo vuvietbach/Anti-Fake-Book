@@ -1,9 +1,6 @@
-import 'dart:ffi';
-
 import 'package:anti_fake_book/helper/helper.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/friend.dto.dart';
 import 'package:anti_fake_book/store/actions/friends.dart';
-import 'package:anti_fake_book/store/state/friend/friend_list.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/utils.dart';
 
@@ -19,7 +16,6 @@ AntiFakeBookState onSuccessGetUserFriends(
   bool isOwner = isAccountOwner(action.extras['request'].userId, state);
   if (isOwner) {
     var friendList = state.friendState.userFriends;
-    ;
     if (action.extras['request'].index == 0) {
       friendList = action.payload.friends;
     } else {
