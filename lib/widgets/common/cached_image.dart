@@ -38,7 +38,7 @@ class _CachedImageWidgetState extends State<CachedImageWidget> {
           return const SizedBox(); // or a loading spinner
         } else if (snapshot.hasError) {
           return Image.asset(
-            'assets/images/default_cached_image.png',
+            'assets/images/default_cached_image.jpg',
             fit: BoxFit.fill,
           );
         } else {
