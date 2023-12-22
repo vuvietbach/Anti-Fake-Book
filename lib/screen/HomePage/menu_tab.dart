@@ -48,7 +48,8 @@ class MenuContent extends StatelessWidget {
             ElevatedButton(
               // màu nều trong suốt
               onPressed: () {
-                context.go('/profile');
+                String userId = store.state.userState.userInfo.id;
+                context.go('/profile/$userId');
               },
               style: ButtonStyle(
                   backgroundColor:
