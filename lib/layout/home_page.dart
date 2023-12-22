@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../screen/HomePage/news_feed_tab.dart';
 import '../screen/HomePage/friend_tab.dart';
@@ -20,7 +21,9 @@ class HomePage extends StatelessWidget {
             backgroundColor: Colors.white,
             actions: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.go('/search');
+                },
                 icon: const Icon(Icons.search, color: Colors.black),
               ),
               IconButton(

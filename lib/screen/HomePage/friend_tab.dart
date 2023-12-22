@@ -5,6 +5,7 @@ import 'package:anti_fake_book/screen/HomePage/friend_subtab/recommended_friends
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:go_router/go_router.dart';
 import 'package:redux/redux.dart';
 import 'dart:math';
 import '../../models/base_apis/dto/response/get_requested_friends.dto.dart';
@@ -191,12 +192,20 @@ class _FriendPageContentState extends State<FriendPageContent> {
                           const SizedBox(width: 10),
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AllFriends(),
-                                ),
-                              );
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => AllFriends(),
+                              //   ),
+                              // );
+                              // print('ok');
+                              // print(store.state.userState.userInfo.username);
+                              // print(store.state.userState.userInfo.id);
+                              // print('here');
+                              // context.go(
+                              //     '/friend_list?username=username&userId=1');
+                              context.go(
+                                  '/friend_list?username=${store.state.userState.userInfo.username}&userId=${store.state.userState.userInfo.id}');
                             },
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
@@ -246,11 +255,19 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                 children: [
                                   if (friendRequests[index].imageUrl != '' &&
                                       friendRequests[index].imageUrl != null)
-                                    CircleAvatar(
-                                      radius: 48,
-                                      backgroundImage: NetworkImage(
-                                          friendRequests[index].imageUrl),
-                                    )
+                                    GestureDetector(
+                                        onTap: () {
+                                          print('ok');
+                                          print(friendRequests[index].id);
+                                          context.go(
+                                            '/profile/${friendRequests[index].id}',
+                                          );
+                                        },
+                                        child: CircleAvatar(
+                                          radius: 48,
+                                          backgroundImage: NetworkImage(
+                                              friendRequests[index].imageUrl),
+                                        ))
                                   else
                                     const CircleAvatar(
                                       radius: 48,
@@ -385,11 +402,19 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                 children: [
                                   if (friendRequests[index].imageUrl != '' &&
                                       friendRequests[index].imageUrl != null)
-                                    CircleAvatar(
-                                      radius: 48,
-                                      backgroundImage: NetworkImage(
-                                          friendRequests[index].imageUrl),
-                                    )
+                                    GestureDetector(
+                                        onTap: () {
+                                          print('ok');
+                                          print(friendRequests[index].id);
+                                          context.go(
+                                            '/profile/${friendRequests[index].id}',
+                                          );
+                                        },
+                                        child: CircleAvatar(
+                                          radius: 48,
+                                          backgroundImage: NetworkImage(
+                                              friendRequests[index].imageUrl),
+                                        ))
                                   else
                                     const CircleAvatar(
                                       radius: 48,
@@ -549,11 +574,19 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                 children: [
                                   if (friendRequests[index].imageUrl != '' &&
                                       friendRequests[index].imageUrl != null)
-                                    CircleAvatar(
-                                      radius: 48,
-                                      backgroundImage: NetworkImage(
-                                          friendRequests[index].imageUrl),
-                                    )
+                                    GestureDetector(
+                                        onTap: () {
+                                          print('ok');
+                                          print(friendRequests[index].id);
+                                          context.go(
+                                            '/profile/${friendRequests[index].id}',
+                                          );
+                                        },
+                                        child: CircleAvatar(
+                                          radius: 48,
+                                          backgroundImage: NetworkImage(
+                                              friendRequests[index].imageUrl),
+                                        ))
                                   else
                                     const CircleAvatar(
                                       radius: 48,
