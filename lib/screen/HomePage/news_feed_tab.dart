@@ -799,13 +799,11 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
       return Stack(children: [
         Column(
           children: [
-            Expanded(
-              child: ListPost(
-                listPost: listPost,
-                onReload: reloadContainers,
-                onAddMore: loadMoreContainers,
-                createPostButton: true,
-              ),
+            ListPost(
+              listPost: listPost,
+              onReload: reloadContainers,
+              onAddMore: loadMoreContainers,
+              createPostButton: true,
             ),
           ],
         ),
