@@ -247,6 +247,7 @@ Post convertToPost(SearchResultItem item) {
   return Post(
       item.id,
       item.author.id,
+      item.author.username,
       item.described,
       imageUrls,
       item.video?.url ?? '',

@@ -84,6 +84,7 @@ List<Post> convertFromResponseToListPost(List<Map<String, dynamic>> response) {
     res.add(Post(
         thisPost['id'],
         thisPost['author']['id'],
+        thisPost['author']['name'],
         thisPost['described'],
         imageUrls,
         thisPost['video'] ?? '',
@@ -98,6 +99,7 @@ List<Post> convertFromResponseToListPost(List<Map<String, dynamic>> response) {
 
 class Post {
   final String id;
+  final String userId;
   final String userName;
   final String content;
   // final String youtubeLink;
@@ -119,6 +121,7 @@ class Post {
 
   Post(
       this.id,
+      this.userId,
       this.userName,
       this.content,
       // this.youtubeLink,
@@ -197,6 +200,7 @@ Post getPostState(int listPostId, Store<AntiFakeBookState> store) {
   listPostId = min(listPostId, store.state.listPostsState.post.length - 1);
   EachPostPayloadDTO post = store.state.listPostsState.post[listPostId];
   String id = post.id ?? "";
+  String userId = post.author?.id ?? "";
   String username = post.author?.name ?? "";
   String content = post.described ?? "";
 
@@ -216,8 +220,8 @@ Post getPostState(int listPostId, Store<AntiFakeBookState> store) {
 
   String? isFelt = post.isFelt;
 
-  return Post(id, username, content, imageURL, videoURL ?? '', kudosCount,
-      commentCount, postDate, userAvatar, isFelt ?? "-1");
+  return Post(id, userId, username, content, imageURL, videoURL ?? '',
+      kudosCount, commentCount, postDate, userAvatar, isFelt ?? "-1");
 }
 
 Post FakePost() {
@@ -240,7 +244,7 @@ Post FakePost() {
   // PostDate
   DateTime postDate = DateTime.now().add(const Duration(days: -30));
 
-  return Post(id, username, content, imageURL, videoURL, kudosCount,
+  return Post(id, id, username, content, imageURL, videoURL, kudosCount,
       commentCount, postDate, '', "-1");
 }
 
@@ -389,9 +393,16 @@ class _PostWidgetState extends State<PostWidget> {
           Row(
             children: [
               if (widget.post.userAvatar != '')
-                CircleAvatar(
-                  radius: 20,
-                  backgroundImage: NetworkImage(widget.post.userAvatar),
+                GestureDetector(
+                  onTap: () {
+                    context.go(
+                      '/profile/${widget.post.userId}',
+                    );
+                  },
+                  child: CircleAvatar(
+                    radius: 20,
+                    backgroundImage: NetworkImage(widget.post.userAvatar),
+                  ),
                 )
               else
                 const CircleAvatar(
