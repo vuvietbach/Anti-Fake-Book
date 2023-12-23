@@ -2,7 +2,6 @@ import 'package:anti_fake_book/store/state/listposts.dart';
 
 import '../../constants/constants.dart';
 import '../../models/base_apis/dto/response/response.dto.dart';
-import '../../screen/HomePage/news_feed_tab.dart';
 import '../actions/listposts.dart';
 import '../state/app.dart';
 import '../state/index.dart';

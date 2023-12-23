@@ -12,3 +12,4 @@ export 'search.dto.dart';
 export 'device.dto.dart';
 export 'get_list_posts.dart';
 export 'get_requested_friends.dart';
+export 'get_list_videos.dart';

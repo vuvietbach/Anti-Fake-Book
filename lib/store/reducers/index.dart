@@ -26,6 +26,7 @@ import '../actions/index.dart';
 import '../actions/listposts.dart';
 import '../state/index.dart';
 import 'listposts.dart';
+import 'listvideos.dart';
 
 //hàm in ra FailureCreatePostAction
 AntiFakeBookState onDefaultFaulureAction(
@@ -128,6 +129,10 @@ final antiFakeBookReducers = combineReducers<AntiFakeBookState>([
       onGetRequestedFriendsPending),
   TypedReducer<AntiFakeBookState, SuccessGetUserFriendsAction>(
       onSuccessGetUserFriends),
+  TypedReducer<AntiFakeBookState, SuccessGetListVideosAction>(
+      onGetListVideosSuccess),
+  TypedReducer<AntiFakeBookState, PendingGetListVideosAction>(
+      onGetListVideosPending),
 
   // TypedReducer<AntiFakeBookState, PendingSetReadMessageAction>(onPendingSetReadMessage),
   // TypedReducer<AntiFakeBookState, SuccessSetReadMessageAction>(onSuccessSetReadMessage),

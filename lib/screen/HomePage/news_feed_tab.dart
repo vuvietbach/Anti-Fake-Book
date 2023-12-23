@@ -4,7 +4,6 @@ import 'package:anti_fake_book/models/base_apis/dto/request/post.dto.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/get_list_posts.dto.dart';
 import 'package:anti_fake_book/screen/HomePage/news_feed_subtab/detailed_post.dart';
 import 'package:chewie/chewie.dart';
-import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -112,7 +111,6 @@ class Post {
   // final int disappointedCount;
   final int commentCount;
   final DateTime PostDate;
-  late FlickManager? currentFlickManager;
   late final String timeAgo;
   List<InlineSpan> textSpans = [];
   bool showAllText = false;
@@ -442,32 +440,26 @@ class _PostWidgetState extends State<PostWidget> {
                 key: menuButtonKeys,
                 icon: const Icon(Icons.more_horiz),
                 onPressed: () {
-                  final RenderBox buttonBox = menuButtonKeys.currentContext
-                      ?.findRenderObject() as RenderBox;
-                  final Offset offset = buttonBox.localToGlobal(Offset.zero);
-
-                  final Size screenSize =
-                      window.physicalSize / window.devicePixelRatio;
-                  final double menuHeight = menuOptions.length * 56.0;
-
-                  showMenu(
+                  showModalBottomSheet(
                     context: context,
-                    position: RelativeRect.fromLTRB(
-                      offset.dx,
-                      screenSize.height - menuHeight,
-                      offset.dx + buttonBox.size.width,
-                      screenSize.height,
-                    ),
-                    items: menuOptions.map((option) {
-                      return PopupMenuItem(
-                        value: option['title'],
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.all(0),
-                          leading: Icon(option['icon']),
-                          title: Text(option['title']),
+                    builder: (BuildContext context) {
+                      return Container(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: menuOptions.map((option) {
+                            return ListTile(
+                              leading: Icon(option['icon']),
+                              title: Text(option['title']),
+                              onTap: () {
+                                // Handle the menu option tap
+                                Navigator.pop(
+                                    context); // Close the bottom sheet after action
+                              },
+                            );
+                          }).toList(),
                         ),
                       );
-                    }).toList(),
+                    },
                   );
                 },
               ),

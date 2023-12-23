@@ -11,8 +11,10 @@ import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
 import 'package:http_parser/http_parser.dart';
 
 import 'dto/request/get_list_posts.dart';
+import 'dto/request/get_list_videos.dart';
 import 'dto/request/index.dart';
 import 'dto/response/get_list_posts.dto.dart';
+import 'dto/response/get_list_videos.dto.dart';
 import 'dto/response/index.dart';
 import 'package:anti_fake_book/utils.dart';
 import 'package:anti_fake_book/global_type/user/user_summary.entity.dart';
@@ -392,6 +394,38 @@ class ApiModel {
     }).then((rawResponse) => rawResponse.data['data']) as List<dynamic>;
     final data = rawResponse.map((e) => UserSummaryEntity.fromJson(e)).toList();
     return data;
+  }
+
+  Future<GetListVideosResponseDTO> GetListVideos(
+      GetListVideosRequestDTO data) async {
+    final response = await _dio.post(
+      PathName.getListVideos,
+      data: {
+        'user_id': data.user_id,
+        'in_campaign': data.in_campaign,
+        'campaign_id': data.campaign_id,
+        'latitude': data.latitude,
+        'longitude': data.longitude,
+        'last_id': data.last_id,
+        'index': data.index,
+        'count': data.count,
+      },
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer ${data.token}',
+        },
+      ),
+    );
+
+    // print('getListPosts');
+    // print(response.statusCode);
+    // print(response.data);
+    // print(response.realUri);
+    // print(ApiModel.api.convertDioRequestToCurl(response.requestOptions));
+    // print(response.requestOptions);
+    // print(response.data);
+    // print(response.data.runtimeType);
+    return GetListVideosResponseDTO.fromJson(response.data);
   }
 }
 
