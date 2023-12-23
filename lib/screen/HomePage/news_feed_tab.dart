@@ -18,6 +18,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 import '../../models/base_apis/dto/request/get_list_posts.dart';
+import '../../plugins/index.dart';
 import '../../store/actions/listposts.dart';
 import '../../store/reducers/listposts.dart';
 import '../../store/state/index.dart';
@@ -625,17 +626,57 @@ class ListPost extends StatelessWidget {
         itemBuilder: (BuildContext context, int indexOfAll) {
           int index = indexOfAll - fl;
           if (index == -1) {
-            return Row(
-              children: [
-                Expanded(
-                    child: ElevatedButton(
-                  child: const Text('Tạo bài viết'),
-                  onPressed: () {
-                    GoRouter.of(context).go('/create-post');
-                  },
-                ))
-              ],
-            );
+            return Column(children: [
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  if (Plugins
+                          .antiFakeBookStore?.state.userState.userInfo.avatar !=
+                      '')
+                    GestureDetector(
+                      onTap: () {
+                        context.go(
+                          '/profile/${Plugins.antiFakeBookStore?.state.userState.userInfo.id}',
+                        );
+                      },
+                      child: CircleAvatar(
+                        radius: 20,
+                        backgroundImage: NetworkImage(Plugins.antiFakeBookStore!
+                            .state.userState.userInfo.avatar),
+                      ),
+                    )
+                  else
+                    const CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.deepPurple,
+                    ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                      child: ElevatedButton(
+                    onPressed: () {
+                      GoRouter.of(context).go('/create-post');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: Text(
+                        'Bạn đang nghĩ gì?',
+                        style: TextStyle(
+                          color: Colors.black, // Set the text color to black
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ),
+                  )),
+                ],
+              ),
+              const SizedBox(height: 10),
+            ]);
           }
           return PostWidget(
             post: listPost[index],
@@ -808,21 +849,27 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
   @override
   Widget build(BuildContext context) {
     return StoreBuilder(
-        builder: (BuildContext context, Store<AntiFakeBookState> store) {
-      return Stack(children: [
-        Column(
-          children: [
-            ListPost(
-              listPost: listPost,
-              onReload: reloadContainers,
-              onAddMore: loadMoreContainers,
-              createPostButton: true,
-            ),
-          ],
-        ),
-        if (isLoading) const LoadingWidget(),
-      ]);
-    });
+      builder: (BuildContext context, Store<AntiFakeBookState> store) {
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5.0),
+          child: Stack(
+            children: [
+              Column(
+                children: [
+                  ListPost(
+                    listPost: listPost,
+                    onReload: reloadContainers,
+                    onAddMore: loadMoreContainers,
+                    createPostButton: true,
+                  ),
+                ],
+              ),
+              if (isLoading) const LoadingWidget(),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 
