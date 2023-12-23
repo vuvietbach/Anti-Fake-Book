@@ -19,7 +19,7 @@ AntiFakeBookState onSignInSuccess(
     action.extras['onSuccess']?.call(action.payload);
     ApiModel.token = action.payload.data.token;
     // print("sign in token: ${ApiModel.token}");
-    
+
     AntiFakeBookState newState = state.copyWith(
       userState: state.userState.copyWith(
         userInfo: state.userState.userInfo.copyWith(

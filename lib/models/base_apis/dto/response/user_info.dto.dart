@@ -87,8 +87,7 @@ class GetUserInfoResponse with _$GetUserInfoResponse {
     required String message,
     @Default(UserInfoData()) UserInfoData data,
   }) = _GetUserInfoResponse;
-  
+
   factory GetUserInfoResponse.fromJson(Map<String, dynamic> json) =>
       _$GetUserInfoResponseFromJson(json);
-
 }
