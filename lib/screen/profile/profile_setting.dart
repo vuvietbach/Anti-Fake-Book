@@ -47,9 +47,10 @@ class ProfileSettingPage extends StatelessWidget {
           const CustomDivider(),
           firstOption(context),
           Option(
-              callback: () => Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
-                return ProfileSearchPage(userState: userState);
-              })),
+              callback: () => Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (BuildContext context) {
+                    return ProfileSearchPage(userState: userState);
+                  })),
               icon: const Icon(Icons.search),
               title: "Tìm kiếm trên trang cá nhân"),
           const CustomDivider(),

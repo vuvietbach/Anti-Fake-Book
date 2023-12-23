@@ -342,8 +342,7 @@ class ApiModel {
     return deleteConversationResponse;
   }
 
-  Future<GetListPostsResponseDTO> getListPosts(
-    GetListPostsRequest data) async {
+  Future<GetListPostsResponseDTO> getListPosts(GetListPostsRequest data) async {
     final response = await _dio.post(
       PathName.getListPosts,
       data: data.toJson(),
@@ -357,8 +356,6 @@ class ApiModel {
     // print(response.data.runtimeType);
     return GetListPostsResponseDTO.fromJson(response.data);
   }
-
-
 
   Future<GetRequestedFriendsResponseDTO> GetRequestedFriends(
       GetRequestedFriendsRequestDTO data) async {

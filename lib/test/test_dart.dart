@@ -33,5 +33,4 @@ void main() {
   // print(highlightedText);
   // final text1 = "This is underlined text\u0332.\u0332";
   final x = GetListPostsResponseDTO.fromJson({"code": 1000, "message": "OK"});
-  
 }
