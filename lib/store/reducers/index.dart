@@ -15,6 +15,7 @@ import 'package:anti_fake_book/store/reducers/common.dart';
 import 'package:anti_fake_book/store/reducers/conversation.dart';
 import 'package:anti_fake_book/store/reducers/friend.dart';
 import 'package:anti_fake_book/store/reducers/post.dart';
+import 'package:anti_fake_book/store/reducers/recommended_friends.dart';
 import 'package:anti_fake_book/store/reducers/requested_friends.dart';
 import 'package:anti_fake_book/store/reducers/search.dart';
 import 'package:anti_fake_book/store/reducers/user_info.dart';
@@ -133,6 +134,10 @@ final antiFakeBookReducers = combineReducers<AntiFakeBookState>([
       onGetListVideosSuccess),
   TypedReducer<AntiFakeBookState, PendingGetListVideosAction>(
       onGetListVideosPending),
+  TypedReducer<AntiFakeBookState, SuccessGetRecommendedFriendsAction>(
+      onGetRecommendedFriendsSuccess),
+  TypedReducer<AntiFakeBookState, PendingGetRecommendedFriendsAction>(
+      onGetRecommendedFriendsPending),
 
   // TypedReducer<AntiFakeBookState, PendingSetReadMessageAction>(onPendingSetReadMessage),
   // TypedReducer<AntiFakeBookState, SuccessSetReadMessageAction>(onSuccessSetReadMessage),

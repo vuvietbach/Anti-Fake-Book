@@ -1,12 +1,25 @@
+import 'dart:async';
+
+import 'package:anti_fake_book/models/base_apis/dto/request/get_recommended_friends.dto.dart';
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'dart:math';
 
+import 'package:redux/redux.dart';
+
+import '../../../models/base_apis/dto/response/get_recommended_friends.dto.dart';
+import '../../../plugins/index.dart';
+import '../../../store/actions/recommended_friends.dart';
+import '../../../store/state/index.dart';
+
 class Friend {
+  final String id;
   final String name;
   final String imageUrl;
+  final String sameFriends;
 
-  Friend(this.name, this.imageUrl);
+  Friend(this.id, this.name, this.imageUrl, this.sameFriends);
 }
 
 class RecommendedFriends extends StatefulWidget {
@@ -16,27 +29,71 @@ class RecommendedFriends extends StatefulWidget {
   _RecommendedFriendsState createState() => _RecommendedFriendsState();
 }
 
+Friend getRecommendedFriendState(int listRecommendedFriendId) {
+  listRecommendedFriendId = min(
+      listRecommendedFriendId,
+      (Plugins.antiFakeBookStore?.state.recommendedFriendsState.requests
+                  .length ??
+              0) -
+          1);
+  RecommendedFriendsPayloadDTO? user = Plugins.antiFakeBookStore?.state
+      .recommendedFriendsState.requests[listRecommendedFriendId];
+
+  print('here');
+  print(user);
+
+  String userId = user?.id ?? "";
+  String username = user?.username ?? "";
+  String avatar = user?.avatar ?? "";
+  String sameFriends = user?.sameFriends ?? "";
+
+  return Friend(userId, username, avatar, sameFriends);
+}
+
 class _RecommendedFriendsState extends State<RecommendedFriends> {
+  List<Friend> recommendedFriends = [];
+  int numberOfContainers = 100;
+  late Store<AntiFakeBookState> store;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    store = StoreProvider.of<AntiFakeBookState>(context);
+    reloadListRecommendedFriend();
+  }
+
   List<bool> sendRequest = List.generate(100, (index) => false);
   List<bool> cancelRequest = List.generate(100, (index) => false);
 
-  final List<Friend> recommendedFriends = List.generate(100, (index) {
-    final faker = Faker();
-    final name = faker.person.name();
+  Future<void> reloadListRecommendedFriend() async {
+    GetRecommendedFriendsRequestDTO getRecommendedFriends =
+        GetRecommendedFriendsRequestDTO(
+            token: store.state.token, index: "0", count: "100");
 
-    final random = Random();
-    final imageIndex = random.nextInt(4);
+    Completer<void> completer = Completer<void>();
 
-    final imagePaths = [
-      'assets/images/PostImage_01.jpeg',
-      'assets/images/PostImage_02.jpeg',
-      'assets/images/PostImage_03.jpeg',
-      'assets/images/PostImage_04.jpeg',
-    ];
+    // Dispatch the action and listen for completion
+    store.dispatch(
+      GetRecommendedFriendsAction(
+        listUsers: getRecommendedFriends,
+        onSuccess: () {
+          completer.complete();
+        },
+        onPending: () {},
+      ),
+    );
 
-    final imageUrl = imagePaths[imageIndex];
-    return Friend(name, imageUrl);
-  });
+    await completer.future;
+
+    setState(() {
+      numberOfContainers = store.state.recommendedFriendsState.requests.length;
+    });
+    recommendedFriends = [];
+
+    for (int i = 0; i < numberOfContainers; i++) {
+      recommendedFriends.add(getRecommendedFriendState(i));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,8 +125,7 @@ class _RecommendedFriendsState extends State<RecommendedFriends> {
               children: [
                 Expanded(
                   child: ListView.builder(
-                    itemCount: recommendedFriends.length +
-                        1, // 1 item là phần text trên cùng
+                    itemCount: recommendedFriends.length + 1,
                     itemBuilder: (BuildContext context, int indexOfListView) {
                       int index = indexOfListView - 1;
                       if (index == -1) {
@@ -107,7 +163,7 @@ class _RecommendedFriendsState extends State<RecommendedFriends> {
                                     children: [
                                       CircleAvatar(
                                         radius: 48,
-                                        backgroundImage: AssetImage(
+                                        backgroundImage: NetworkImage(
                                             recommendedFriends[index].imageUrl),
                                       ),
                                       const SizedBox(width: 14),
@@ -267,7 +323,7 @@ class _RecommendedFriendsState extends State<RecommendedFriends> {
                                     children: [
                                       CircleAvatar(
                                         radius: 48,
-                                        backgroundImage: AssetImage(
+                                        backgroundImage: NetworkImage(
                                             recommendedFriends[index].imageUrl),
                                       ),
                                       const SizedBox(width: 14),
