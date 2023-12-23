@@ -12,9 +12,11 @@ import 'package:http_parser/http_parser.dart';
 
 import 'dto/request/get_list_posts.dart';
 import 'dto/request/get_list_videos.dart';
+import 'dto/request/get_recommended_friends.dto.dart';
 import 'dto/request/index.dart';
 import 'dto/response/get_list_posts.dto.dart';
 import 'dto/response/get_list_videos.dto.dart';
+import 'dto/response/get_recommended_friends.dto.dart';
 import 'dto/response/index.dart';
 import 'package:anti_fake_book/utils.dart';
 import 'package:anti_fake_book/global_type/user/user_summary.entity.dart';
@@ -426,6 +428,28 @@ class ApiModel {
     // print(response.data);
     // print(response.data.runtimeType);
     return GetListVideosResponseDTO.fromJson(response.data);
+  }
+
+  Future<GetRecommendedFriendsResponseDTO> GetRecommendedFriends(
+      GetRecommendedFriendsRequestDTO data) async {
+    final response = await _dio.post(
+      PathName.getRecommendedFriends,
+      data: {
+        'index': data.index,
+        'count': data.count,
+      },
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer ${data.token}',
+        },
+      ),
+    );
+    // print('ok');
+    // print(response.statusCode);
+    // print(response.data);
+    // print(GetRecommendedFriendsResponseDTO.fromJson(response.data));
+
+    return GetRecommendedFriendsResponseDTO.fromJson(response.data);
   }
 }
 

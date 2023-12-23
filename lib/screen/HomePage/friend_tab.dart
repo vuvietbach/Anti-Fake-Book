@@ -257,7 +257,6 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                       friendRequests[index].imageUrl != null)
                                     GestureDetector(
                                         onTap: () {
-                                          print('ok');
                                           print(friendRequests[index].id);
                                           context.go(
                                             '/profile/${friendRequests[index].id}',

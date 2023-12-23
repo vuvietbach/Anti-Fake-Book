@@ -8,6 +8,7 @@ import 'package:anti_fake_book/store/state/list_videos.dart';
 import 'package:anti_fake_book/store/state/listposts.dart';
 import 'package:anti_fake_book/store/state/friend/friend.dart';
 import 'package:anti_fake_book/store/state/post.dart';
+import 'package:anti_fake_book/store/state/recommended_friends.dart';
 import 'package:anti_fake_book/store/state/requested_friends.dart';
 import 'package:anti_fake_book/store/state/search/search.dart';
 import 'package:anti_fake_book/store/state/user.dart';
@@ -32,22 +33,23 @@ class AntiFakeBookState with _$AntiFakeBookState {
     required RequestedFriendsState requestedFriendsState,
     required FriendState friendState,
     required ListVideosState listVideosState,
+    required RecommendedFriendsState recommendedFriendsState,
   }) = _AntiFakeBookState;
 
   factory AntiFakeBookState.initState() => AntiFakeBookState(
-        token: "",
-        authState: AuthState(),
-        appState: AppState(),
-        postState: PostState(),
-        userState: UserState(),
-        responseDTO: ResponseDTO(),
-        searchState: const SearchState(),
-        conversationState: ConversationState(),
-        listPostsState: ListPostsState(),
-        requestedFriendsState: RequestedFriendsState(),
-        friendState: FriendState(),
-        listVideosState: ListVideosState(),
-      );
+      token: "",
+      authState: AuthState(),
+      appState: AppState(),
+      postState: PostState(),
+      userState: UserState(),
+      responseDTO: ResponseDTO(),
+      searchState: const SearchState(),
+      conversationState: ConversationState(),
+      listPostsState: ListPostsState(),
+      requestedFriendsState: RequestedFriendsState(),
+      friendState: FriendState(),
+      listVideosState: ListVideosState(),
+      recommendedFriendsState: RecommendedFriendsState());
 
   factory AntiFakeBookState.fromJson(Map<String, dynamic> json) =>
       _$AntiFakeBookStateFromJson(json);
