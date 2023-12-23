@@ -1,6 +1,5 @@
 //Lib
 import 'package:anti_fake_book/app_state_observer.dart';
-import 'package:anti_fake_book/models/base_apis/apis.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
