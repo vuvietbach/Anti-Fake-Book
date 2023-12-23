@@ -364,8 +364,6 @@ class ApiModel {
     return GetListPostsResponseDTO.fromJson(response.data);
   }
 
-
-
   Future<GetRequestedFriendsResponseDTO> GetRequestedFriends(
       GetRequestedFriendsRequestDTO data) async {
     final response = await _dio.post(
