@@ -167,47 +167,57 @@ class ProfilePageUi extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          leading: IconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: const Icon(Icons.arrow_back, color: Colors.black)),
+        ),
         body: ListView(
-      children: [
-        AccountImage(
-          username: userState.userInfo.username,
-          avatar: userState.userInfo.avatar,
-          coverImage: userState.userInfo.coverImage,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(children: [
-                _mainButton(context),
-                const SizedBox(
-                  width: 10.0,
-                ),
-                _profileSettingButton(context),
-              ]),
-              const Divider(
-                height: 20.0,
-                thickness: 2.0,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: AccountImage(
+                username: userState.userInfo.username,
+                avatar: userState.userInfo.avatar,
+                coverImage: userState.userInfo.coverImage,
               ),
-              GeneralInfoSection(
-                city: userState.userInfo.city,
-                country: userState.userInfo.country,
-                address: userState.userInfo.address,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(children: [
+                    _mainButton(context),
+                    const SizedBox(
+                      width: 10.0,
+                    ),
+                    _profileSettingButton(context),
+                  ]),
+                  const Divider(
+                    height: 20.0,
+                    thickness: 2.0,
+                  ),
+                  GeneralInfoSection(
+                    city: userState.userInfo.city,
+                    country: userState.userInfo.country,
+                    address: userState.userInfo.address,
+                  ),
+                  const Divider(
+                    height: 20.0,
+                    thickness: 2.0,
+                  ),
+                  FriendSection(
+                    friendState: friendState,
+                    userState: userState,
+                  ),
+                ],
               ),
-              const Divider(
-                height: 20.0,
-                thickness: 2.0,
-              ),
-              FriendSection(
-                friendState: friendState,
-                userState: userState,
-              ),
-            ],
-          ),
-        ),
-      ],
-    ));
+            ),
+          ],
+        ));
   }
 
   Widget _profileSettingButton(BuildContext context) {

@@ -28,8 +28,8 @@ void main() async {
       .addObserver(AppStateObserver(store: Plugins.antiFakeBookStore!));
   // ApiModel.token =
   //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcxLCJkZXZpY2VfaWQiOiJzdHJpbmciLCJpYXQiOjE3MDMxNTI0Mjl9.bSPonlcYIbVaYy7WGSY_zzdkRgeqYzDFIUpZOJwv_fQ";
-  ApiModel.token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcxLCJkZXZpY2VfaWQiOiJzdHJpbmciLCJpYXQiOjE3MDMyOTExMTZ9.S23gC3v2pHqYvSkJlctcHmpyvun64Lb5mscGiTPhtpI';
+  // ApiModel.token =
+  //     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcxLCJkZXZpY2VfaWQiOiJzdHJpbmciLCJpYXQiOjE3MDMyOTExMTZ9.S23gC3v2pHqYvSkJlctcHmpyvun64Lb5mscGiTPhtpI';
   runApp(AntiFakeBookApp(store: Plugins.antiFakeBookStore!));
 }
 
