@@ -14,8 +14,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
-class SearchPage extends StatelessWidget {
+class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
+
+  @override
+  State<SearchPage> createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> {
+  bool done = false;
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   void _searchCallback(BuildContext context, String text) {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
@@ -31,10 +45,11 @@ class SearchPage extends StatelessWidget {
       getSavedSearch(
         context,
         GetSavedSearchRequest(index: 0, count: NUM_QUERY_PER_REQUEST),
+        onSuccess: (GetSavedSearchResponse response) {
+          done = true;
+        },
       );
     }, builder: (BuildContext context, Store<AntiFakeBookState> store) {
-      // final savedSearch0 = store.state.searchState.savedSearch;
-      // final savedSearch = getDisplaySearchHistory(savedSearch0);
       final savedSearch =
           getDisplaySearchHistory(store.state.searchState.savedSearch);
       return EmptyLayout(
@@ -52,27 +67,29 @@ class SearchPage extends StatelessWidget {
                 searchCallback: (String text) =>
                     _searchCallback(context, text)),
           ),
-          body: savedSearch.isEmpty
-              ? _defaultSearchScreen(context)
-              : Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: savedSearch.length + 1,
-                        itemBuilder: (context, index) {
-                          if (index == 0) {
-                            return _titleAndEditButton(context);
-                          } else {
-                            return ListTile(
-                              leading: const Icon(Icons.search),
-                              title: Text(savedSearch[index - 1].keyword),
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+          body: done
+              ? (savedSearch.isEmpty
+                  ? _defaultSearchScreen(context)
+                  : Column(
+                      children: [
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: savedSearch.length + 1,
+                            itemBuilder: (context, index) {
+                              if (index == 0) {
+                                return _titleAndEditButton(context);
+                              } else {
+                                return ListTile(
+                                  leading: const Icon(Icons.search),
+                                  title: Text(savedSearch[index - 1].keyword),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ))
+              : const SizedBox(),
         ),
       );
     });
@@ -159,6 +176,7 @@ class SearchResultPage extends StatefulWidget {
 
 class _SearchResultPageState extends State<SearchResultPage> {
   late SearchState searchState;
+  bool done = false;
   @override
   void initState() {
     super.initState();
@@ -170,6 +188,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
           GetSavedSearchRequest(index: 0, count: NUM_QUERY_PER_REQUEST));
       setState(() {
         searchState = newState;
+        done = true;
       });
     });
   }
@@ -198,9 +217,11 @@ class _SearchResultPageState extends State<SearchResultPage> {
   Widget _listPost() {
     final listPost =
         searchState.searchResults.map((e) => convertToPost(e)).toList();
-    return ListPost(
-      listPost: listPost,
-      onAddMore: _onAddMore,
+    return Expanded(
+      child: ListPost(
+        listPost: listPost,
+        onAddMore: _onAddMore,
+      ),
     );
   }
 
@@ -224,7 +245,9 @@ class _SearchResultPageState extends State<SearchResultPage> {
       ),
       body: Column(children: [
         _tab(),
-        searchState.isEmpty() ? _notFound() : _listPost()
+        done
+            ? (searchState.isEmpty() ? _notFound() : _listPost())
+            : const SizedBox()
         // Expanded(
         //   child: _internetErrorMessage(),
         // )

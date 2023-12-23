@@ -1,4 +1,3 @@
-import 'package:anti_fake_book/screen/sign_in/sign_in.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/widgets/common/image.dart';
 import 'package:flutter/material.dart';

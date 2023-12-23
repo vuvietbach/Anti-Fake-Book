@@ -1,6 +1,5 @@
 //Lib
 import 'package:anti_fake_book/app_state_observer.dart';
-import 'package:anti_fake_book/models/base_apis/apis.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -26,10 +25,6 @@ void main() async {
       initialState: initialState, middleware: [futureMiddleware]);
   WidgetsBinding.instance
       .addObserver(AppStateObserver(store: Plugins.antiFakeBookStore!));
-  ApiModel.token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZGV2aWNlX2lkIjoic3RyaW5nIiwiaWF0IjoxNzAzMzAxNTA0fQ.VS0ypfiti2lPtGEgGXL6khXhijZBFlqQ7lTfn4nwHSw";
-  // ApiModel.token =
-  //     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcxLCJkZXZpY2VfaWQiOiJzdHJpbmciLCJpYXQiOjE3MDMyOTExMTZ9.S23gC3v2pHqYvSkJlctcHmpyvun64Lb5mscGiTPhtpI';
   runApp(AntiFakeBookApp(store: Plugins.antiFakeBookStore!));
 }
 

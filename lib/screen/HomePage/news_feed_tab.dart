@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:anti_fake_book/models/base_apis/dto/request/post.dto.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/get_list_posts.dto.dart';
 import 'package:anti_fake_book/screen/HomePage/news_feed_subtab/detailed_post.dart';
 import 'package:chewie/chewie.dart';
@@ -589,11 +590,13 @@ class _PostWidgetState extends State<PostWidget> {
   }
 }
 
-class ListPost extends StatelessWidget {
+class ListPost extends StatefulWidget {
   final List<Post> listPost;
   final Function? onReload;
   final Function? onAddMore;
   final bool createPostButton;
+  final bool? shrinkWrap;
+  final ScrollPhysics? physics;
 
   const ListPost({
     super.key,
@@ -601,28 +604,44 @@ class ListPost extends StatelessWidget {
     this.onReload,
     this.onAddMore,
     this.createPostButton = false,
+    this.physics,
+    this.shrinkWrap,
   });
 
   @override
-  Widget build(BuildContext context) {
-    ScrollController scrollController = ScrollController();
-    scrollController.addListener(() {
+  State<ListPost> createState() => _ListPostState();
+}
+
+class _ListPostState extends State<ListPost> {
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+        scrollController.addListener(() {
       if (scrollController.position.pixels ==
               scrollController.position.maxScrollExtent &&
-          onAddMore != null) {
-        onAddMore!();
-      } else if (scrollController.position.pixels == 0 && onReload != null) {
-        onReload!();
+          widget.onAddMore != null) {
+        widget.onAddMore!();
+      } else if (scrollController.position.pixels == 0 && widget.onReload != null) {
+        widget.onReload!();
       }
     });
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // ScrollController scrollController = ScrollController();
+
     int fl = 0;
-    if (createPostButton == true) {
+    if (widget.createPostButton == true) {
       fl = 1;
     }
     return Expanded(
       child: ListView.builder(
         controller: scrollController,
-        itemCount: listPost.length + fl,
+        itemCount: widget.listPost.length + fl,
         itemBuilder: (BuildContext context, int indexOfAll) {
           int index = indexOfAll - fl;
           if (index == -1) {
@@ -657,7 +676,7 @@ class ListPost extends StatelessWidget {
                       GoRouter.of(context).go('/create-post');
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.white,
+                      backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
@@ -679,11 +698,9 @@ class ListPost extends StatelessWidget {
             ]);
           }
           return PostWidget(
-            post: listPost[index],
+            post: widget.listPost[index],
           );
-        },
-      ),
-    );
+        }));
   }
 }
 
@@ -734,16 +751,18 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
       isLoading = true;
     });
 
-    GetListPostsRequestDTO getListPosts = GetListPostsRequestDTO(
-        token: store.state.token,
-        user_id: "",
-        in_campaign: "1",
-        campaign_id: "1",
-        latitude: "1.0",
-        longitude: "1.0",
-        last_id: "0",
-        index: "0",
-        count: (numberOfContainers + 10).toString());
+    // GetListPostsRequestDTO getListPosts = GetListPostsRequestDTO(
+    //     token: store.state.token,
+    //     user_id: "",
+    //     in_campaign: "1",
+    //     campaign_id: "1",
+    //     latitude: "1.0",
+    //     longitude: "1.0",
+    //     last_id: "0",
+    //     index: "0",
+    //     count: (numberOfContainers + 10).toString());
+    final getListPosts =
+        GetListPostsRequest(index: 0, count: numberOfContainers + 10);
 
     Completer<void> completer = Completer<void>();
 
@@ -782,16 +801,17 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
       isLoading = true;
     });
 
-    GetListPostsRequestDTO getListPosts = GetListPostsRequestDTO(
-        token: store.state.token,
-        user_id: "",
-        in_campaign: "1",
-        campaign_id: "1",
-        latitude: "1.0",
-        longitude: "1.0",
-        last_id: "0",
-        index: "0",
-        count: "10");
+    // GetListPostsRequestDTO getListPosts = GetListPostsRequestDTO(
+    //     token: store.state.token,
+    //     user_id: "",
+    //     in_campaign: "1",
+    //     campaign_id: "1",
+    //     latitude: "1.0",
+    //     longitude: "1.0",
+    //     last_id: "0",
+    //     index: "0",
+    //     count: "10");
+    final getListPosts = GetListPostsRequest(index: 0, count: 10);
 
     Completer<void> completer = Completer<void>();
 
@@ -851,7 +871,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
     return StoreBuilder(
       builder: (BuildContext context, Store<AntiFakeBookState> store) {
         return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 5.0),
+          padding: const EdgeInsets.symmetric(horizontal: 5.0),
           child: Stack(
             children: [
               Column(
