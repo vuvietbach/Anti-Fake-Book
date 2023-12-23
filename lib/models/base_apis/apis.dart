@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:anti_fake_book/constants/base_apis.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/friend.dto.dart';
+import 'package:anti_fake_book/models/base_apis/dto/request/post.dto.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/friend.dto.dart';
 import 'package:dio/dio.dart';
 
@@ -160,7 +161,7 @@ class ApiModel {
   Future<SignInResponse> signIn(SignInRequest data) async {
     final response = await _dio.post(PathName.signIn, data: data.toJson());
     SignInResponse signInResponse = SignInResponse.fromJson(response.data);
-    token = signInResponse.data.token;
+    // token = signInResponse.data.token;
     return signInResponse;
   }
 
@@ -341,27 +342,11 @@ class ApiModel {
     return deleteConversationResponse;
   }
 
-  Future<GetListPostsResponseDTO> GetListPosts(
-      GetListPostsRequestDTO data) async {
+  Future<GetListPostsResponseDTO> getListPosts(GetListPostsRequest data) async {
     final response = await _dio.post(
       PathName.getListPosts,
-      data: {
-        'user_id': data.user_id,
-        'in_campaign': data.in_campaign,
-        'campaign_id': data.campaign_id,
-        'latitude': data.latitude,
-        'longitude': data.longitude,
-        'last_id': data.last_id,
-        'index': data.index,
-        'count': data.count,
-      },
-      options: Options(
-        headers: {
-          'Authorization': 'Bearer ${data.token}',
-        },
-      ),
+      data: data.toJson(),
     );
-
     // print('getListPosts');
     // print(response.statusCode);
     // print(response.realUri);

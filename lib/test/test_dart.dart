@@ -32,7 +32,5 @@ void main() {
   // final highlightedText = highlightPhoneNumbers(text);
   // print(highlightedText);
   // final text1 = "This is underlined text\u0332.\u0332";
-  final data = {"code": 1000, "message": "block"};
-  final response = GetUserInfoResponse.fromJson(data);
-  print(response.code);
+  final x = GetListPostsResponseDTO.fromJson({"code": 1000, "message": "OK"});
 }

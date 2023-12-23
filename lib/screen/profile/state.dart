@@ -2,8 +2,10 @@ import 'package:anti_fake_book/constants/constants.dart';
 import 'package:anti_fake_book/helper/helper.dart';
 import 'package:anti_fake_book/models/base_apis/apis.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/friend.dto.dart';
+import 'package:anti_fake_book/models/base_apis/dto/request/post.dto.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/user_info.dto.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/friend.dto.dart';
+import 'package:anti_fake_book/models/base_apis/dto/response/get_list_posts.dto.dart';
 import 'package:anti_fake_book/plugins/index.dart';
 import 'package:anti_fake_book/store/actions/block.dart';
 import 'package:anti_fake_book/store/actions/friends.dart';
@@ -117,4 +119,41 @@ class UserState {
       });
     }
   }
+}
+
+class PostState {
+  final String? userId;
+  final List<EachPostPayloadDTO> posts;
+  final Function(PostState)? setStateCallback;
+  const PostState(
+      {this.posts = const [],
+      required this.userId,
+      required this.setStateCallback});
+
+  void getInitialPosts(BuildContext context) async {
+    final request = GetListPostsRequest(
+        index: 0, count: NUM_QUERY_PER_REQUEST, userId: userId);
+    callAPI(context, () async {
+      final response = await ApiModel.api.getListPosts(request);
+      final newState = PostState(
+          posts: response.data.post,
+          setStateCallback: setStateCallback,
+          userId: userId);
+      setStateCallback?.call(newState);
+    });
+  }
+
+  void loadMorePosts(BuildContext context) async {
+    final request = GetListPostsRequest(
+        index: posts.length, count: NUM_QUERY_PER_REQUEST, userId: userId);
+    callAPI(context, () async {
+      final response = await ApiModel.api.getListPosts(request);
+      var newPosts = [...posts, ...response.data.post];
+      final newState = PostState(
+          posts: newPosts, setStateCallback: setStateCallback, userId: userId);
+      setStateCallback?.call(newState);
+    });
+  }
+
+  int get total => posts.length;
 }

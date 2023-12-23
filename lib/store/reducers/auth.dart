@@ -1,6 +1,5 @@
 import 'package:anti_fake_book/helper/helper.dart';
 import 'package:anti_fake_book/models/base_apis/apis.dart';
-import 'package:anti_fake_book/models/saved_state.dto.dart';
 import 'package:anti_fake_book/store/actions/auth.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/utils.dart';

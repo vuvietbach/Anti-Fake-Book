@@ -1,3 +1,4 @@
+import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/response.dto.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/search.dto.dart';
 import 'package:anti_fake_book/screen/HomePage/news_feed_tab.dart';
@@ -256,4 +257,31 @@ Post convertToPost(SearchResultItem item) {
       DateTime.parse(item.created),
       item.author.avatar,
       item.isFelt.toString());
+}
+
+Post convertToPostFromPostPayload(EachPostPayloadDTO item) {
+  EachPostPayloadDTO post = item;
+  String id = post.id ?? "";
+  String userId = post.author?.id ?? "";
+  String username = post.author?.name ?? "";
+  String content = post.described ?? "";
+
+  int kudosCount = int.parse(post.feel ?? "0");
+  // int disappointedCount = random.nextInt(200);
+  int commentCount = int.parse(post.commentMark ?? "0");
+
+  List<String> imageURL = [];
+  for (int i = 0; i < post.image.length; i++) {
+    imageURL.add(post.image[i].url ?? "");
+  }
+
+  String? videoURL = post.video?.url;
+
+  DateTime postDate = DateTime.parse(post.created ?? "");
+  String userAvatar = post.author?.avatar ?? '';
+
+  String? isFelt = post.isFelt;
+
+  return Post(id, userId, username, content, imageURL, videoURL ?? '',
+      kudosCount, commentCount, postDate, userAvatar, isFelt ?? "-1");
 }

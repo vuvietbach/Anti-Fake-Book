@@ -3,6 +3,7 @@ import 'package:anti_fake_book/helper/helper.dart';
 import 'package:anti_fake_book/layout/default_layer.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/friend.dto.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/index.dart';
+import 'package:anti_fake_book/screen/HomePage/news_feed_tab.dart';
 import 'package:anti_fake_book/screen/profile/friend_section.dart';
 import 'package:anti_fake_book/screen/profile/profile_setting.dart';
 import 'package:anti_fake_book/screen/profile/redux_actions.dart';
@@ -83,8 +84,25 @@ class ProfilePage extends StatelessWidget {
   }
 }
 
-class MyProfilePage extends StatelessWidget {
+class MyProfilePage extends StatefulWidget {
   const MyProfilePage({super.key});
+
+  @override
+  State<MyProfilePage> createState() => _MyProfilePageState();
+}
+
+class _MyProfilePageState extends State<MyProfilePage> {
+  late PostState postState;
+  @override
+  void initState() {
+    super.initState();
+    postState = PostState(
+        userId: null,
+        setStateCallback: (PostState state) => setState(() {
+              postState = state;
+            }));
+    postState.getInitialPosts(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +118,8 @@ class MyProfilePage extends StatelessWidget {
               userId: null,
               setStateCallback: null,
               friends: store.state.friendState.userFriends,
-              total: store.state.friendState.userTotalNumFriend));
+              total: store.state.friendState.userTotalNumFriend),
+          postState: postState);
     });
   }
 }
@@ -117,6 +136,7 @@ class OtherProfilePage extends StatefulWidget {
 class _OtherProfilePageState extends State<OtherProfilePage> {
   late UserState userState;
   late FriendState friendState;
+  late PostState postState;
   @override
   void initState() {
     super.initState();
@@ -130,8 +150,14 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
         setStateCallback: (FriendState state) => setState(() {
               friendState = state;
             }));
+    postState = PostState(
+        userId: widget.userId,
+        setStateCallback: (PostState state) => setState(() {
+              postState = state;
+            }));
     userState.getUserInfo(context);
     friendState.getInitialFriends(context);
+    postState.getInitialPosts(context);
   }
 
   // Future<void> _fetchData() async {
@@ -154,15 +180,38 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
     return ProfilePageUi(
       userState: userState,
       friendState: friendState,
+      postState: postState,
     );
   }
 }
 
-class ProfilePageUi extends StatelessWidget {
+class ProfilePageUi extends StatefulWidget {
   final UserState userState;
   final FriendState friendState;
+  final PostState postState;
   const ProfilePageUi(
-      {super.key, required this.userState, required this.friendState});
+      {super.key,
+      required this.userState,
+      required this.friendState,
+      required this.postState});
+
+  @override
+  State<ProfilePageUi> createState() => _ProfilePageUiState();
+}
+
+class _ProfilePageUiState extends State<ProfilePageUi> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        _loadMorePosts(context);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -174,50 +223,67 @@ class ProfilePageUi extends StatelessWidget {
               onPressed: () => Navigator.of(context).pop(),
               icon: const Icon(Icons.arrow_back, color: Colors.black)),
         ),
-        body: ListView(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: AccountImage(
-                username: userState.userInfo.username,
-                avatar: userState.userInfo.avatar,
-                coverImage: userState.userInfo.coverImage,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(children: [
-                    _mainButton(context),
-                    const SizedBox(
-                      width: 10.0,
+        body: ListView.builder(
+            controller: _scrollController,
+            itemCount: 1 + widget.postState.total,
+            itemBuilder: (BuildContext context, int index) {
+              if (index == 0) {
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: AccountImage(
+                        username: widget.userState.userInfo.username,
+                        avatar: widget.userState.userInfo.avatar,
+                        coverImage: widget.userState.userInfo.coverImage,
+                      ),
                     ),
-                    _profileSettingButton(context),
-                  ]),
-                  const Divider(
-                    height: 20.0,
-                    thickness: 2.0,
-                  ),
-                  GeneralInfoSection(
-                    city: userState.userInfo.city,
-                    country: userState.userInfo.country,
-                    address: userState.userInfo.address,
-                  ),
-                  const Divider(
-                    height: 20.0,
-                    thickness: 2.0,
-                  ),
-                  FriendSection(
-                    friendState: friendState,
-                    userState: userState,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ));
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(children: [
+                            _mainButton(context),
+                            const SizedBox(
+                              width: 10.0,
+                            ),
+                            _profileSettingButton(context),
+                          ]),
+                          const Divider(
+                            height: 20.0,
+                            thickness: 2.0,
+                          ),
+                          GeneralInfoSection(
+                            city: widget.userState.userInfo.city,
+                            country: widget.userState.userInfo.country,
+                            address: widget.userState.userInfo.address,
+                          ),
+                          const Divider(
+                            height: 20.0,
+                            thickness: 2.0,
+                          ),
+                          FriendSection(
+                            friendState: widget.friendState,
+                            userState: widget.userState,
+                          ),
+                          // _listPost(context),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              } else {
+                final post = convertToPostFromPostPayload(
+                    widget.postState.posts[index - 1]);
+                return PostWidget(post: post);
+              }
+            }));
+  }
+
+  void _loadMorePosts(BuildContext context) {
+    print("hello");
+    widget.postState.loadMorePosts(context);
   }
 
   Widget _profileSettingButton(BuildContext context) {
@@ -228,7 +294,7 @@ class ProfilePageUi extends StatelessWidget {
               backgroundColor: MaterialStateProperty.all(Colors.grey)),
           onPressed: () => Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => ProfileSettingPage(
-                    userId: userState.userInfo.id,
+                    userState: widget.userState,
                   ))),
           child: const Icon(Icons.more_horiz, color: Colors.black)),
     );

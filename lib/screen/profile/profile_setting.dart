@@ -1,5 +1,7 @@
 import 'package:anti_fake_book/helper/helper.dart';
 import 'package:anti_fake_book/screen/profile/redux_actions.dart';
+import 'package:anti_fake_book/screen/profile/state.dart';
+import 'package:anti_fake_book/screen/search_page/profile_search_page.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/widgets/common/divider.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +11,8 @@ import 'package:go_router/go_router.dart';
 import 'package:redux/redux.dart';
 
 class ProfileSettingPage extends StatelessWidget {
-  final String? userId;
-  const ProfileSettingPage({super.key, required this.userId});
+  final UserState userState;
+  const ProfileSettingPage({super.key, required this.userState});
 
   void _copyLink(BuildContext context, String text) {
     Clipboard.setData(ClipboardData(text: text));
@@ -45,7 +47,10 @@ class ProfileSettingPage extends StatelessWidget {
           const CustomDivider(),
           firstOption(context),
           Option(
-              callback: () {},
+              callback: () => Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (BuildContext context) {
+                    return ProfileSearchPage(userState: userState);
+                  })),
               icon: const Icon(Icons.search),
               title: "Tìm kiếm trên trang cá nhân"),
           const CustomDivider(),
@@ -88,7 +93,7 @@ class ProfileSettingPage extends StatelessWidget {
   Widget firstOption(BuildContext context) {
     Store<AntiFakeBookState> store =
         StoreProvider.of<AntiFakeBookState>(context);
-    bool isOwner = isAccountOwner(userId, store.state);
+    bool isOwner = isAccountOwner(userState.userInfo.id, store.state);
     return isOwner
         ? Option(
             callback: () => context.go("/change_profile_setting"),

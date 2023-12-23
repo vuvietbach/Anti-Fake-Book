@@ -3,7 +3,6 @@ import 'package:anti_fake_book/helper/helper.dart';
 import 'package:anti_fake_book/models/base_apis/apis.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/search.dto.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
-import 'package:anti_fake_book/screen/search_page/redux_actions.dart';
 import 'package:flutter/material.dart';
 
 class SearchState {
@@ -24,5 +23,9 @@ class SearchState {
       final newState = SearchState(searchResults: response.data);
       callback?.call(newState);
     });
+  }
+
+  bool isEmpty() {
+    return searchResults.isEmpty;
   }
 }

@@ -1,4 +1,3 @@
-import 'package:anti_fake_book/screen/sign_in/sign_in.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/widgets/common/image.dart';
 import 'package:flutter/material.dart';
@@ -20,9 +19,7 @@ class SigninOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => SignIn(
-              onSuccess: (BuildContext context) => context.go("/home")))),
+      onTap: () => context.go('/sign-in'),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
         child: Row(
@@ -58,9 +55,7 @@ class AccountCard extends StatelessWidget {
         final name = store.state.userState.userInfo.username;
         final avatarUrl = store.state.userState.userInfo.avatar;
         return InkWell(
-          onTap: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => SignInWithAccount(
-                  onSuccess: (context) => context.go("/home")))),
+          onTap: () => context.go('/sign-in-with-account'),
           child: Card(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10),
