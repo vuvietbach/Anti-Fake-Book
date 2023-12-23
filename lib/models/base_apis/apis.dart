@@ -21,7 +21,7 @@ class ApiModel {
   late final BaseOptions _baseOptions;
   late final Dio _dio;
   static String token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAxOSwiZGV2aWNlX2lkIjoiMTIzNCIsImlhdCI6MTcwMzE0Njk2N30.bODgdcRVUFvdw2I7siEBoEeO4LzTfx_hmapWU_B71-0';
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZGV2aWNlX2lkIjoic3RyaW5nIiwiaWF0IjoxNzAzMjY0NTUxfQ.HK-FmxVfCSjaRNaKs_IlVQyU-2PMJ1hjtEljYQI9NmI';
   ApiModel() {
     _baseUrl = 'https://it4788.catan.io.vn';
     _baseOptions = BaseOptions(baseUrl: _baseUrl);
@@ -346,6 +346,7 @@ class ApiModel {
     final response = await _dio.post(
       PathName.getListPosts,
       data: {
+        'user_id': data.user_id,
         'in_campaign': data.in_campaign,
         'campaign_id': data.campaign_id,
         'latitude': data.latitude,
