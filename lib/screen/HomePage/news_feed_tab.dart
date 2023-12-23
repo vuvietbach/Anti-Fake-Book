@@ -695,6 +695,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
 
     GetListPostsRequestDTO getListPosts = GetListPostsRequestDTO(
         token: store.state.token,
+        user_id: "",
         in_campaign: "1",
         campaign_id: "1",
         latitude: "1.0",
@@ -742,6 +743,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
 
     GetListPostsRequestDTO getListPosts = GetListPostsRequestDTO(
         token: store.state.token,
+        user_id: "",
         in_campaign: "1",
         campaign_id: "1",
         latitude: "1.0",

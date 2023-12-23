@@ -21,6 +21,8 @@ import 'package:anti_fake_book/screen/sign_in/routes.dart';
 import 'package:anti_fake_book/screen/sign_up/routes.dart';
 import 'package:anti_fake_book/screen/welcome_screen/welcome_screen.dart';
 
+import '../screen/HomePage/friend_tab.dart';
+
 final GoRouter router = GoRouter(routes: [
   GoRoute(
       path: '/',
@@ -130,6 +132,11 @@ final GoRouter router = GoRouter(routes: [
                     username: state.uri.queryParameters['username']!,
                     userId: state.uri.queryParameters['userId']));
           },
-        )
+        ),
+        GoRoute(
+          path: 'requested_friend',
+          builder: (BuildContext context, GoRouterState stage) =>
+              EmptyLayout(child: FriendPageContent()),
+        ),
       ]),
 ]);
