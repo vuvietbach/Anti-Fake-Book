@@ -3,6 +3,7 @@ import 'package:anti_fake_book/screen/profile/redux_actions.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/widgets/common/divider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:go_router/go_router.dart';
 import 'package:redux/redux.dart';
@@ -11,64 +12,77 @@ class ProfileSettingPage extends StatelessWidget {
   final String? userId;
   const ProfileSettingPage({super.key, required this.userId});
 
+  void _copyLink(BuildContext context, String text) {
+    Clipboard.setData(ClipboardData(text: text));
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   const SnackBar(content: Text('Copied to clipboard!')),
+    // );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(color: Colors.black, Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context); // Quay lại màn hình trước đó
-          },
-        ),
-        title: const Text(
-          "Cài đặt trang cá nhân",
-          style: TextStyle(
-              fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.black),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0, // Set the background color to white
-      ),
-      body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const CustomDivider(),
-        firstOption(context),
-        Option(
-            callback: () => context.go("/profile/setting/search"),
-            icon: const Icon(Icons.search),
-            title: "Tìm kiếm trên trang cá nhân"),
-        const CustomDivider(),
-        Padding(
-          padding: const EdgeInsets.only(top: 10.0, left: 15.0, right: 15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Liên kết đến trang cá nhân của bạn",
-                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                height: 5.0,
-              ),
-              const Text("Liên kết của riêng bạn trên Anti Fake Book"),
-              const Divider(
-                height: 10.0,
-                thickness: 1.0,
-              ),
-              const Text("/profile",
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              OutlinedButton(
-                  onPressed: () {},
-                  style: ButtonStyle(
-                      overlayColor: getColor(Colors.grey.withOpacity(0.2))),
-                  child: const Text(
-                    "SAO CHÉP LIÊN KẾT",
-                    style: TextStyle(color: Colors.black),
-                  ))
-            ],
+    return StoreBuilder(
+        builder: (BuildContext context, Store<AntiFakeBookState> store) {
+      return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(color: Colors.black, Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context); // Quay lại màn hình trước đó
+            },
           ),
+          title: const Text(
+            "Cài đặt trang cá nhân",
+            style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.black),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0, // Set the background color to white
         ),
-      ]),
-    );
+        body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          const CustomDivider(),
+          firstOption(context),
+          Option(
+              callback: () {},
+              icon: const Icon(Icons.search),
+              title: "Tìm kiếm trên trang cá nhân"),
+          const CustomDivider(),
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0, left: 15.0, right: 15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Liên kết đến trang cá nhân của bạn",
+                  style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(
+                  height: 5.0,
+                ),
+                const Text("Liên kết của riêng bạn trên Anti Fake Book"),
+                const Divider(
+                  height: 10.0,
+                  thickness: 1.0,
+                ),
+                Text(store.state.userState.userInfo.link,
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                OutlinedButton(
+                    onPressed: () =>
+                        _copyLink(context, store.state.userState.userInfo.link),
+                    style: ButtonStyle(
+                        overlayColor: getColor(Colors.grey.withOpacity(0.2))),
+                    child: const Text(
+                      "SAO CHÉP LIÊN KẾT",
+                      style: TextStyle(color: Colors.black),
+                    ))
+              ],
+            ),
+          ),
+        ]),
+      );
+    });
   }
 
   Widget firstOption(BuildContext context) {

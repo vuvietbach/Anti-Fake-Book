@@ -26,6 +26,7 @@ final GoRouter router = GoRouter(routes: [
       path: '/',
       builder: (BuildContext context, GoRouterState stage) {
         return const EmptyLayout(child: CheckLoginWrapper(child: HomePage()));
+        // return const EmptyLayout(child: ProfilePage(),);
       },
       routes: [
         GoRoute(

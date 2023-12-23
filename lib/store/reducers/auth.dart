@@ -1,9 +1,7 @@
 import 'package:anti_fake_book/helper/helper.dart';
 import 'package:anti_fake_book/models/base_apis/apis.dart';
 import 'package:anti_fake_book/models/saved_state.dto.dart';
-import 'package:anti_fake_book/services/save_to_disk_service.dart';
 import 'package:anti_fake_book/store/actions/auth.dart';
-import 'package:anti_fake_book/store/state/auth.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/utils.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +18,8 @@ AntiFakeBookState onSignInSuccess(
   if (isSuccessCode(action.payload.code)) {
     action.extras['onSuccess']?.call(action.payload);
     ApiModel.token = action.payload.data.token;
-    print("sign in token: ${ApiModel.token}");
+    // print("sign in token: ${ApiModel.token}");
+
     AntiFakeBookState newState = state.copyWith(
       userState: state.userState.copyWith(
         userInfo: state.userState.userInfo.copyWith(

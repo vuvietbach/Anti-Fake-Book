@@ -52,8 +52,7 @@ class AccountCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreBuilder(
         builder: (BuildContext context, Store<AntiFakeBookState> store) {
-      if (store.state.userState.userInfo.username == "" ||
-          store.state.userState.userInfo.email == "") {
+      if (store.state.userState.userInfo.email == "") {
         return const SizedBox();
       } else {
         final name = store.state.userState.userInfo.username;
