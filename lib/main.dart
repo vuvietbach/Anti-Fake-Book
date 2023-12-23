@@ -20,14 +20,14 @@ void main() async {
   await DiskStore.init();
   final initialState =
       await DiskStore.loadAndMergeState(AntiFakeBookState.initState());
-  await NotificationService.init();
+  // await NotificationService.init();
   await initCached();
   Plugins.antiFakeBookStore = Store<AntiFakeBookState>(antiFakeBookReducers,
       initialState: initialState, middleware: [futureMiddleware]);
   WidgetsBinding.instance
       .addObserver(AppStateObserver(store: Plugins.antiFakeBookStore!));
-  // ApiModel.token =
-  //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcxLCJkZXZpY2VfaWQiOiJzdHJpbmciLCJpYXQiOjE3MDMxNTI0Mjl9.bSPonlcYIbVaYy7WGSY_zzdkRgeqYzDFIUpZOJwv_fQ";
+  ApiModel.token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZGV2aWNlX2lkIjoic3RyaW5nIiwiaWF0IjoxNzAzMzAxNTA0fQ.VS0ypfiti2lPtGEgGXL6khXhijZBFlqQ7lTfn4nwHSw";
   // ApiModel.token =
   //     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcxLCJkZXZpY2VfaWQiOiJzdHJpbmciLCJpYXQiOjE3MDMyOTExMTZ9.S23gC3v2pHqYvSkJlctcHmpyvun64Lb5mscGiTPhtpI';
   runApp(AntiFakeBookApp(store: Plugins.antiFakeBookStore!));
