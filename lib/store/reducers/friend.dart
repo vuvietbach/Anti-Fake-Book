@@ -35,5 +35,16 @@ AntiFakeBookState onSuccessGetUserFriends(
 AntiFakeBookState onUnfriendSuccess(
     AntiFakeBookState state, SuccessUnfriendAction action) {
   action.extras['onSuccess']?.call();
-  return state;
+  final oldLen = state.friendState.userFriends.length;
+  final newFriendList = state.friendState.userFriends
+      .where((element) => element.id != action.extras['request'].userId)
+      .toList();
+  final newTotal =
+      state.friendState.userTotalNumFriend - (oldLen - newFriendList.length);
+  return state.copyWith(
+    friendState: state.friendState.copyWith(
+      userFriends: newFriendList,
+      userTotalNumFriend: newTotal,
+    ),
+  );
 }

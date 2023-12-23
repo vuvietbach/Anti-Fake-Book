@@ -1,6 +1,8 @@
 import 'package:anti_fake_book/models/base_apis/dto/response/user_info_data.dart';
 import 'package:anti_fake_book/utils.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 part 'user_info.dto.g.dart';
+part 'user_info.dto.freezed.dart';
 
 @customJsonSerializable
 class SetUserInfoResponse {
@@ -76,15 +78,17 @@ class SetUserInfoResponse {
 //   Map<String, dynamic> toJson() => _$UserInfoDataToJson(this);
 // }
 
-@customJsonSerializable
-class GetUserInfoResponse {
-  final int code;
-  final String message;
-  final UserInfoData data;
-
-  GetUserInfoResponse(
-      {required this.code, required this.message, required this.data});
+@freezed
+class GetUserInfoResponse with _$GetUserInfoResponse {
+  const GetUserInfoResponse._();
+  @customJsonSerializable
+  const factory GetUserInfoResponse({
+    required int code,
+    required String message,
+    @Default(UserInfoData()) UserInfoData data,
+  }) = _GetUserInfoResponse;
+  
   factory GetUserInfoResponse.fromJson(Map<String, dynamic> json) =>
       _$GetUserInfoResponseFromJson(json);
-  Map<String, dynamic> toJson() => _$GetUserInfoResponseToJson(this);
+
 }
