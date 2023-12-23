@@ -160,7 +160,7 @@ class ApiModel {
   Future<SignInResponse> signIn(SignInRequest data) async {
     final response = await _dio.post(PathName.signIn, data: data.toJson());
     SignInResponse signInResponse = SignInResponse.fromJson(response.data);
-    token = signInResponse.data.token;
+    // token = signInResponse.data.token;
     return signInResponse;
   }
 

@@ -228,7 +228,7 @@ class ProfilePageUi extends StatelessWidget {
               backgroundColor: MaterialStateProperty.all(Colors.grey)),
           onPressed: () => Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => ProfileSettingPage(
-                    userId: userState.userInfo.id,
+                    userState: userState,
                   ))),
           child: const Icon(Icons.more_horiz, color: Colors.black)),
     );

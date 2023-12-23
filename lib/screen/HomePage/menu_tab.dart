@@ -49,7 +49,7 @@ class MenuContent extends StatelessWidget {
               // màu nều trong suốt
               onPressed: () {
                 String userId = store.state.userState.userInfo.id;
-                context.go('/profile/$userId');
+                context.push('/profile/$userId');
               },
               style: ButtonStyle(
                   backgroundColor:

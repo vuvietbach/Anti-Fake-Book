@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 final profileRoutes = [
-  GoRoute(
-      path: 'profile_setting/:userId',
-      builder: (BuildContext context, GoRouterState state) {
-        return EmptyLayout(
-            child: ProfileSettingPage(
-          userId: state.pathParameters['userId'] ?? "",
-        ));
-      }),
+  // GoRoute(
+  //     path: 'profile_setting/:userId',
+  //     builder: (BuildContext context, GoRouterState state) {
+  //       return EmptyLayout(
+  //           child: ProfileSettingPage(
+  //         userId: state.pathParameters['userId'] ?? "",
+  //       ));
+  //     }),
   GoRoute(
     path: "change_profile_setting",
     builder: (context, state) => const EmptyLayout(

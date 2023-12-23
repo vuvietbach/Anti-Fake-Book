@@ -1,5 +1,6 @@
 import 'package:anti_fake_book/screen/profile/friend_list.dart';
 import 'package:anti_fake_book/screen/profile/profile.dart';
+import 'package:anti_fake_book/screen/sign_in/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -111,7 +112,18 @@ final GoRouter router = GoRouter(routes: [
           builder: (BuildContext context, GoRouterState state) =>
               const HomePage(),
         ),
-        ...signInRoutes,
+        GoRoute(
+          path: 'sign-in',
+          builder: (BuildContext context, GoRouterState state) {
+            return const EmptyLayout(child: SignIn());
+          },
+        ),
+        GoRoute(
+          path: 'sign-in-with-account',
+          builder: (BuildContext context, GoRouterState state) {
+            return const EmptyLayout(child: SignInWithAccount());
+          },
+        ),
         signUpRoutes,
         GoRoute(
           path: 'search',

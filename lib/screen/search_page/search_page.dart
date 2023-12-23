@@ -184,6 +184,17 @@ class _SearchResultPageState extends State<SearchResultPage> {
     });
   }
 
+  Widget _notFound() {
+    return const SingleChildScrollView(
+      child: Column(
+        children: [
+          Image(image: AssetImage("assets/images/not_found.png")),
+          Text("Không tìm thấy kết quả")
+        ],
+      ),
+    );
+  }
+
   Widget _listPost() {
     final listPost =
         searchState.searchResults.map((e) => convertToPost(e)).toList();
@@ -213,7 +224,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
       ),
       body: Column(children: [
         _tab(),
-        _listPost()
+        searchState.isEmpty() ? _notFound() : _listPost()
         // Expanded(
         //   child: _internetErrorMessage(),
         // )

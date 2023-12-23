@@ -2,7 +2,6 @@ import 'package:anti_fake_book/helper/helper.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/auth.dto.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
 import 'package:anti_fake_book/screen/sign_in/redux_actions.dart';
-import 'package:anti_fake_book/store/reducers/user_info.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/utils.dart';
 import 'package:anti_fake_book/widgets/common/image.dart';
@@ -129,7 +128,7 @@ class _SignInState extends State<SignIn> {
                             password: passwordController.text,
                             uuid: await getDeviceId(),
                           ), onSuccess: (SignInResponse response) {
-                        context.go('/home');
+                        context.push('/home');
                       });
                     }
                   },
@@ -224,7 +223,7 @@ class _SignInWithAccountState extends State<SignInWithAccount> {
                                         password: passwordController.text,
                                         uuid: await getDeviceId()),
                                     onSuccess: (response) =>
-                                        context.go("/home"));
+                                        context.push("/home"));
                               }
                             },
                       child: const Text("Đăng nhập"),
