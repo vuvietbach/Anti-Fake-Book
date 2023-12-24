@@ -5,6 +5,7 @@ import 'package:anti_fake_book/models/base_apis/dto/response/friend.dto.dart';
 import 'package:anti_fake_book/screen/profile/profile.dart';
 import 'package:anti_fake_book/screen/profile/redux_actions.dart';
 import 'package:anti_fake_book/screen/profile/state.dart';
+import 'package:anti_fake_book/screen/profile/widgets.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/widgets/common/image.dart';
 import 'package:anti_fake_book/widgets/common/search_bar.dart';
@@ -191,7 +192,7 @@ class FriendListTile extends StatelessWidget {
   void _getUserFriends(BuildContext context) {
     Navigator.pop(context);
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return OtherFriendListPage(userId: info.id, username: info.username);
+      return FriendListPage(userId: info.id, username: info.username);
     }));
   }
 
@@ -317,6 +318,9 @@ class FriendListUI extends StatefulWidget {
 }
 
 class _FriendListUIState extends State<FriendListUI> {
+  int selectedOption = 0;
+  String searchKeyword = "";
+
   final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
@@ -341,7 +345,9 @@ class _FriendListUIState extends State<FriendListUI> {
   }
 
   void _loadMore(BuildContext context) {
-    widget.friendState.loadMoreFriends(context);
+    if (searchKeyword.isNotEmpty) {
+      widget.friendState.loadMoreFriends(context);
+    }
   }
 
   void _blockUser(BuildContext context, String userId) {
@@ -373,32 +379,108 @@ class _FriendListUIState extends State<FriendListUI> {
           padding: const EdgeInsets.all(10.0),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const CustomSearchBar(),
+            _options(),
             const SizedBox(
               height: 15.0,
             ),
-            Expanded(
-                child: ListView.builder(
-              controller: _scrollController,
-              itemCount: widget.friendState.friends.length + 2,
-              itemBuilder: (BuildContext context, int index) {
-                if (index == 0) {
-                  return _numFriendText(widget.friendState.total);
-                } else if (index == widget.friendState.friends.length + 1) {
-                  // return const BottomProgressIndicator();
-                  return const SizedBox();
-                } else {
-                  return FriendListTile(
-                      info: widget.friendState.friends[index - 1],
-                      isOwnersFriend: widget.isOwner,
-                      onUnfriend: (String userId) => _unfriend(context, userId),
-                      onBlockUser: (String userId) =>
-                          _blockUser(context, userId));
-                }
-              },
-            ))
+            CustomSearchBar(
+              placeholder: "Tìm kiếm bạn bè",
+              searchCallback: (String text) => _searchFriend(text),
+              onClear: _clearSearch,
+            ),
+            const SizedBox(
+              height: 15.0,
+            ),
+            Expanded(child: Builder(builder: (context) {
+              final friendList = widget.friendState
+                  .filterFriends(selectedOption, searchKeyword);
+              final displayedNumFriends = (searchKeyword.isEmpty)
+                  ? widget.friendState.total
+                  : friendList.length;
+              return ListView.builder(
+                controller: _scrollController,
+                itemCount: (friendList.length + 2),
+                itemBuilder: (BuildContext context, int index) {
+                  if (index == 0) {
+                    return _numFriendText(displayedNumFriends);
+                  } else if (index == friendList.length + 1) {
+                    // return const BottomProgressIndicator();
+                    return const SizedBox();
+                  } else {
+                    return FriendListTile(
+                        info: friendList[index - 1],
+                        isOwnersFriend: widget.isOwner,
+                        onUnfriend: (String userId) =>
+                            _unfriend(context, userId),
+                        onBlockUser: (String userId) =>
+                            _blockUser(context, userId));
+                  }
+                },
+              );
+            }))
           ]),
         ));
+  }
+
+  Row _options() {
+    return Row(
+      children: [
+        ChipButton(
+          text: "Tất cả",
+          isSelected: (selectedOption == 0),
+          onPressed: () => _handleSelectOption(0),
+        ),
+        const SizedBox(
+          width: 10.0,
+        ),
+        ChipButton(
+          text: "Gần đây",
+          isSelected: (selectedOption == 1),
+          onPressed: () => _handleSelectOption(1),
+        )
+      ],
+    );
+  }
+
+  void _handleSelectOption(int index) {
+    setState(() {
+      selectedOption = index;
+    });
+    // if (index == 0) {
+    //   setState(() {
+    //     friendList = widget.friendState.alphabeticalFriends;
+    //   });
+    // } else {
+    //   setState(() {
+    //     friendList = widget.friendState.recentFriends;
+    //   });
+    // }
+  }
+
+  void _searchFriend(String text) {
+    // if (text.isEmpty) {
+    //   setState(() {
+    //     displayedFriends = friendList;
+    //   });
+    // }
+    // setState(() {
+    //   displayedFriends = friendList
+    //       .where((friend) =>
+    //           friend.username.toLowerCase().contains(text.toLowerCase()))
+    //       .toList();
+    // });
+    setState(() {
+      searchKeyword = text;
+    });
+  }
+
+  void _clearSearch() {
+    setState(() {
+      searchKeyword = "";
+    });
+    // setState(() {
+    //   displayedFriends = friendList;
+    // });
   }
 
   Widget _numFriendText(int numFriend) {

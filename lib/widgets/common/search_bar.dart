@@ -47,6 +47,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
         suffixIcon: IconButton(
           onPressed: () {
             _controller.clear();
+            FocusScope.of(context).unfocus();
             if (widget.onClear != null) {
               widget.onClear!();
             }

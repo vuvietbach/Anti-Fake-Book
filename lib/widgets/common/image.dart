@@ -1,7 +1,6 @@
-import 'dart:ffi';
 import 'dart:io';
-import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -26,41 +25,63 @@ class AvatarImage extends StatefulWidget {
 }
 
 class _AvatarImageState extends State<AvatarImage> {
-  String? imagePath;
-  _decorationImage() {
-    try {
-      if (widget.allowEdit && imagePath != null) {
-        return DecorationImage(
-          image: FileImage(File(imagePath!)),
-          fit: BoxFit.cover,
-        );
-      } else if (widget.imageUrl != null && widget.imageUrl!.isNotEmpty) {
-        return DecorationImage(
-          image: NetworkImage(widget.imageUrl!),
-          fit: BoxFit.cover,
-        );
-      } else if (widget.localImagePath != null &&
-          widget.localImagePath!.isNotEmpty) {
-        return DecorationImage(
-          image: FileImage(File(widget.localImagePath!)),
-          fit: BoxFit.cover,
-        );
-      } else {
-        throw Exception();
-      }
-    } catch (e) {
-      return const DecorationImage(
-        image: AssetImage('assets/images/default_avatar.jpeg'),
-        fit: BoxFit.cover,
-      );
-    }
+  String? _imagePath;
+  // _decorationImage() {
+  //   try {
+  //     if (widget.allowEdit && imagePath != null) {
+  //       return DecorationImage(
+  //         image: FileImage(File(imagePath!)),
+  //         fit: BoxFit.cover,
+  //       );
+  //     } else if (widget.imageUrl != null && widget.imageUrl!.isNotEmpty) {
+  //       return DecorationImage(
+  //         image: NetworkImage(widget.imageUrl!),
+  //         fit: BoxFit.cover,
+  //       );
+  //     } else if (widget.localImagePath != null &&
+  //         widget.localImagePath!.isNotEmpty) {
+  //       return DecorationImage(
+  //         image: FileImage(File(widget.localImagePath!)),
+  //         fit: BoxFit.cover,
+  //       );
+  //     } else {
+  //       throw Exception();
+  //     }
+  //   } catch (e) {
+  //     return const DecorationImage(
+  //       image: AssetImage('assets/images/default_avatar.jpeg'),
+  //       fit: BoxFit.cover,
+  //     );
+  //   }
+  // }
+
+  Widget _avatar() {
+    final defaultAvatar = CircleAvatar(
+        radius: widget.height / 2,
+        backgroundImage: const AssetImage('assets/images/default_avatar.jpeg'));
+    final localPath = _imagePath ?? widget.localImagePath;
+    return localPath != null
+        ? CircleAvatar(
+            radius: widget.height / 2,
+            backgroundImage: FileImage(File(localPath)))
+        : widget.imageUrl != null && widget.imageUrl!.isNotEmpty
+            ? CachedNetworkImage(
+                imageUrl: widget.imageUrl!,
+                imageBuilder: (context, imageProvider) => CircleAvatar(
+                  radius: widget.height / 2,
+                  backgroundImage: imageProvider,
+                ),
+                placeholder: (context, url) => defaultAvatar,
+                errorWidget: (context, url, error) => defaultAvatar,
+              )
+            : defaultAvatar;
   }
 
   Future _pickImageFromGallery() async {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     setState(() {
-      imagePath = pickedFile?.path;
+      _imagePath = pickedFile?.path;
     });
     widget.onImageChanged?.call(pickedFile?.path);
   }
@@ -69,7 +90,7 @@ class _AvatarImageState extends State<AvatarImage> {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.camera);
     setState(() {
-      imagePath = pickedFile?.path;
+      _imagePath = pickedFile?.path;
     });
     widget.onImageChanged?.call(pickedFile?.path);
   }
@@ -78,13 +99,14 @@ class _AvatarImageState extends State<AvatarImage> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
-            height: widget.height,
-            width: widget.height,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: _decorationImage(),
-            )),
+        // Container(
+        //     height: widget.height,
+        //     width: widget.height,
+        //     decoration: BoxDecoration(
+        //       shape: BoxShape.circle,
+        //       image: _decorationImage(),
+        //     )),
+        _avatar(),
         widget.allowEdit ? _editButton(context) : const SizedBox(),
       ],
     );
@@ -130,15 +152,22 @@ class _AvatarImageState extends State<AvatarImage> {
 }
 
 class CoverImage extends StatefulWidget {
-  final double height;
   final String? imageUrl;
   final bool allowEdit;
+  final double? height;
+  final double? width;
+  final String? localImagePath;
+  final Function(String?)? onImageChanged;
 
   const CoverImage({
     super.key,
     this.imageUrl,
-    this.height = 200.0,
+    this.width,
+    this.height,
+    // this.height = 200.0,
     this.allowEdit = false,
+    this.onImageChanged,
+    this.localImagePath,
   });
 
   @override
@@ -146,28 +175,63 @@ class CoverImage extends StatefulWidget {
 }
 
 class _CoverImageState extends State<CoverImage> {
-  String? imagePath;
-  _decorationImage() {
-    if (widget.allowEdit && imagePath != null) {
-      return DecorationImage(
-        image: FileImage(File(imagePath!)),
-        fit: BoxFit.cover,
-      );
-    } else if (widget.imageUrl != null && widget.imageUrl!.isNotEmpty) {
-      return DecorationImage(
-        image: NetworkImage(widget.imageUrl!),
-        fit: BoxFit.cover,
-      );
-    } else {
-      return null;
-    }
+  String? _imagePath;
+  // _decorationImage() {
+  //   if (widget.allowEdit && imagePath != null) {
+  //     return DecorationImage(
+  //       image: FileImage(File(imagePath!)),
+  //       fit: BoxFit.cover,
+  //     );
+  //   } else if (widget.imageUrl != null && widget.imageUrl!.isNotEmpty) {
+  //     return DecorationImage(
+  //       image: NetworkImage(widget.imageUrl!),
+  //       fit: BoxFit.cover,
+  //     );
+  //   } else {
+  //     return null;
+  //   }
+  // }
+  Widget _coverImage() {
+    final defaultImage = Container(
+      width: widget.width,
+      height: widget.height,
+      color: Colors.grey,
+    );
+    final localPath = _imagePath ?? widget.localImagePath;
+    return localPath != null
+        ? Container(
+            width: widget.width,
+            height: widget.height,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: FileImage(File(localPath)),
+                fit: BoxFit.cover,
+              ),
+            ))
+        : widget.imageUrl != null && widget.imageUrl!.isNotEmpty
+            ? CachedNetworkImage(
+                imageUrl: widget.imageUrl!,
+                imageBuilder: (context, imageProvider) => Container(
+                  width: widget.width,
+                  height: widget.height,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                placeholder: (context, url) => defaultImage,
+                errorWidget: (context, url, error) => defaultImage,
+              )
+            : defaultImage;
   }
 
   Future _pickImageFromGallery() async {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     setState(() {
-      imagePath = pickedFile?.path;
+      _imagePath = pickedFile?.path;
     });
   }
 
@@ -175,7 +239,7 @@ class _CoverImageState extends State<CoverImage> {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.camera);
     setState(() {
-      imagePath = pickedFile?.path;
+      _imagePath = pickedFile?.path;
     });
   }
 
@@ -183,13 +247,14 @@ class _CoverImageState extends State<CoverImage> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
-          height: widget.height,
-          decoration: BoxDecoration(
-            image: _decorationImage(),
-            color: Colors.grey,
-          ),
-        ),
+        // Container(
+        //   height: widget.height,
+        //   decoration: BoxDecoration(
+        //     image: _decorationImage(),
+        //     color: Colors.grey,
+        //   ),
+        // ),
+        _coverImage(),
         widget.allowEdit ? _editButton(context) : const SizedBox(),
       ],
     );
