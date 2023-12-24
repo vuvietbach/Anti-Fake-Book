@@ -69,7 +69,7 @@ dependencies:
   flutter_local_notifications: ^16.2.0
   dio_cache_interceptor: ^3.5.0
   dio_cache_interceptor_hive_store: ^3.2.2
-  cached_network_image: ^3.1.0
+  cached_network_image: ^3.3.0
   chewie: ^1.5.0
   http_parser: ^4.0.2
 

@@ -162,8 +162,9 @@ class AccountImage extends StatelessWidget {
       children: [
         Column(
           children: [
-            BackgroundImage(
+            CoverImage(
               height: 200,
+              width: double.infinity,
               imageUrl: coverImage,
             ),
             Container(
@@ -308,4 +309,35 @@ class GeneralInfoSection extends StatelessWidget {
           ],
         ),
       );
+}
+
+class ChipButton extends StatelessWidget {
+  final String? text;
+  final bool isSelected;
+  final Function()? onPressed;
+
+  const ChipButton(
+      {super.key, this.text, this.onPressed, this.isSelected = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onPressed,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+        decoration: BoxDecoration(
+            color: isSelected
+                ? Theme.of(context).primaryColor.withOpacity(0.2)
+                : Colors.grey[200],
+            borderRadius: BorderRadius.circular(20.0)),
+        child: Text(
+          text ?? "",
+          style: TextStyle(
+              color: isSelected
+                  ? Theme.of(context).colorScheme.primary
+                  : Colors.grey[500]),
+        ),
+      ),
+    );
+  }
 }

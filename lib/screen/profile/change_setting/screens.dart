@@ -313,7 +313,7 @@ class _EditDescriptionPageState extends State<EditDescriptionPage> {
   @override
   Widget build(BuildContext context) {
     return StoreBuilder(onInit: (Store<AntiFakeBookState> store) {
-      _controller.text = store.state.userState.userInfo.description ?? "";
+      _controller.text = store.state.userState.userInfo.description;
     }, builder: (BuildContext context, Store<AntiFakeBookState> store) {
       return EditPage(
         title: "Chỉnh sửa mô tả",
@@ -350,44 +350,49 @@ class EditLink extends StatefulWidget {
 }
 
 class _EditLinkState extends State<EditLink> {
-  String initialText = "Mô tả";
   final _controller = TextEditingController();
   @override
   void initState() {
     super.initState();
-    _controller.text = initialText;
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return EditPage(
-      title: "Chỉnh sửa liên kết",
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextFormField(
-          controller: _controller,
-          maxLines: 4,
-          decoration: const InputDecoration(
-              labelText: 'Liên kết trang cá nhân',
-              border: OutlineInputBorder()),
-          onSaved: (value) {
-            setState(() {
-              initialText = value ?? "";
-            });
-          },
+    return StoreBuilder(onInit: (Store<AntiFakeBookState> store) {
+      _controller.text = store.state.userState.userInfo.link;
+    }, builder: (BuildContext context, Store<AntiFakeBookState> store) {
+      return EditPage(
+        title: "Chỉnh sửa liên kết",
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            controller: _controller,
+            decoration: const InputDecoration(border: InputBorder.none),
+          ),
         ),
-      ),
-      onConfirm: () {
-        setState(() {
-          initialText = _controller.text;
-        });
-      },
-      onCancel: () {
-        setState(() {
-          _controller.text = initialText;
-        });
-      },
-    );
+        onConfirm: () {
+          // setState(() {
+          //   initialText = _controller.text;
+          // });
+          setUserInfo(
+            context,
+            SetUserInfoRequest(link: _controller.text),
+            // onSuccess: (res) => Navigator.pop(context),
+          );
+        },
+        onCancel: () {
+          setState(() {
+            _controller.text = store.state.userState.userInfo.link;
+          });
+        },
+      );
+    });
   }
 }
 

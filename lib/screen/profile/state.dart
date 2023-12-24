@@ -18,6 +18,8 @@ import 'package:redux/redux.dart';
 
 class FriendState {
   final List<Friend> friends;
+  final List<Friend> sortedByNameFriends;
+  final List<Friend> sortedByDateFriends;
   final int total;
   final String? userId;
   final bool isOwner;
@@ -27,10 +29,21 @@ class FriendState {
       this.total = 0,
       required this.userId,
       required this.setStateCallback})
-      : isOwner = isAccountOwner(userId, Plugins.antiFakeBookStore!.state);
+      : isOwner = isAccountOwner(userId, Plugins.antiFakeBookStore!.state),
+        sortedByNameFriends = sortFriendsByName(friends),
+        sortedByDateFriends = [...friends];
 
-  void sortFriendsByName() {
-    friends.sort((a, b) => a.username.compareTo(b.username));
+  static List<Friend> sortFriendsByName(List<Friend> friends) {
+    var newFriends = [...friends];
+    newFriends.sort((a, b) => a.username.compareTo(b.username));
+    return newFriends;
+  }
+
+  static List<Friend> sortFriendsByDate(List<Friend> friends) {
+    var newFriends = [...friends];
+    newFriends.sort((a, b) =>
+        DateTime.parse(b.created).compareTo(DateTime.parse(a.created)));
+    return newFriends;
   }
 
   void unfriend(BuildContext context, String userId) {
@@ -66,6 +79,18 @@ class FriendState {
     }
   }
 
+  List<Friend> filterFriends(int filterType, String keyword) {
+    if (keyword.isEmpty) {
+      return filterType == 0 ? alphabeticalFriends : recentFriends;
+    } else {
+      final tmp = (filterType == 0) ? alphabeticalFriends : recentFriends;
+      return tmp
+          .where((Friend element) =>
+              element.username.toLowerCase().contains(keyword))
+          .toList();
+    }
+  }
+
   void loadMoreFriends(BuildContext context) {
     final request = GetUserFriendsRequest(
         index: friends.length, count: NUM_QUERY_PER_REQUEST, userId: userId);
@@ -84,6 +109,10 @@ class FriendState {
       });
     }
   }
+
+  get recentFriends => sortedByDateFriends;
+  get alphabeticalFriends => sortedByNameFriends;
+  get topRecentFriends => sortedByDateFriends.take(6).toList();
 }
 
 class UserState {

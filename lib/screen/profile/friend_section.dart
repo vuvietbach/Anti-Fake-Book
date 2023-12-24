@@ -2,6 +2,7 @@ import 'package:anti_fake_book/models/base_apis/dto/response/friend.dto.dart';
 import 'package:anti_fake_book/screen/profile/friend_list.dart';
 import 'package:anti_fake_book/screen/profile/profile.dart';
 import 'package:anti_fake_book/screen/profile/state.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class FriendSection extends StatelessWidget {
@@ -91,28 +92,33 @@ class FriendSection extends StatelessWidget {
 class FriendCard extends StatelessWidget {
   final String? avatarUrl;
   final String username;
+  final imageHeight = 100.0;
   const FriendCard({
     super.key,
     this.avatarUrl,
     required this.username,
   });
   Widget _avatar() {
-    try {
-      if (avatarUrl != null) {
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(10.0),
-          child: Image.network(avatarUrl!,
-              height: 100.0, width: double.infinity, fit: BoxFit.fill),
-        );
-      }
-      throw Exception();
-    } catch (e) {
-      return ClipRRect(
+    return ClipRRect(
         borderRadius: BorderRadius.circular(10.0),
-        child: Image.asset('assets/images/default_avatar.jpeg',
-            height: 100.0, width: double.infinity, fit: BoxFit.fill),
-      );
-    }
+        child: CachedNetworkImage(
+          imageUrl: avatarUrl!,
+          height: imageHeight,
+          width: double.infinity,
+          fit: BoxFit.cover,
+          placeholder: (context, url) => Image.asset(
+            'assets/images/default_avatar.jpeg',
+            height: imageHeight,
+            width: double.infinity,
+            fit: BoxFit.cover,
+          ),
+          errorWidget: (context, url, error) => Image.asset(
+            'assets/images/default_avatar.jpeg',
+            height: imageHeight,
+            width: double.infinity,
+            fit: BoxFit.cover,
+          ),
+        ));
   }
 
   @override
