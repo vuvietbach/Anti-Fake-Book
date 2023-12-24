@@ -595,6 +595,10 @@ class _PostWidgetState extends State<PostWidget> {
                     ),
                   ),
                   onPressed: () {
+                    Plugins.antiFakeBookStore!.dispatch(FeelPostAction(
+                        widget.post.id,
+                        widget.post.is_felt == "0" ? true : false,
+                        {'postId': widget.post.id}));
                     setState(() {
                       handleLikeButtonPress();
                     });

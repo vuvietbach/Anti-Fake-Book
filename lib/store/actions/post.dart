@@ -50,6 +50,19 @@ class DeletePostAction
             extras: {'postId': postId, ...extras});
 }
 
+class FeelPostAction extends FutureAction<FeelPostAction, ResponseDTO>
+    implements PostAction {
+  String postId;
+  bool isKudos;
+  FeelPostAction(this.postId, this.isKudos, extras)
+      : super(
+            future: ApiModel.api.feelPost(postId, isKudos),
+            extras: {'postId': postId, ...extras});
+}
+
+typedef SuccessFeelPostAction
+    = FutureSucceededAction<FeelPostAction, ResponseDTO>;
+
 typedef PendingDeletePostAction = FuturePendingAction<DeletePostAction>;
 typedef SuccessDeletePostAction
     = FutureSucceededAction<DeletePostAction, ModifiedPostResponseDto>;

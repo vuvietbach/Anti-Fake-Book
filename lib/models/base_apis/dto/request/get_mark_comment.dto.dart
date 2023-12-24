@@ -6,7 +6,7 @@ class GetMarkCommentRequestDto {
   String id;
   int index;
   int count;
-  GetMarkCommentRequestDto(this.id, this.index, this.count);
+  GetMarkCommentRequestDto({required this.id, this.index = 0, this.count = 20});
   factory GetMarkCommentRequestDto.fromJson(Map<String, dynamic> json) =>
       _$GetMarkCommentRequestDtoFromJson(json);
   Map<String, dynamic> toJson() => _$GetMarkCommentRequestDtoToJson(this);

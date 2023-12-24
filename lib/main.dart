@@ -25,8 +25,6 @@ void main() async {
       initialState: initialState, middleware: [futureMiddleware]);
   WidgetsBinding.instance
       .addObserver(AppStateObserver(store: Plugins.antiFakeBookStore!));
-  ApiModel.token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcxLCJkZXZpY2VfaWQiOiJzdHJpbmciLCJpYXQiOjE3MDMzOTE2NTF9.LvtmXe9LcQ87fB1XrTLOTOMi52oKuqqYF-GnbztKJd8';
   runApp(AntiFakeBookApp(store: Plugins.antiFakeBookStore!));
 }
 

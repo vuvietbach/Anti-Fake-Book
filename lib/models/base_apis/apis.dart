@@ -5,6 +5,7 @@ import 'package:anti_fake_book/constants/base_apis.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/friend.dto.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/post.dto.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/friend.dto.dart';
+import 'package:anti_fake_book/plugins/index.dart';
 import 'package:dio/dio.dart';
 
 import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
@@ -42,10 +43,9 @@ class ApiModel {
         return handler.next(options);
       },
       onError: (DioException e, ErrorInterceptorHandler handler) {
-        const String? refreshToken = null;
-        if (refreshToken != null &&
-            e.response?.statusCode == HttpStatus.unauthorized) {
-          //todo: retry call api
+        if (e.response?.statusCode == HttpStatus.unauthorized ||
+            e.response?.data['code'] == '9998') {
+          Plugins.goRouter.go('/welcome');
         }
 
         return handler.next(e);
@@ -147,10 +147,10 @@ class ApiModel {
     return GetMarkCommentResponseDto.fromJson(rawResponse);
   }
 
-  Future<ResponseDTO> feelPost(String postId) async {
-    final rawResponse = await _dio.post(PathName.feelPost, data: {"id": postId})
-        as Map<String, dynamic>;
-    return ResponseDTO.fromJson(rawResponse);
+  Future<ResponseDTO> feelPost(String postId, bool isKudos) async {
+    final rawResponse = await _dio
+        .post(PathName.feelPost, data: {"id": postId, "type": isKudos ? 0 : 1});
+    return ResponseDTO.fromJson(rawResponse.data);
   }
 
   Future<ResponseDTO> setPushSetting(SetPushSettingRequest request) {
