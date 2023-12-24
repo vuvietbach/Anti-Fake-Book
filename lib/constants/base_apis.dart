@@ -49,4 +49,5 @@ abstract class PathName {
   static String unfriend = '/unfriend'; // da xong
   static String getListVideos = '/get_list_videos';
   static String getRecommendedFriends = '/get_suggested_friends';
+  static String setAcceptFriend = '/set_accept_friend';
 }

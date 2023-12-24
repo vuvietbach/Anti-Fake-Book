@@ -8,8 +8,10 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:go_router/go_router.dart';
 import 'package:redux/redux.dart';
 import 'dart:math';
+import '../../models/base_apis/dto/request/set_accept_friend.dto.dart';
 import '../../models/base_apis/dto/response/get_requested_friends.dto.dart';
 import '../../store/actions/requested_friends.dart';
+import '../../store/actions/set_accept_friend.dart';
 import '../../store/state/index.dart';
 import 'friend_subtab/all_friends.dart';
 
@@ -111,6 +113,26 @@ class _FriendPageContentState extends State<FriendPageContent> {
     // print('ok');
     // print(friendRequests[4].name);
     // print(friendRequests[4].imageUrl);
+  }
+
+  Future<void> SetAcceptFriend(String userId, String isAccept) async {
+    SetAcceptFriendRequestDTO setAcceptFriend = SetAcceptFriendRequestDTO(
+        token: store.state.token, user_id: userId, is_accept: isAccept);
+
+    Completer<void> completer = Completer<void>();
+
+    // Dispatch the action and listen for completion
+    store.dispatch(
+      SetAcceptFriendAction(
+        acceptInfo: setAcceptFriend,
+        onSuccess: () {
+          completer.complete();
+        },
+        onPending: () {},
+      ),
+    );
+
+    await completer.future;
   }
 
   @override
@@ -467,6 +489,11 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                                         child: const Text(
                                                             "Xác nhận"),
                                                         onPressed: () {
+                                                          SetAcceptFriend(
+                                                              friendRequests[
+                                                                      index]
+                                                                  .id,
+                                                              "1");
                                                           setState(() {
                                                             acceptInvite[
                                                                 index] = true;
@@ -516,6 +543,11 @@ class _FriendPageContentState extends State<FriendPageContent> {
                                                         child: const Text(
                                                             "Xác nhận"),
                                                         onPressed: () {
+                                                          SetAcceptFriend(
+                                                              friendRequests[
+                                                                      index]
+                                                                  .id,
+                                                              "0");
                                                           setState(() {
                                                             rejectInvite[
                                                                 index] = true;
