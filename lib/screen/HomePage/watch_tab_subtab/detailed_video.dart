@@ -70,7 +70,7 @@ class _DetailedVideoState extends State<DetailedVideo> {
           ],
         ),
         body: SingleChildScrollView(
-          child: VideoWidget(post: widget.post),
+          child: VideoWidget(post: widget.post, isDetailedPost: true),
         ));
   }
 }

@@ -23,6 +23,7 @@ import '../../models/base_apis/dto/request/get_list_videos.dart';
 import '../../models/base_apis/dto/request/set_request_friend.dto.dart';
 import '../../models/base_apis/dto/response/get_list_videos.dto.dart';
 import '../../plugins/index.dart';
+import '../../store/actions/block.dart';
 import '../../store/actions/listvideos.dart';
 import '../../store/actions/set_request_friend.dart';
 import '../../widgets/loading_widget.dart';
@@ -169,9 +170,11 @@ class Video {
   }
 }
 
-Video getPostState(int listPostId, Store<AntiFakeBookState> store) {
-  listPostId = min(listPostId, store.state.listVideosState.post.length - 1);
-  EachVideoPayloadDTO post = store.state.listVideosState.post[listPostId];
+Video getPostState(int listPostId) {
+  listPostId = min(listPostId,
+      (Plugins.antiFakeBookStore?.state.listVideosState.post.length ?? 0) - 1);
+  EachVideoPayloadDTO post =
+      Plugins.antiFakeBookStore!.state.listVideosState.post[listPostId];
   String id = post.id ?? "";
   String userId = post.author?.id ?? "";
   String username = post.author?.name ?? "";
@@ -266,11 +269,14 @@ class _VideoWidgetState extends State<VideoWidget> {
       {
         'icon': Icons.block,
         'title': "Chặn người chủ của video",
-        'action': () {
-          // Implement action for blocking the video owner
-        },
+        'action': blockUser,
       },
     ];
+  }
+
+  Future<void> blockUser() async {
+    Plugins.antiFakeBookStore!.dispatch(
+        SetBlockAction(widget.post.userId, true, {'context': context}));
   }
 
   Future<void> sendRequestFriend() async {
@@ -306,17 +312,14 @@ class _VideoWidgetState extends State<VideoWidget> {
         widget.post.is_felt = "0";
       });
     }
-    // EachPostPayloadDTO updatedPost = EachPostPayloadDTO(
-    //   id: widget.post.id,
-    //   isFelt: widget.post.is_felt,
-    // );
-    //
-    // store.dispatch(UpdateListPostAction(updatedPost, index));
   }
 
   @override
   Widget build(BuildContext context) {
     GlobalKey menuButtonKeys = GlobalKey();
+
+    Color textColor = widget.isDetailedPost ? Colors.white : Colors.black;
+    Color backgroundColor = widget.isDetailedPost ? Colors.black : Colors.white;
 
     if (widget.post.textSpans.length <= 30) {
       widget.post.displayedText = widget.post.textSpans;
@@ -326,9 +329,9 @@ class _VideoWidgetState extends State<VideoWidget> {
           : widget.post.textSpans.sublist(0, 30);
       if (!widget.post.showAllText) {
         widget.post.displayedText.add(
-          const TextSpan(
+          TextSpan(
             text: '...',
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: textColor),
           ),
         );
         widget.post.displayedText.add(
@@ -363,9 +366,9 @@ class _VideoWidgetState extends State<VideoWidget> {
           : widget.post.textSpans.sublist(0, 30);
       if (!widget.post.showAllText) {
         widget.post.displayedText.add(
-          const TextSpan(
+          TextSpan(
             text: '...',
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: textColor),
           ),
         );
         widget.post.displayedText.add(
@@ -386,7 +389,7 @@ class _VideoWidgetState extends State<VideoWidget> {
       }
     }
     return Container(
-      color: Colors.white,
+      color: backgroundColor,
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(10),
       child: Column(
@@ -417,16 +420,17 @@ class _VideoWidgetState extends State<VideoWidget> {
                 children: [
                   Text(
                     widget.post.userName,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: textColor),
                   ),
                   Row(
                     children: [
                       Text(
                         '${widget.post.timeAgo} • ',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 10,
-                        ),
+                        style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 10,
+                            color: textColor),
                       ),
                       const SizedBox(height: 20),
                       const Icon(
@@ -469,8 +473,14 @@ class _VideoWidgetState extends State<VideoWidget> {
             ],
           ),
           const SizedBox(height: 10),
-          RichText(
-            text: TextSpan(children: widget.post.displayedText),
+          Text(
+            widget.post.displayedText.map((span) {
+              if (span is TextSpan) {
+                return span.text;
+              }
+              return '';
+            }).join(),
+            style: TextStyle(color: textColor),
           ),
           const SizedBox(height: 10),
           widget.post.loadedVideo,
@@ -587,20 +597,16 @@ class ListVideo extends StatelessWidget {
   }
 }
 
-class _WatchTabContentState extends State<WatchTabContent> {
+class _WatchTabContentState extends State<WatchTabContent>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   final ScrollController _scrollController = ScrollController();
   int numberOfContainers = 10;
   bool isLoading = false;
 
   List<Video> listVideo = [];
-  late Store<AntiFakeBookState> store;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    store = StoreProvider.of<AntiFakeBookState>(context);
-    reloadContainers();
-  }
 
   @override
   void initState() {
@@ -614,11 +620,7 @@ class _WatchTabContentState extends State<WatchTabContent> {
         reloadContainers();
       }
     });
-    // store = StoreProvider.of<AntiFakeBookState>(context);
-    // reloadContainers();
-    listVideo = List.generate(numberOfContainers, (index) {
-      return FakeVideo();
-    });
+    reloadContainers();
   }
 
   void loadMoreContainers() {
@@ -635,7 +637,7 @@ class _WatchTabContentState extends State<WatchTabContent> {
     });
 
     GetListVideosRequestDTO getListVideos = GetListVideosRequestDTO(
-        token: store.state.token,
+        token: Plugins.antiFakeBookStore?.state.token ?? '',
         user_id: "",
         in_campaign: "1",
         campaign_id: "1",
@@ -647,7 +649,7 @@ class _WatchTabContentState extends State<WatchTabContent> {
 
     Completer<void> completer = Completer<void>();
 
-    store.dispatch(
+    Plugins.antiFakeBookStore?.dispatch(
       GetListVideosAction(
         videoData: getListVideos,
         onSuccess: () {
@@ -665,7 +667,7 @@ class _WatchTabContentState extends State<WatchTabContent> {
       isLoading = false;
     });
     for (int i = numberOfContainers - 10; i < numberOfContainers; i++) {
-      listVideo.add(getPostState(i, store));
+      listVideo.add(getPostState(i));
     }
   }
 
@@ -683,7 +685,7 @@ class _WatchTabContentState extends State<WatchTabContent> {
     });
 
     GetListVideosRequestDTO getListVideos = GetListVideosRequestDTO(
-        token: store.state.token,
+        token: Plugins.antiFakeBookStore?.state.token ?? '',
         user_id: "",
         in_campaign: "1",
         campaign_id: "1",
@@ -696,7 +698,7 @@ class _WatchTabContentState extends State<WatchTabContent> {
     Completer<void> completer = Completer<void>();
 
     // Dispatch the action and listen for completion
-    store.dispatch(
+    Plugins.antiFakeBookStore?.dispatch(
       GetListVideosAction(
         videoData: getListVideos,
         onSuccess: () {
@@ -715,7 +717,7 @@ class _WatchTabContentState extends State<WatchTabContent> {
     });
     listVideo = [];
     for (int i = 0; i < numberOfContainers; i++) {
-      listVideo.add(getPostState(i, store));
+      listVideo.add(getPostState(i));
     }
   }
 
