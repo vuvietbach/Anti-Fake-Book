@@ -196,21 +196,23 @@ class Post {
   }
 }
 
-Post getPostState(int listPostId, Store<AntiFakeBookState> store) {
-  listPostId = min(listPostId, store.state.listPostsState.post.length - 1);
-  EachPostPayloadDTO post = store.state.listPostsState.post[listPostId];
-  String id = post.id ?? "";
-  String userId = post.author?.id ?? "";
-  String username = post.author?.name ?? "";
-  String content = post.described ?? "";
+Post getPostState(int listPostId) {
+  listPostId = min(listPostId,
+      (Plugins.antiFakeBookStore?.state.listPostsState.post.length ?? 0) - 1);
+  EachPostPayloadDTO? post =
+      Plugins.antiFakeBookStore?.state.listPostsState.post[listPostId];
+  String id = post?.id ?? "";
+  String userId = post?.author?.id ?? "";
+  String username = post?.author?.name ?? "";
+  String content = post?.described ?? "";
 
-  int kudosCount = int.parse(post.feel ?? "0");
+  int kudosCount = int.parse(post?.feel ?? "0");
   // int disappointedCount = random.nextInt(200);
-  int commentCount = int.parse(post.commentMark ?? "0");
+  int commentCount = int.parse(post?.commentMark ?? "0");
 
   List<String> imageURL = [];
-  for (int i = 0; i < post.image.length; i++) {
-    imageURL.add(post.image[i].url ?? "");
+  for (int i = 0; i < post!.image.length; i++) {
+    imageURL.add(post?.image[i].url ?? "");
   }
 
   String? videoURL = post.video?.url;
@@ -443,10 +445,16 @@ class _PostWidgetState extends State<PostWidget> {
                   showModalBottomSheet(
                     context: context,
                     builder: (BuildContext context) {
+                      List<Map<String, dynamic>> modifiedOptions =
+                          widget.post.userId ==
+                                  Plugins.antiFakeBookStore?.state.userState
+                                      .userInfo.id
+                              ? menuOptions
+                              : menuOptions.sublist(0, 2);
                       return Container(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
-                          children: menuOptions.map((option) {
+                          children: modifiedOptions.map((option) {
                             return ListTile(
                               leading: Icon(option['icon']),
                               title: Text(option['title']),
@@ -694,27 +702,34 @@ class _ListPostState extends State<ListPost> {
                   const SizedBox(height: 10),
                 ]);
               }
-              return PostWidget(
-                post: widget.listPost[index],
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          DetailedPost(post: widget.listPost[index]),
+                    ),
+                  );
+                },
+                child: PostWidget(
+                  post: widget.listPost[index],
+                ),
               );
             }));
   }
 }
 
-class _PostHomePageContentState extends State<PostHomePageContent> {
+class _PostHomePageContentState extends State<PostHomePageContent>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   final ScrollController _scrollController = ScrollController();
   int numberOfContainers = 10;
   bool isLoading = false;
 
   List<Post> listPost = [];
-  late Store<AntiFakeBookState> store;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    store = StoreProvider.of<AntiFakeBookState>(context);
-    reloadContainers();
-  }
 
   @override
   void initState() {
@@ -728,11 +743,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
         reloadContainers();
       }
     });
-    // store = StoreProvider.of<AntiFakeBookState>(context);
-    // reloadContainers();
-    listPost = List.generate(numberOfContainers, (index) {
-      return FakePost();
-    });
+    reloadContainers();
   }
 
   void loadMoreContainers() {
@@ -763,7 +774,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
 
     Completer<void> completer = Completer<void>();
 
-    store.dispatch(
+    Plugins.antiFakeBookStore?.dispatch(
       GetListPostsAction(
         postData: getListPosts,
         onSuccess: () {
@@ -781,7 +792,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
       isLoading = false;
     });
     for (int i = numberOfContainers - 10; i < numberOfContainers; i++) {
-      listPost.add(getPostState(i, store));
+      listPost.add(getPostState(i));
     }
   }
 
@@ -813,7 +824,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
     Completer<void> completer = Completer<void>();
 
     // Dispatch the action and listen for completion
-    store.dispatch(
+    Plugins.antiFakeBookStore?.dispatch(
       GetListPostsAction(
         postData: getListPosts,
         onSuccess: () {
@@ -832,7 +843,7 @@ class _PostHomePageContentState extends State<PostHomePageContent> {
     });
     listPost = [];
     for (int i = 0; i < numberOfContainers; i++) {
-      listPost.add(getPostState(i, store));
+      listPost.add(getPostState(i));
     }
   }
 

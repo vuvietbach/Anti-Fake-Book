@@ -29,7 +29,7 @@ final GoRouter router = GoRouter(routes: [
       builder: (BuildContext context, GoRouterState stage) {
         // return const EmptyLayout(child: FriendListPage(username: "toi",));
         return const EmptyLayout(
-          child: ProfilePage(),
+          child: HomePage(),
         );
       },
       routes: [
