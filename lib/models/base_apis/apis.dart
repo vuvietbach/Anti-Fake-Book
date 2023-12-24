@@ -14,12 +14,15 @@ import 'dto/request/get_list_posts.dart';
 import 'dto/request/get_list_videos.dart';
 import 'dto/request/get_recommended_friends.dto.dart';
 import 'dto/request/index.dart';
+import 'dto/request/set_accept_friend.dto.dart';
 import 'dto/response/get_list_posts.dto.dart';
 import 'dto/response/get_list_videos.dto.dart';
 import 'dto/response/get_recommended_friends.dto.dart';
 import 'dto/response/index.dart';
 import 'package:anti_fake_book/utils.dart';
 import 'package:anti_fake_book/global_type/user/user_summary.entity.dart';
+
+import 'dto/response/set_accept_friend.dto.dart';
 
 class ApiModel {
   late final String _baseUrl;
@@ -450,6 +453,59 @@ class ApiModel {
     // print(GetRecommendedFriendsResponseDTO.fromJson(response.data));
 
     return GetRecommendedFriendsResponseDTO.fromJson(response.data);
+  }
+
+  Future<SetAcceptFriendResponseDTO> SetAcceptFriend(
+      SetAcceptFriendRequestDTO data) async {
+    // try {
+    //   final response = await _dio.post(
+    //     PathName.setAcceptFriend,
+    //     data: {
+    //       'user_id': data.user_id,
+    //       'is_accept': data.is_accept,
+    //     },
+    //     options: Options(
+    //       headers: {
+    //         'Authorization': 'Bearer ${data.token}',
+    //       },
+    //     ),
+    //   );
+    //
+    //   final requestUrl = response.requestOptions.uri.toString();
+    //   print('Request URL: $requestUrl');
+    //   print('Status Code: ${response.statusCode}');
+    //
+    //   return SetAcceptFriendResponseDTO.fromJson(response.data);
+    // } catch (error) {
+    //   // Print the error message from the server response
+    //   if (error is DioError && error.response != null) {
+    //     print('Error Status Code: ${error.response!.statusCode}');
+    //     print('Error Message: ${error.response!.data}');
+    //   } else {
+    //     print('Unexpected Error: $error');
+    //   }
+    //
+    //   // You might want to throw or handle the error accordingly
+    //   throw error;
+    // }
+
+    final response = await _dio.post(
+      PathName.setAcceptFriend,
+      data: {
+        'user_id': data.user_id,
+        'is_accept': data.is_accept,
+      },
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer ${data.token}',
+        },
+      ),
+    );
+
+    print('here');
+    print(response.statusCode);
+
+    return SetAcceptFriendResponseDTO.fromJson(response.data);
   }
 }
 
