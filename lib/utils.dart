@@ -186,19 +186,6 @@ bool isErrorCode(int code) {
 }
 
 //Convert Uint8List to  MultipartFile.fromBytes(e, filename: e.toString()) recursively
-convertUint8ListToMultipartFile(input) {
-  if (input is Uint8List) {
-    return MultipartFile.fromBytes(input, filename: input.toString());
-  } else if (input is List) {
-    return input.map((e) => convertUint8ListToMultipartFile(e)).toList();
-  }
-  if (input is Map) {
-    return input.map((key, value) {
-      return MapEntry(key, convertUint8ListToMultipartFile(value));
-    });
-  }
-  return input;
-}
 
 String timeAgo(DateTime created) {
   int difference = DateTime.now().difference(created).inDays;

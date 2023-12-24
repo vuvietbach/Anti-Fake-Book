@@ -1,9 +1,18 @@
+import 'dart:convert';
+
 import 'package:anti_fake_book/utils.dart';
+import 'package:json_annotation/json_annotation.dart';
 part 'report_post.dto.g.dart';
+
+String listToString(List<String> value) {
+  return value.join(',');
+}
 
 @customJsonSerializable
 class ReportPostRequestDto {
   final String id;
+  //convert to string
+  @JsonKey(toJson: listToString)
   final List<String> subject;
   final String details;
   ReportPostRequestDto(

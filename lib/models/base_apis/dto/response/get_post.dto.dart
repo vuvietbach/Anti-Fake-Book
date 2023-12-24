@@ -81,8 +81,8 @@ class AuthorPostPayloadDTO with _$AuthorPostPayloadDTO {
 class ImagePayloadDTO with _$ImagePayloadDTO {
   @customJsonSerializable
   factory ImagePayloadDTO({
-    required String id,
-    required String url,
+    @Default('') String id,
+    @Default('') String url,
     Uint8List? bytes,
   }) = _ImagePayloadDTO;
 

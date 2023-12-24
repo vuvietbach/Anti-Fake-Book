@@ -1,3 +1,4 @@
+import 'package:anti_fake_book/screen/posts/mark.dart';
 import 'package:anti_fake_book/screen/profile/friend_list.dart';
 import 'package:anti_fake_book/screen/profile/profile.dart';
 import 'package:anti_fake_book/screen/sign_in/sign_in.dart';
@@ -29,14 +30,18 @@ final GoRouter router = GoRouter(routes: [
       builder: (BuildContext context, GoRouterState stage) {
         // return const EmptyLayout(child: FriendListPage(username: "toi",));
         return const EmptyLayout(
-          child: HomePage(),
+          child: CheckLoginWrapper(
+            child: HomePage(),
+          ),
         );
       },
       routes: [
         GoRoute(
             path: 'create-post',
-            builder: (BuildContext context, GoRouterState stage) =>
-                const EmptyLayout(child: CreatePostScreen()),
+            builder: (BuildContext context, GoRouterState stage) {
+              final String? postId = stage.extra as String?;
+              return EmptyLayout(child: CreatePostScreen(postId: postId));
+            },
             routes: [
               GoRoute(
                 path: 'emotions',
@@ -50,6 +55,14 @@ final GoRouter router = GoRouter(routes: [
               return const HomeFake();
             },
             routes: [
+              GoRoute(
+                  path: 'comment',
+                  builder: (BuildContext context, GoRouterState stage) {
+                    final String postId = stage.pathParameters['id'] ?? '';
+                    return MarkPostScreenWidget(
+                      postId: postId,
+                    );
+                  }),
               GoRoute(
                   path: 'report',
                   builder: (BuildContext context, GoRouterState stage) =>

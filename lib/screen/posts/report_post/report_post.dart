@@ -80,8 +80,8 @@ class _ReportPostScreenStage extends State<ReportPostScreenWidget> {
                   child: ElevatedButton(
                     onPressed: listSelected.length > 0
                         ? () {
-                            context.go(
-                                '${GoRouterState.of(context).fullPath!}/confirm',
+                            context.push(
+                                '${GoRouterState.of(context).uri}/confirm',
                                 extra: listSelected);
                           }
                         : null,

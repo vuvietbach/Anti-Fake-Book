@@ -46,7 +46,7 @@ AntiFakeBookState onDefaultFaulureAction(
   bool isStandardError = true;
   ResponseDTO? responseDTO;
   try {
-    print(action.error.response!.data);
+    print(action.error);
     responseDTO = ResponseDTO.fromJson(action.error.response!.data);
   } catch (e) {
     print(e);
@@ -75,6 +75,8 @@ AntiFakeBookState onDefaultFaulureAction(
 }
 
 final antiFakeBookReducers = combineReducers<AntiFakeBookState>([
+  TypedReducer<AntiFakeBookState, PendingDeletePostAction>(onDeletePostPending),
+  TypedReducer<AntiFakeBookState, SuccessDeletePostAction>(onDeletePostSuccess),
   TypedReducer<AntiFakeBookState, SuccessGetListBlocksAction>(
       onSuccessGetListBlocksAction),
   TypedReducer<AntiFakeBookState, SuccessSetBlockAction>(

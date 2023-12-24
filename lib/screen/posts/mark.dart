@@ -1,9 +1,9 @@
-import 'package:anti_fake_book/widgets/common/oval_seclection.dart';
 import 'package:anti_fake_book/widgets/posts/comment.dart';
 import 'package:flutter/material.dart';
 
 class MarkPostScreenWidget extends StatefulWidget {
-  const MarkPostScreenWidget({Key? key}) : super(key: key);
+  String postId;
+  MarkPostScreenWidget({Key? key, required this.postId}) : super(key: key);
 
   @override
   _MarkPostScreenWidgetState createState() => _MarkPostScreenWidgetState();

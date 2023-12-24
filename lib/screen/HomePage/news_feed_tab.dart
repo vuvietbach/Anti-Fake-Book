@@ -1,15 +1,19 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:anti_fake_book/models/base_apis/dto/request/post.dto.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/get_list_posts.dto.dart';
+import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
+import 'package:anti_fake_book/models/cached_http_request.dart';
 import 'package:anti_fake_book/screen/HomePage/news_feed_subtab/detailed_post.dart';
+import 'package:anti_fake_book/store/actions/post.dart';
 import 'package:chewie/chewie.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:go_router/go_router.dart';
 import 'package:redux/redux.dart';
-import 'dart:ui';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:video_player/video_player.dart';
 import 'package:faker/faker.dart';
@@ -17,12 +21,9 @@ import 'dart:math';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
-import '../../models/base_apis/dto/request/get_list_posts.dart';
 import '../../plugins/index.dart';
 import '../../store/actions/listposts.dart';
-import '../../store/reducers/listposts.dart';
 import '../../store/state/index.dart';
-import '../../utils.dart';
 import '../../widgets/loading_widget.dart';
 
 final List<String> imageAssets = [
@@ -289,6 +290,10 @@ List<Map<String, dynamic>> menuOptions = [
     'icon': Icons.edit,
     'title': "Chỉnh sửa bài viết",
   },
+  {
+    'icon': Icons.report,
+    'title': "Báo cáo",
+  },
 ];
 
 class _PostWidgetState extends State<PostWidget> {
@@ -459,7 +464,57 @@ class _PostWidgetState extends State<PostWidget> {
                               leading: Icon(option['icon']),
                               title: Text(option['title']),
                               onTap: () {
-                                // Handle the menu option tap
+                                final String postId = widget.post.id;
+                                switch (option['title']) {
+                                  case "Xóa":
+                                    {
+                                      Plugins.antiFakeBookStore!.dispatch(
+                                          DeletePostAction(
+                                              postId, {'postId': postId}));
+                                      break;
+                                    }
+                                  case "Chỉnh sửa bài viết":
+                                    {
+                                      //                                       var response =  cachedRequest.get(widget.url,
+                                      //     options: Options(responseType: ResponseType.bytes));
+                                      // return Uint8List.fromList(response.data as List<int>);
+
+                                      var listFuture = widget.post.imageURL
+                                          .map((e) => cachedRequest.get(e,
+                                              options: Options(
+                                                  responseType:
+                                                      ResponseType.bytes)))
+                                          .toList();
+                                      var store = Plugins.antiFakeBookStore!;
+                                      Future.wait(listFuture).then((value) {
+                                        store.dispatch(SetSelectedPostAction(store
+                                            .state.postState.selected
+                                            .copyWith(
+                                                described: widget.post.content,
+                                                images: value
+                                                    .map((e) => ImagePayloadDTO(
+                                                        id: '',
+                                                        url: '',
+                                                        bytes:
+                                                            Uint8List.fromList(e
+                                                                    .data
+                                                                as List<int>)))
+                                                    .toList())));
+                                      });
+                                      store.dispatch(SetSelectedPostAction(store
+                                          .state.postState.selected
+                                          .copyWith(
+                                        described: widget.post.content,
+                                      )));
+                                      context.go('/create-post',
+                                          extra: widget.post.id);
+                                      break;
+                                    }
+                                  case 'Báo cáo':
+                                    {
+                                      context.push('/post/$postId/report');
+                                    }
+                                }
                                 Navigator.pop(
                                     context); // Close the bottom sheet after action
                               },
@@ -571,8 +626,8 @@ class _PostWidgetState extends State<PostWidget> {
                     ),
                   ),
                   onPressed: () {
-                    // Add functionality for the Comment button
-                    // You can navigate to a chat screen or perform any other action
+                    String postId = widget.post.id;
+                    context.push('/post/$postId/comment');
                   },
                   icon: const Icon(Icons.message),
                   label: Text(
@@ -813,16 +868,6 @@ class _PostHomePageContentState extends State<PostHomePageContent>
       isLoading = true;
     });
 
-    // GetListPostsRequestDTO getListPosts = GetListPostsRequestDTO(
-    //     token: store.state.token,
-    //     user_id: "",
-    //     in_campaign: "1",
-    //     campaign_id: "1",
-    //     latitude: "1.0",
-    //     longitude: "1.0",
-    //     last_id: "0",
-    //     index: "0",
-    //     count: "10");
     final getListPosts = GetListPostsRequest(index: 0, count: 10);
 
     Completer<void> completer = Completer<void>();

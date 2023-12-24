@@ -24,20 +24,14 @@ import '../../widgets/common/text_button.dart';
 import '../../constants/post.dart';
 
 class CreatePostScreen extends StatefulWidget {
-  const CreatePostScreen({super.key});
+  final String? postId;
+  const CreatePostScreen({super.key, this.postId});
   @override
   // ignore: library_private_types_in_public_api
   _CreatePostScreenState createState() => _CreatePostScreenState();
 }
 
 class _CreatePostScreenState extends State<CreatePostScreen> {
-  // AddPostRequestDTO postData = AddPostRequestDTO();
-  // bool get isHaveContent {
-  //   return postData.described.isNotEmpty ||
-  //       postData.image.isNotEmpty ||
-  //       postData.video.isNotEmpty;
-  // }
-
   _getImageOnPressed(_CreatePostViewModel vm) {
     return () async {
       try {
@@ -64,7 +58,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   }
 
   void _getEmotionOnPressed() {
-    context.go('/create-post/emotions');
+    context.push('/create-post/emotions');
   }
 
   // final List<ListButtonItemConfig> listButtonConfig = [];
@@ -126,7 +120,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             },
             child: Scaffold(
               appBar: CommonAppBar(
-                title: 'Tạo bài đăng',
+                title: widget.postId != null
+                    ? 'Tạo bài đăng'
+                    : 'Chỉnh sửa bài đăng',
                 context: context,
                 onPressedLeading: () {
                   // cập nhật state isShowButtonSheet thành true
@@ -138,7 +134,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   createTextButton(
                       isDisable: !vm.isHaveContent,
                       onPressed: () {
-                        vm.onCreatePost();
+                        vm.onCreatePost(widget.postId);
                       },
                       title: 'Đăng'),
                 ],
@@ -185,14 +181,15 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                               vm.updateDescribed(value);
                             },
                           ),
-                          if (vm.postData.image.isNotEmpty)
+                          if (vm.postData.image!.isNotEmpty)
                             GridView.count(
                               crossAxisCount: 2,
                               shrinkWrap: true,
                               mainAxisSpacing: 0.5,
                               crossAxisSpacing: 0.5,
                               physics: const ScrollPhysics(),
-                              children: vm.postData.image.map((Uint8List file) {
+                              children:
+                                  vm.postData.image!.map((Uint8List file) {
                                 return Stack(
                                   alignment: Alignment.topRight,
                                   children: <Widget>[
@@ -261,15 +258,15 @@ class _CreatePostViewModel {
   late final UserState userInfomation;
   bool get isHaveContent {
     return postData.described.isNotEmpty ||
-        postData.image.isNotEmpty ||
-        postData.video.isNotEmpty;
+        postData.image!.isNotEmpty ||
+        postData.video!.isNotEmpty;
   }
 
   late final Function addImage;
   late final Function removeImage;
   late final Function updateDescribed;
   late final Function onEditPost;
-  late final Function onCreatePost;
+  late final Function(String? postId) onCreatePost;
   late final Function onClearPost;
   final Function onPendingLoading;
   final Function onSuccessLoading;
@@ -300,7 +297,11 @@ class _CreatePostViewModel {
           store.state.postState.selected.copyWith(described: described)));
     };
 
-    onCreatePost = () {
+    onCreatePost = (String? postId) {
+      postData.status = store.state.postState.selected.status ?? 'Happy';
+      if (postId != null) {
+        store.dispatch(DeletePostAction(postId, {'postId': postId}));
+      }
       store.dispatch(CreatePostAction(
           postData, onPendingLoading, onSuccessLoading, {'context': context}));
       onClearPost();

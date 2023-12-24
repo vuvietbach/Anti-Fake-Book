@@ -73,8 +73,30 @@ class ApiModel {
 
   Future<AddPostResponseDTO> addPost(AddPostRequestDTO addPostData) async {
     //Chuyển addPostData thành FormDataf
-    final formData = convertUint8ListToMultipartFile(addPostData.toJson());
+    final formData = FormData.fromMap({
+      'status': addPostData.status,
+      'described': addPostData.described,
+    });
+    addPostData.video.forEach((element) {
+      formData.files.add(MapEntry(
+          'video',
+          MultipartFile.fromBytes(
+            element,
+            contentType: MediaType('video', 'mp4'),
+            filename: 'video.mp4',
+          )));
+    });
+    addPostData.image.forEach((element) {
+      formData.files.add(MapEntry(
+          'image',
+          MultipartFile.fromBytes(
+            element,
+            contentType: MediaType('image', 'jpg'),
+            filename: 'image.jpg',
+          )));
+    });
     final response = await _dio.post(PathName.addPost, data: formData);
+    print(response);
     AddPostResponseDTO addPostResponseDTO =
         AddPostResponseDTO.fromJson(response.data);
     return addPostResponseDTO;
@@ -87,8 +109,15 @@ class ApiModel {
 
   Future<ModifiedPostResponseDto> editPost(
       EditPostRequestDto editPostRequest) async {
-    final jsonData = convertUint8ListToMultipartFile(editPostRequest.toJson());
-    final formData = FormData.fromMap(jsonData);
+    // final jsonData = convertUint8ListToMultipartFile(editPostRequest.toJson());
+    final formData = FormData.fromMap({
+      'id': editPostRequest.id,
+      'described': editPostRequest.described,
+      'status': editPostRequest.status,
+      'imageDel': editPostRequest.imageDel,
+      'imageSort': editPostRequest.imageSort,
+      'autoAccept': editPostRequest.autoAccept,
+    });
     final response = await _dio.post(PathName.editPost, data: formData);
     ModifiedPostResponseDto modifiedPostResponseDto =
         ModifiedPostResponseDto.fromJson(response.data);

@@ -40,6 +40,20 @@ class ReportPostAction extends FutureAction<ReportPostAction, ResponseDTO>
       : super(future: ApiModel.api.reportPost(reportData));
 }
 
+class DeletePostAction
+    extends FutureAction<DeletePostAction, ModifiedPostResponseDto>
+    implements PostAction {
+  String postId;
+  DeletePostAction(this.postId, extras)
+      : super(
+            future: ApiModel.api.deletePost(postId),
+            extras: {'postId': postId, ...extras});
+}
+
+typedef PendingDeletePostAction = FuturePendingAction<DeletePostAction>;
+typedef SuccessDeletePostAction
+    = FutureSucceededAction<DeletePostAction, ModifiedPostResponseDto>;
+
 typedef PendingReportPostAction = FuturePendingAction<ReportPostAction>;
 typedef SuccessReportPostAction
     = FutureSucceededAction<ReportPostAction, ResponseDTO>;
