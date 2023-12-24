@@ -219,7 +219,7 @@ class FriendListTile extends StatelessWidget {
                   onPressed: () {
                     Navigator.pop(context);
                     Navigator.pop(context);
-                    // onUnfriend?.call(info.id);
+                    onUnfriend?.call(info.id);
                   },
                   child: const Text("Xác nhận"))
             ],

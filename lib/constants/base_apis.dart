@@ -50,4 +50,5 @@ abstract class PathName {
   static String getListVideos = '/get_list_videos';
   static String getRecommendedFriends = '/get_suggested_friends';
   static String setAcceptFriend = '/set_accept_friend';
+  static String setRequestFriend = '/set_request_friend';
 }

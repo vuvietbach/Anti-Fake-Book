@@ -20,9 +20,11 @@ import 'package:visibility_detector/visibility_detector.dart';
 import 'dart:math';
 
 import '../../models/base_apis/dto/request/get_list_videos.dart';
+import '../../models/base_apis/dto/request/set_request_friend.dto.dart';
 import '../../models/base_apis/dto/response/get_list_videos.dto.dart';
 import '../../plugins/index.dart';
 import '../../store/actions/listvideos.dart';
+import '../../store/actions/set_request_friend.dart';
 import '../../widgets/loading_widget.dart';
 
 final List<String> imageAssets = [
@@ -239,31 +241,59 @@ String formatCount(int count) {
   }
 }
 
-final List<Map<String, dynamic>> menuOptions = [
-  {
-    'icon': Icons.flag,
-    'title': "Báo cáo video",
-    'action': () {
-      // Implement action for reporting video
-    },
-  },
-  {
-    'icon': Icons.person_add,
-    'title': "Kết bạn chủ của video",
-    'action': () {
-      // Implement action for adding as friend
-    },
-  },
-  {
-    'icon': Icons.block,
-    'title': "Chặn người chủ của video",
-    'action': () {
-      // Implement action for blocking the video owner
-    },
-  },
-];
-
 class _VideoWidgetState extends State<VideoWidget> {
+  late List<Map<String, dynamic>> menuOptions;
+  @override
+  void initState() {
+    super.initState();
+    initializeMenuOptions();
+  }
+
+  void initializeMenuOptions() {
+    menuOptions = [
+      {
+        'icon': Icons.flag,
+        'title': "Báo cáo video",
+        'action': () {
+          // Implement action for reporting video
+        },
+      },
+      {
+        'icon': Icons.person_add,
+        'title': "Kết bạn chủ của video",
+        'action': sendRequestFriend,
+      },
+      {
+        'icon': Icons.block,
+        'title': "Chặn người chủ của video",
+        'action': () {
+          // Implement action for blocking the video owner
+        },
+      },
+    ];
+  }
+
+  Future<void> sendRequestFriend() async {
+    SetRequestFriendRequestDTO setRequestFriends = SetRequestFriendRequestDTO(
+        token: Plugins.antiFakeBookStore!.state.token,
+        user_id: widget.post.userId);
+
+    Completer<void> completer = Completer<void>();
+
+    // Dispatch the action and listen for completion
+    Plugins.antiFakeBookStore?.dispatch(
+      SetRequestInviteAction(
+        requestInfo: setRequestFriends,
+        onSuccess: () {
+          completer.complete();
+        },
+        onPending: () {},
+      ),
+    );
+
+    await completer.future;
+  }
+
   void handleLikeButtonPress() {
     if (widget.post.is_felt == "0") {
       setState(() {
@@ -701,36 +731,12 @@ class _WatchTabContentState extends State<WatchTabContent> {
     }
   }
 
-  final List<Map<String, dynamic>> menuOptions = [
-    {
-      'icon': Icons.flag,
-      'title': "Báo cáo video",
-      'action': () {
-        // Implement action for reporting video
-      },
-    },
-    {
-      'icon': Icons.person_add,
-      'title': "Kết bạn video",
-      'action': () {
-        // Implement action for adding as friend
-      },
-    },
-    {
-      'icon': Icons.block,
-      'title': "Chặn người chủ của video",
-      'action': () {
-        // Implement action for blocking the video owner
-      },
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
     return StoreBuilder(
       builder: (BuildContext context, Store<AntiFakeBookState> store) {
         return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 5.0),
+          padding: const EdgeInsets.symmetric(horizontal: 5.0),
           child: Stack(
             children: [
               Column(
@@ -756,6 +762,6 @@ class WatchTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WatchTabContent();
+    return const WatchTabContent();
   }
 }
