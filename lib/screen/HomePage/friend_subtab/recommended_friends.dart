@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:anti_fake_book/models/base_apis/dto/request/get_recommended_friends.dto.dart';
+import 'package:anti_fake_book/models/base_apis/dto/request/set_request_friend.dto.dart';
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -11,6 +12,7 @@ import 'package:redux/redux.dart';
 import '../../../models/base_apis/dto/response/get_recommended_friends.dto.dart';
 import '../../../plugins/index.dart';
 import '../../../store/actions/recommended_friends.dart';
+import '../../../store/actions/set_request_friend.dart';
 import '../../../store/state/index.dart';
 
 class Friend {
@@ -93,6 +95,26 @@ class _RecommendedFriendsState extends State<RecommendedFriends> {
     for (int i = 0; i < numberOfContainers; i++) {
       recommendedFriends.add(getRecommendedFriendState(i));
     }
+  }
+
+  Future<void> sendRequestFriend(userId) async {
+    SetRequestFriendRequestDTO setRequestFriends =
+        SetRequestFriendRequestDTO(token: store.state.token, user_id: userId);
+
+    Completer<void> completer = Completer<void>();
+
+    // Dispatch the action and listen for completion
+    store.dispatch(
+      SetRequestInviteAction(
+        requestInfo: setRequestFriends,
+        onSuccess: () {
+          completer.complete();
+        },
+        onPending: () {},
+      ),
+    );
+
+    await completer.future;
   }
 
   @override
@@ -208,6 +230,10 @@ class _RecommendedFriendsState extends State<RecommendedFriends> {
                                                             child: const Text(
                                                                 "Xác nhận"),
                                                             onPressed: () {
+                                                              sendRequestFriend(
+                                                                  recommendedFriends[
+                                                                          index]
+                                                                      .id);
                                                               setState(() {
                                                                 sendRequest[
                                                                         index] =

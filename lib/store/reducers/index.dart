@@ -19,6 +19,7 @@ import 'package:anti_fake_book/store/reducers/recommended_friends.dart';
 import 'package:anti_fake_book/store/reducers/requested_friends.dart';
 import 'package:anti_fake_book/store/reducers/search.dart';
 import 'package:anti_fake_book/store/reducers/set_accept_friend.dart';
+import 'package:anti_fake_book/store/reducers/set_request_friend.dart';
 import 'package:anti_fake_book/store/reducers/user_info.dart';
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
@@ -27,6 +28,7 @@ import 'package:redux_future_middleware/redux_future_middleware.dart';
 import '../actions/index.dart';
 import '../actions/listposts.dart';
 import '../actions/set_accept_friend.dart';
+import '../actions/set_request_friend.dart';
 import '../state/index.dart';
 import 'listposts.dart';
 import 'listvideos.dart';
@@ -144,7 +146,10 @@ final antiFakeBookReducers = combineReducers<AntiFakeBookState>([
       onSetAcceptFriendSuccess),
   TypedReducer<AntiFakeBookState, PendingSetAcceptFriendAction>(
       onSetAcceptFriendPending),
-
+  TypedReducer<AntiFakeBookState, SuccessSetRequestFriendAction>(
+      onSetRequestInviteSuccess),
+  TypedReducer<AntiFakeBookState, PendingSetRequestFriendAction>(
+      onSetRequestInvitePending),
   // TypedReducer<AntiFakeBookState, PendingSetReadMessageAction>(onPendingSetReadMessage),
   // TypedReducer<AntiFakeBookState, SuccessSetReadMessageAction>(onSuccessSetReadMessage),
   // TypedReducer<AntiFakeBookState, PendingDeleteMessageAction>(onPendingDeleteMessage),

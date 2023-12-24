@@ -15,6 +15,7 @@ import 'dto/request/get_list_videos.dart';
 import 'dto/request/get_recommended_friends.dto.dart';
 import 'dto/request/index.dart';
 import 'dto/request/set_accept_friend.dto.dart';
+import 'dto/request/set_request_friend.dto.dart';
 import 'dto/response/get_list_posts.dto.dart';
 import 'dto/response/get_list_videos.dto.dart';
 import 'dto/response/get_recommended_friends.dto.dart';
@@ -502,10 +503,30 @@ class ApiModel {
       ),
     );
 
+    // print('here');
+    // print(response.statusCode);
+
+    return SetAcceptFriendResponseDTO.fromJson(response.data);
+  }
+
+  Future<SetRequestFriendResponseDTO> SetRequestFriend(
+      SetRequestFriendRequestDTO data) async {
+    final response = await _dio.post(
+      PathName.setRequestFriend,
+      data: {
+        'user_id': data.user_id,
+      },
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer ${data.token}',
+        },
+      ),
+    );
+
     print('here');
     print(response.statusCode);
 
-    return SetAcceptFriendResponseDTO.fromJson(response.data);
+    return SetRequestFriendResponseDTO.fromJson(response.data);
   }
 }
 
