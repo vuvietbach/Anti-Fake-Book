@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:anti_fake_book/layout/default_layer.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/post.dto.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/get_list_posts.dto.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/index.dart';
@@ -384,7 +385,8 @@ class _PostWidgetState extends State<PostWidget> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DetailedPost(post: widget.post),
+                      builder: (context) =>
+                          EmptyLayout(child: DetailedPost(post: widget.post)),
                     ),
                   );
                 },
@@ -554,7 +556,8 @@ class _PostWidgetState extends State<PostWidget> {
                     Navigator.push(
                       contextImage,
                       MaterialPageRoute(
-                        builder: (contextImage) => Scaffold(
+                        builder: (contextImage) => EmptyLayout(
+                            child: Scaffold(
                           body: PhotoViewGallery.builder(
                             itemCount: widget.post.imageURL.length,
                             builder: (contextImage, indexImage) {
@@ -577,7 +580,7 @@ class _PostWidgetState extends State<PostWidget> {
                             pageController:
                                 PageController(initialPage: imageIndex),
                           ),
-                        ),
+                        )),
                       ),
                     );
                   },
@@ -783,8 +786,8 @@ class _ListPostState extends State<ListPost> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          DetailedPost(post: widget.listPost[index]),
+                      builder: (context) => EmptyLayout(
+                          child: DetailedPost(post: widget.listPost[index])),
                     ),
                   );
                 },

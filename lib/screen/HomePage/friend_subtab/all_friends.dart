@@ -87,18 +87,18 @@ class _AllFriendsState extends State<AllFriends> {
                   backgroundImage:
                       AssetImage(allFriends[currentIndex].imageUrl),
                 ),
-                SizedBox(width: 14),
+                const SizedBox(width: 14),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       allFriends[currentIndex].name,
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       'Là bạn bè từ tháng ${allFriends[currentIndex].friendFromMonth} năm ${allFriends[currentIndex].friendFromYear}',
-                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                      style: const TextStyle(fontSize: 14, color: Colors.grey),
                     )
                   ],
                 ),
@@ -110,9 +110,9 @@ class _AllFriendsState extends State<AllFriends> {
             color: Colors.grey[300],
           ),
           ListTile(
-            leading: Icon(Icons.message),
+            leading: const Icon(Icons.message),
             title: Text('Nhắn tin cho ${allFriends[currentIndex].firstName}',
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                 )),
             onTap: () {
@@ -124,12 +124,12 @@ class _AllFriendsState extends State<AllFriends> {
             },
           ),
           ListTile(
-            leading: Icon(Icons.remove_circle),
+            leading: const Icon(Icons.remove_circle),
             title: Text('Bỏ theo dõi ${allFriends[currentIndex].firstName}',
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                 )),
-            subtitle: Text(
+            subtitle: const Text(
                 'Không nhìn thấy bài viết của nhau nữa nhưng vẫn là bạn bè',
                 style: TextStyle(color: Colors.grey)),
             onTap: () {
@@ -141,14 +141,14 @@ class _AllFriendsState extends State<AllFriends> {
             },
           ),
           ListTile(
-            leading: Icon(Icons.block),
+            leading: const Icon(Icons.block),
             title: Text('Chặn ${allFriends[currentIndex].firstName}',
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                 )),
             subtitle: Text(
                 '${allFriends[currentIndex].firstName} sẽ không thể nhìn thấy bạn hoặc liên hệ với bạn trên AntiFakebook',
-                style: TextStyle(color: Colors.grey)),
+                style: const TextStyle(color: Colors.grey)),
             onTap: () {
               // Xử lý khi nhấn vào tùy chọn "Chặn"
               // Đóng BottomSheet sau khi xử lý
@@ -158,15 +158,15 @@ class _AllFriendsState extends State<AllFriends> {
             },
           ),
           ListTile(
-            leading: Icon(Icons.delete),
+            leading: const Icon(Icons.delete),
             title: Text('Hủy kết bạn với ${allFriends[currentIndex].firstName}',
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.red,
                   fontWeight: FontWeight.bold,
                 )),
             subtitle: Text(
                 'Xóa ${allFriends[currentIndex].firstName} khỏi danh sách bạn bè',
-                style: TextStyle(color: Colors.grey)),
+                style: const TextStyle(color: Colors.grey)),
             onTap: () {
               // Xử lý khi nhấn vào tùy chọn "Hủy kết bạn"
               // Đóng BottomSheet sau khi xử lý
@@ -186,7 +186,7 @@ class _AllFriendsState extends State<AllFriends> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Tất cả bạn bè',
           style: TextStyle(
             color: Colors.black,
@@ -197,7 +197,7 @@ class _AllFriendsState extends State<AllFriends> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
         ),
         actions: [
           IconButton(
@@ -214,18 +214,18 @@ class _AllFriendsState extends State<AllFriends> {
                 child: ListView.builder(
                   itemCount:
                       allFriends.length + 1, // 1 item là phần text trên cùng
-                  itemBuilder: (BuildContext context, int index_of_list_view) {
-                    int index = index_of_list_view - 1;
+                  itemBuilder: (BuildContext context, int indexOfListView) {
+                    int index = indexOfListView - 1;
                     if (index == -1) {
                       return Column(
                         children: [
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   '$totalFriendRequests Bạn bè',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -241,8 +241,9 @@ class _AllFriendsState extends State<AllFriends> {
                                             mainAxisSize: MainAxisSize.min,
                                             children: <Widget>[
                                               ListTile(
-                                                leading: Icon(Icons.people),
-                                                title: Text('Mặc định',
+                                                leading:
+                                                    const Icon(Icons.people),
+                                                title: const Text('Mặc định',
                                                     style: TextStyle(
                                                       color: Colors.black,
                                                       fontWeight:
@@ -257,9 +258,9 @@ class _AllFriendsState extends State<AllFriends> {
                                                 },
                                               ),
                                               ListTile(
-                                                leading: Icon(Icons
+                                                leading: const Icon(Icons
                                                     .arrow_upward_outlined),
-                                                title: Text(
+                                                title: const Text(
                                                     'Bạn bè mới nhất trước tiên',
                                                     style: TextStyle(
                                                       color: Colors.black,
@@ -287,9 +288,9 @@ class _AllFriendsState extends State<AllFriends> {
                                                 },
                                               ),
                                               ListTile(
-                                                leading: Icon(Icons
+                                                leading: const Icon(Icons
                                                     .arrow_downward_outlined),
-                                                title: Text(
+                                                title: const Text(
                                                     'Bạn bè lâu nhất trước tiên',
                                                     style: TextStyle(
                                                       color: Colors.black,
@@ -336,7 +337,7 @@ class _AllFriendsState extends State<AllFriends> {
                     } else if (index < allFriends.length) {
                       return Container(
                           color: Colors.white,
-                          margin: EdgeInsets.only(
+                          margin: const EdgeInsets.only(
                             top: 10,
                             left: 10,
                             right: 10,
@@ -352,13 +353,13 @@ class _AllFriendsState extends State<AllFriends> {
                                     backgroundImage:
                                         AssetImage(allFriends[index].imageUrl),
                                   ),
-                                  SizedBox(width: 14),
+                                  const SizedBox(width: 14),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      SizedBox(height: 16),
-                                      Container(
+                                      const SizedBox(height: 16),
+                                      SizedBox(
                                         width: 270,
                                         child: Row(
                                             mainAxisAlignment:
@@ -366,7 +367,7 @@ class _AllFriendsState extends State<AllFriends> {
                                             children: [
                                               Text(
                                                 allFriends[index].name,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     fontSize: 16,
                                                     fontWeight:
                                                         FontWeight.bold),
@@ -400,7 +401,7 @@ class _AllFriendsState extends State<AllFriends> {
                                                                         backgroundImage:
                                                                             AssetImage(allFriends[index].imageUrl),
                                                                       ),
-                                                                      SizedBox(
+                                                                      const SizedBox(
                                                                           width:
                                                                               14),
                                                                       Column(
@@ -410,12 +411,12 @@ class _AllFriendsState extends State<AllFriends> {
                                                                           Text(
                                                                             allFriends[index].name,
                                                                             style:
-                                                                                TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                                                                const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                                                           ),
                                                                           Text(
                                                                             'Là bạn bè từ tháng ${allFriends[index].friendFromMonth} năm ${allFriends[currentIndex].friendFromYear}',
                                                                             style:
-                                                                                TextStyle(fontSize: 14, color: Colors.grey),
+                                                                                const TextStyle(fontSize: 14, color: Colors.grey),
                                                                           )
                                                                         ],
                                                                       ),
@@ -429,13 +430,14 @@ class _AllFriendsState extends State<AllFriends> {
                                                                       300],
                                                                 ),
                                                                 ListTile(
-                                                                  leading: Icon(
-                                                                      Icons
-                                                                          .message),
+                                                                  leading:
+                                                                      const Icon(
+                                                                          Icons
+                                                                              .message),
                                                                   title: Text(
                                                                       'Nhắn tin cho ${allFriends[index].firstName}',
                                                                       style:
-                                                                          TextStyle(
+                                                                          const TextStyle(
                                                                         fontWeight:
                                                                             FontWeight.bold,
                                                                       )),
@@ -445,17 +447,18 @@ class _AllFriendsState extends State<AllFriends> {
                                                                   },
                                                                 ),
                                                                 ListTile(
-                                                                  leading: Icon(
-                                                                      Icons
-                                                                          .remove_circle),
+                                                                  leading:
+                                                                      const Icon(
+                                                                          Icons
+                                                                              .remove_circle),
                                                                   title: Text(
                                                                       'Bỏ theo dõi ${allFriends[index].firstName}',
                                                                       style:
-                                                                          TextStyle(
+                                                                          const TextStyle(
                                                                         fontWeight:
                                                                             FontWeight.bold,
                                                                       )),
-                                                                  subtitle: Text(
+                                                                  subtitle: const Text(
                                                                       'Không nhìn thấy bài viết của nhau nữa nhưng vẫn là bạn bè',
                                                                       style: TextStyle(
                                                                           color:
@@ -466,19 +469,20 @@ class _AllFriendsState extends State<AllFriends> {
                                                                   },
                                                                 ),
                                                                 ListTile(
-                                                                  leading: Icon(
-                                                                      Icons
-                                                                          .block),
+                                                                  leading:
+                                                                      const Icon(
+                                                                          Icons
+                                                                              .block),
                                                                   title: Text(
                                                                       'Chặn ${allFriends[index].firstName}',
                                                                       style:
-                                                                          TextStyle(
+                                                                          const TextStyle(
                                                                         fontWeight:
                                                                             FontWeight.bold,
                                                                       )),
                                                                   subtitle: Text(
                                                                       '${allFriends[index].firstName} sẽ không thể nhìn thấy bạn hoặc liên hệ với bạn trên AntiFakebook',
-                                                                      style: TextStyle(
+                                                                      style: const TextStyle(
                                                                           color:
                                                                               Colors.grey)),
                                                                   onTap: () {
@@ -487,13 +491,14 @@ class _AllFriendsState extends State<AllFriends> {
                                                                   },
                                                                 ),
                                                                 ListTile(
-                                                                  leading: Icon(
-                                                                      Icons
-                                                                          .delete),
+                                                                  leading:
+                                                                      const Icon(
+                                                                          Icons
+                                                                              .delete),
                                                                   title: Text(
                                                                       'Hủy kết bạn với ${allFriends[index].firstName}',
                                                                       style:
-                                                                          TextStyle(
+                                                                          const TextStyle(
                                                                         color: Colors
                                                                             .red,
                                                                         fontWeight:
@@ -501,7 +506,7 @@ class _AllFriendsState extends State<AllFriends> {
                                                                       )),
                                                                   subtitle: Text(
                                                                       'Xóa ${allFriends[index].firstName} khỏi danh sách bạn bè',
-                                                                      style: TextStyle(
+                                                                      style: const TextStyle(
                                                                           color:
                                                                               Colors.grey)),
                                                                   onTap: () {
@@ -520,7 +525,7 @@ class _AllFriendsState extends State<AllFriends> {
                                               ),
                                             ]),
                                       ),
-                                      SizedBox(height: 5),
+                                      const SizedBox(height: 5),
                                     ],
                                   ),
                                 ],
