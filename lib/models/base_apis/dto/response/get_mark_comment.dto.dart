@@ -4,16 +4,26 @@ part 'get_mark_comment.dto.g.dart';
 
 @customJsonSerializable
 class GetMarkCommentResponseDto extends ResponseDTO {
-  String id = '';
-  String markContent = '';
-  String typeOfMark = '';
-  PosterCommentDto poster = PosterCommentDto();
-  List<CommentObjectDto> comments = [];
-  bool isBlocked = false;
+  List<MarkCommentResponse> data = [];
+  bool? isBlocked = false;
   GetMarkCommentResponseDto();
   factory GetMarkCommentResponseDto.fromJson(Map<String, dynamic> json) =>
       _$GetMarkCommentResponseDtoFromJson(json);
   Map<String, dynamic> toJson() => _$GetMarkCommentResponseDtoToJson(this);
+}
+
+@customJsonSerializable
+class MarkCommentResponse {
+  String id = '';
+  DateTime created = DateTime.now();
+  String markContent = '';
+  String typeOfMark = '';
+  PosterCommentDto poster = PosterCommentDto();
+  List<CommentObjectDto> comments = [];
+  MarkCommentResponse();
+  factory MarkCommentResponse.fromJson(Map<String, dynamic> json) =>
+      _$MarkCommentResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$MarkCommentResponseToJson(this);
 }
 
 @customJsonSerializable

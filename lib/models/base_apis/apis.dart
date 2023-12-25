@@ -142,9 +142,23 @@ class ApiModel {
   Future<GetMarkCommentResponseDto> getMarkComment(
       GetMarkCommentRequestDto request) async {
     final bodyRequest = request.toJson();
-    final rawResponse = await _dio.post(PathName.getMarkComment,
-        data: bodyRequest) as Map<String, dynamic>;
-    return GetMarkCommentResponseDto.fromJson(rawResponse);
+    final rawResponse =
+        await _dio.post(PathName.getMarkComment, data: bodyRequest);
+    print(rawResponse.data);
+    GetMarkCommentResponseDto rs =
+        GetMarkCommentResponseDto.fromJson(rawResponse.data);
+    return rs;
+  }
+
+  Future<SetMarkCommentResponseDto> setMarkComment(
+      SetMarkCommentRequest request) async {
+    final bodyRequest = request.toJson();
+    final rawResponse =
+        await _dio.post(PathName.setMarkComment, data: bodyRequest);
+    print(rawResponse.data);
+    SetMarkCommentResponseDto rs =
+        SetMarkCommentResponseDto.fromJson(rawResponse.data);
+    return rs;
   }
 
   Future<ResponseDTO> feelPost(String postId, bool isKudos) async {

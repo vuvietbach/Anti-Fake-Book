@@ -1,4 +1,5 @@
 import 'package:anti_fake_book/utils.dart';
+import 'package:anti_fake_book/widgets/common/cached_image.dart';
 import 'package:anti_fake_book/widgets/common/oval_seclection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/diagnostics.dart';
@@ -32,17 +33,13 @@ class _CommentPostState extends State<CommentPostWidget> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Container(
-        margin: const EdgeInsets.all(10),
-        decoration: const BoxDecoration(
-          color: Colors.grey,
-          shape: BoxShape.circle,
-        ),
-        child: const Icon(
-          Icons.person,
-          size: 30,
-          color: Colors.white,
-        ),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: ClipOval(
+            child: SizedBox(
+                width: 40,
+                height: 40,
+                child: CachedImageWidget(url: widget.avatar))),
       ),
       Expanded(
         child: Column(
@@ -73,9 +70,9 @@ class _CommentPostState extends State<CommentPostWidget> {
                       });
                     },
                     child: Text(
-                      'Thích',
+                      'is Trust',
                       style: TextStyle(
-                          color: isKudos ? Colors.lightBlue : Colors.grey),
+                          color: isKudos ? Colors.lightBlue : Colors.red),
                     )),
               ],
             )
