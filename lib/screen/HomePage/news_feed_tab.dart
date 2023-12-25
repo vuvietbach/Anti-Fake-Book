@@ -93,6 +93,7 @@ List<Post> convertFromResponseToListPost(List<Map<String, dynamic>> response) {
         int.parse(thisPost['feel']),
         int.parse(thisPost['comment_mark']),
         DateTime.parse(thisPost['created']),
+        thisPost['banned'],
         thisPost['author']['avatar'],
         thisPost['is_felt'] ?? '-1'));
   }
@@ -119,6 +120,7 @@ class Post {
   final String userAvatar;
   late Widget loadedVideo;
   late String is_felt;
+  final String banned;
 
   Post(
       this.id,
@@ -133,9 +135,17 @@ class Post {
       // this.disappointedCount,
       this.commentCount,
       this.PostDate,
+      this.banned,
       this.userAvatar,
       this.is_felt) {
     timeAgo = calculateTimeAgo(PostDate);
+
+    if (banned != "0") {
+      for (int i = 0; i < imageURL.length; i++) {
+        imageURL[i] =
+            'https://thumbs.dreamstime.com/b/banned-rubber-stamp-over-white-background-88412216.jpg';
+      }
+    }
 
     if (videoURL != '') {
       VideoPlayerController videoPlayerController =
@@ -219,36 +229,25 @@ Post getPostState(int listPostId) {
   String? videoURL = post.video?.url;
 
   DateTime postDate = DateTime.parse(post.created ?? "");
+
+  String? banned = post.banned;
   String userAvatar = post.author?.avatar ?? '';
 
   String? isFelt = post.isFelt;
 
-  return Post(id, userId, username, content, imageURL, videoURL ?? '',
-      kudosCount, commentCount, postDate, userAvatar, isFelt ?? "-1");
-}
-
-Post FakePost() {
-  String id = faker.guid.guid();
-  String username = faker.person.name();
-  String content = faker.lorem.words(50).join(' ');
-  content = '$content \n https://youtube.com/ \n https://vietnamnet.vn/';
-  // String youtubeLink = 'https://youtube.com/';
-  // String vietnamNetLink = 'https://vietnamnet.vn/';
-
-  final random = Random();
-
-  int kudosCount = random.nextInt(200);
-  // int disappointedCount = random.nextInt(200);
-  int commentCount = random.nextInt(200);
-
-  List<String> imageURL = getRandomImages(imageAssets, random.nextInt(5));
-  String videoURL = '';
-
-  // PostDate
-  DateTime postDate = DateTime.now().add(const Duration(days: -30));
-
-  return Post(id, id, username, content, imageURL, videoURL, kudosCount,
-      commentCount, postDate, '', "-1");
+  return Post(
+      id,
+      userId,
+      username,
+      content,
+      imageURL,
+      videoURL ?? '',
+      kudosCount,
+      commentCount,
+      postDate,
+      banned ?? "0",
+      userAvatar,
+      isFelt ?? "-1");
 }
 
 class PostWidget extends StatefulWidget {
