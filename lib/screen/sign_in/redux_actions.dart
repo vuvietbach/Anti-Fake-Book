@@ -16,8 +16,26 @@ void signIn(BuildContext context, SignInRequest request,
       context: context,
       onSuccess: (SignInResponse response) {
         EmptyLayoutState.of(context).touchLoading(false);
-        context.go('/');
+        if (onSuccess != null) {
+          onSuccess(response);
+        } else {
+          context.go('/');
+        }
       },
       onPending: () => EmptyLayoutState.of(context).touchLoading(true),
+      onError: onError));
+}
+
+void signIn1(BuildContext context, SignInRequest request,
+    {Function(SignInResponse)? onSuccess,
+    Function? onPending,
+    Function? onError}) {
+  StoreProvider.of<AntiFakeBookState>(context).dispatch(SignInAction(
+      data: request,
+      context: context,
+      onSuccess: (SignInResponse response) {
+        onSuccess!(response);
+      },
+      onPending: () => {},
       onError: onError));
 }

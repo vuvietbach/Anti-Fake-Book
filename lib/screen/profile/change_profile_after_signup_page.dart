@@ -113,26 +113,12 @@ class _ChangeProfilePageState extends State<ChangeProfileAfterSignUpPage> {
       child: Scaffold(
           appBar: AppBar(
             title: const Text("Cập nhập thông tin"),
+
           ),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Stack(children: [
-                Column(
-                  children: [
-                    _backgroundImage(),
-                    Container(
-                      height: 80,
-                    ),
-                  ],
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Center(child: _avatar()),
-                ),
-              ]),
+              _avatar(),
               _username(),
               _submitButton(),
             ],

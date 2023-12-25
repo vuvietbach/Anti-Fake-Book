@@ -63,12 +63,12 @@ class _SignUpState extends State<SignUp> {
               BeginSignUp(
                 pageController: _pageController,
               ),
-              SignUpName(
-                pageController: _pageController,
-              ),
-              SignUpAge(
-                pageController: _pageController,
-              ),
+              // SignUpName(
+              //   pageController: _pageController,
+              // ),
+              // SignUpAge(
+              //   pageController: _pageController,
+              // ),
               SignUpEmail(
                 initialValue: _email,
                 onSave: (String? email) {
