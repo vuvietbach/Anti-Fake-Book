@@ -113,7 +113,6 @@ class _ChangeProfilePageState extends State<ChangeProfileAfterSignUpPage> {
       child: Scaffold(
           appBar: AppBar(
             title: const Text("Cập nhập thông tin"),
-
           ),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

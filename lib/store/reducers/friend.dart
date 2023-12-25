@@ -29,6 +29,7 @@ AntiFakeBookState onUnfriendSuccess(
     AntiFakeBookState state, SuccessUnfriendAction action) {
   action.extras['onSuccess']?.call();
   final oldFriendState = state.friendState;
-  final newFriendState = oldFriendState.removeFriend(action.extras['request'].userId);
+  final newFriendState =
+      oldFriendState.removeFriend(action.extras['request'].userId);
   return state.copyWith(friendState: newFriendState);
 }

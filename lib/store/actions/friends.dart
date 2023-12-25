@@ -9,12 +9,10 @@ class GetUserFriendsAction
   final GetUserFriendsRequest data;
   final Function(GetUserFriendsResponse)? onSuccess;
 
-  GetUserFriendsAction(
-      {required this.data, this.onSuccess})
-      : super(future: ApiModel.api.getUserFriends(data), extras: {
-          'request': data,
-          'onSuccess': onSuccess
-        });
+  GetUserFriendsAction({required this.data, this.onSuccess})
+      : super(
+            future: ApiModel.api.getUserFriends(data),
+            extras: {'request': data, 'onSuccess': onSuccess});
 }
 
 typedef SuccessGetUserFriendsAction

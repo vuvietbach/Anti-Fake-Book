@@ -20,8 +20,8 @@ AntiFakeBookState onSetAcceptFriendPending(
 AntiFakeBookState onSetAcceptFriendSuccess(
     AntiFakeBookState state, SuccessSetAcceptFriendAction action) {
   // action.extras['onSuccess']!();
-  Plugins.antiFakeBookStore!.dispatch(
-      GetUserFriendsAction(data: GetUserFriendsRequest(index: 0, count: NUM_QUERY_PER_REQUEST)));
+  Plugins.antiFakeBookStore!.dispatch(GetUserFriendsAction(
+      data: GetUserFriendsRequest(index: 0, count: NUM_QUERY_PER_REQUEST)));
   // action.extras['onSuccess']?.call(action.payload);
   return state;
 }
