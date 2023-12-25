@@ -198,9 +198,16 @@ class ApiModel {
     }).then((rawResponse) => ResponseDTO.fromJson(rawResponse.data));
   }
 
-  Future<GetNotificationReponseDto> getNotification(int index, int count) {
-    return _dio.post(PathName.getNotification).then(
-        (rawResponse) => GetNotificationReponseDto.fromJson(rawResponse.data));
+  Future<GetNotificationReponseDto> getNotification(
+      int index, int count) async {
+    final rs = await _dio.post(PathName.getNotification, data: {
+      'index': index,
+      'count': count,
+    });
+    final rawRs = rs.data;
+    GetNotificationReponseDto finalRs =
+        GetNotificationReponseDto.fromJson(rawRs);
+    return finalRs;
   }
 
   Future<SignUpResponse> signUp(SignUpRequest data) async {
