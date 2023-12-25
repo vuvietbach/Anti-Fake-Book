@@ -12,6 +12,7 @@ class DiskStore {
     _appDocDir = await getApplicationDocumentsDirectory();
     filePath = "${_appDocDir.path}/state.json";
   }
+  
 
   static Future<AntiFakeBookState> loadAndMergeState(
       AntiFakeBookState prevState) async {

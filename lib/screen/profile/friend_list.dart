@@ -11,6 +11,7 @@ import 'package:anti_fake_book/widgets/common/image.dart';
 import 'package:anti_fake_book/widgets/common/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:go_router/go_router.dart';
 import 'package:redux/redux.dart';
 
 class FriendListPage extends StatelessWidget {
@@ -94,7 +95,6 @@ class _OtherFriendListPageState extends State<OtherFriendListPage> {
     return FriendListUI(
         friendState: friendState, username: widget.username, isOwner: false);
   }
-
 }
 
 class FriendListTile extends StatelessWidget {
@@ -138,16 +138,22 @@ class FriendListTile extends StatelessWidget {
 
   void _getUserFriends(BuildContext context) {
     Navigator.pop(context);
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return FriendListPage(userId: info.id, username: info.username);
-    }));
+    Map<String, dynamic> queryParameters = {};
+    queryParameters['userId'] = info.id;
+    queryParameters['username'] = info.username;
+    var uri = Uri(path: '/friend_list', queryParameters: queryParameters);
+    context.push(uri.toString());
+    // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+    //   return FriendListPage(userId: info.id, username: info.username);
+    // }));
   }
 
   void _showProfile(BuildContext context) {
     Navigator.pop(context);
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return ProfilePage(userId: info.id);
-    }));
+    // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+    //   return ProfilePage(userId: info.id);
+    // }));
+    context.push('/profile/${info.id}');
   }
 
   void _unfriend(BuildContext context) {

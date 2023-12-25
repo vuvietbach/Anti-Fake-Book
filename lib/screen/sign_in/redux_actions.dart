@@ -1,19 +1,23 @@
+import 'package:anti_fake_book/layout/default_layer.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/auth.dto.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/auth.dto.dart';
 import 'package:anti_fake_book/store/actions/auth.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:go_router/go_router.dart';
 
 void signIn(BuildContext context, SignInRequest request,
     {Function(SignInResponse)? onSuccess,
     Function? onPending,
     Function? onError}) {
-  print("redux action ${request.toJson()}");
   StoreProvider.of<AntiFakeBookState>(context).dispatch(SignInAction(
       data: request,
       context: context,
-      onSuccess: onSuccess,
-      onPending: onPending,
+      onSuccess: (SignInResponse response) {
+        EmptyLayoutState.of(context).touchLoading(false);
+        context.go('/');
+      },
+      onPending: () => EmptyLayoutState.of(context).touchLoading(true),
       onError: onError));
 }

@@ -322,9 +322,10 @@ class ApiModel {
           )));
     }
     if (data.coverImage != null) {
+      print(data.coverImage!);
       final Uint8List coverImage = await File(data.coverImage!).readAsBytes();
       formData.files.add(MapEntry(
-          'coverImage',
+          'cover_image',
           MultipartFile.fromBytes(
             coverImage,
             contentType: MediaType('image', 'jpg'),
@@ -339,6 +340,7 @@ class ApiModel {
         await _dio.post(PathName.setUserInfo, data: formData, options: options);
     SetUserInfoResponse setUserInfoResponse =
         SetUserInfoResponse.fromJson(response.data);
+    print("ok");
     return setUserInfoResponse;
   }
 

@@ -127,9 +127,7 @@ class _SignInState extends State<SignIn> {
                             email: emailController.text,
                             password: passwordController.text,
                             uuid: await getDeviceId(),
-                          ), onSuccess: (SignInResponse response) {
-                        context.push('/home');
-                      });
+                      ));
                     }
                   },
             child: const Text('Đăng nhập'),
@@ -221,9 +219,7 @@ class _SignInWithAccountState extends State<SignInWithAccount> {
                                         email: store
                                             .state.userState.userInfo.email,
                                         password: passwordController.text,
-                                        uuid: await getDeviceId()),
-                                    onSuccess: (response) =>
-                                        context.push("/home"));
+                                        uuid: await getDeviceId()));
                               }
                             },
                       child: const Text("Đăng nhập"),
