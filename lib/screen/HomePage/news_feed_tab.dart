@@ -297,8 +297,10 @@ List<Map<String, dynamic>> menuOptions = [
 ];
 
 class _PostWidgetState extends State<PostWidget> {
+  bool isDeleted = false;
+
   void handleLikeButtonPress() {
-    if (widget.post.is_felt == "0") {
+    if (widget.post.is_felt == "1") {
       setState(() {
         widget.post.kudosCount -= 1;
         widget.post.is_felt = "-1";
@@ -306,7 +308,7 @@ class _PostWidgetState extends State<PostWidget> {
     } else {
       setState(() {
         widget.post.kudosCount += 1;
-        widget.post.is_felt = "0";
+        widget.post.is_felt = "1";
       });
     }
     // EachPostPayloadDTO updatedPost = EachPostPayloadDTO(
@@ -319,333 +321,345 @@ class _PostWidgetState extends State<PostWidget> {
 
   @override
   Widget build(BuildContext context) {
-    GlobalKey menuButtonKeys = GlobalKey();
+    if (isDeleted == false) {
+      GlobalKey menuButtonKeys = GlobalKey();
 
-    if (widget.post.textSpans.length <= 30) {
-      widget.post.displayedText = widget.post.textSpans;
-    } else if (widget.post.kudosCount < 100 &&
-        widget.post.commentCount < 100 &&
-        widget.post.imageURL.length <= 1) {
-      widget.post.displayedText = widget.post.showAllText
-          ? widget.post.textSpans
-          : widget.post.textSpans.sublist(0, 30);
-      if (!widget.post.showAllText) {
-        widget.post.displayedText.add(
-          const TextSpan(
-            text: '...',
-            style: TextStyle(color: Colors.black),
-          ),
-        );
-        widget.post.displayedText.add(
-          TextSpan(
-            text: 'Xem thêm',
-            style: const TextStyle(color: Colors.grey),
-            recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                setState(() {
-                  widget.post.showAllText = true;
-                });
-              },
-          ),
-        );
+      if (widget.post.textSpans.length <= 30) {
+        widget.post.displayedText = widget.post.textSpans;
+      } else if (widget.post.kudosCount < 100 &&
+          widget.post.commentCount < 100 &&
+          widget.post.imageURL.length <= 1) {
+        widget.post.displayedText = widget.post.showAllText
+            ? widget.post.textSpans
+            : widget.post.textSpans.sublist(0, 30);
+        if (!widget.post.showAllText) {
+          widget.post.displayedText.add(
+            const TextSpan(
+              text: '...',
+              style: TextStyle(color: Colors.black),
+            ),
+          );
+          widget.post.displayedText.add(
+            TextSpan(
+              text: 'Xem thêm',
+              style: const TextStyle(color: Colors.grey),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  setState(() {
+                    widget.post.showAllText = true;
+                  });
+                },
+            ),
+          );
+        } else {
+          widget.post.displayedText.add(
+            TextSpan(
+              text: ' Thu gọn',
+              style: const TextStyle(color: Colors.grey),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  setState(() {
+                    widget.post.showAllText = false;
+                  });
+                },
+            ),
+          );
+        }
       } else {
-        widget.post.displayedText.add(
-          TextSpan(
-            text: ' Thu gọn',
-            style: const TextStyle(color: Colors.grey),
-            recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                setState(() {
-                  widget.post.showAllText = false;
-                });
-              },
-          ),
-        );
+        widget.post.displayedText = widget.post.showAllText
+            ? widget.post.textSpans
+            : widget.post.textSpans.sublist(0, 30);
+        if (!widget.post.showAllText) {
+          widget.post.displayedText.add(
+            const TextSpan(
+              text: '...',
+              style: TextStyle(color: Colors.black),
+            ),
+          );
+          widget.post.displayedText.add(
+            TextSpan(
+              text: 'Xem thêm',
+              style: const TextStyle(color: Colors.grey),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailedPost(post: widget.post),
+                    ),
+                  );
+                },
+            ),
+          );
+        }
       }
-    } else {
-      widget.post.displayedText = widget.post.showAllText
-          ? widget.post.textSpans
-          : widget.post.textSpans.sublist(0, 30);
-      if (!widget.post.showAllText) {
-        widget.post.displayedText.add(
-          const TextSpan(
-            text: '...',
-            style: TextStyle(color: Colors.black),
-          ),
-        );
-        widget.post.displayedText.add(
-          TextSpan(
-            text: 'Xem thêm',
-            style: const TextStyle(color: Colors.grey),
-            recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DetailedPost(post: widget.post),
+      return Container(
+        color: Colors.white,
+        margin: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                if (widget.post.userAvatar != '')
+                  GestureDetector(
+                    onTap: () {
+                      context.go(
+                        '/profile/${widget.post.userId}',
+                      );
+                    },
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundImage: NetworkImage(widget.post.userAvatar),
+                    ),
+                  )
+                else
+                  const CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.deepPurple,
+                  ),
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.post.userName,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          '${widget.post.timeAgo} • ',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 10,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        const Icon(
+                          Icons.public_rounded,
+                          size: 10,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                IconButton(
+                  key: menuButtonKeys,
+                  icon: const Icon(Icons.more_horiz),
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) {
+                        List<Map<String, dynamic>> modifiedOptions =
+                            widget.post.userId ==
+                                    Plugins.antiFakeBookStore?.state.userState
+                                        .userInfo.id
+                                ? menuOptions
+                                : menuOptions.sublist(0, 2);
+                        return Container(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: modifiedOptions.map((option) {
+                              return ListTile(
+                                leading: Icon(option['icon']),
+                                title: Text(option['title']),
+                                onTap: () {
+                                  final String postId = widget.post.id;
+                                  switch (option['title']) {
+                                    case "Xóa":
+                                      {
+                                        Plugins.antiFakeBookStore!.dispatch(
+                                            DeletePostAction(
+                                                postId, {'postId': postId}));
+                                        setState(() {
+                                          isDeleted = true;
+                                        });
+                                        break;
+                                      }
+                                    case "Chỉnh sửa bài viết":
+                                      {
+                                        //                                       var response =  cachedRequest.get(widget.url,
+                                        //     options: Options(responseType: ResponseType.bytes));
+                                        // return Uint8List.fromList(response.data as List<int>);
+
+                                        var listFuture = widget.post.imageURL
+                                            .map((e) => cachedRequest.get(e,
+                                                options: Options(
+                                                    responseType:
+                                                        ResponseType.bytes)))
+                                            .toList();
+                                        var store = Plugins.antiFakeBookStore!;
+                                        Future.wait(listFuture).then((value) {
+                                          store.dispatch(SetSelectedPostAction(store
+                                              .state.postState.selected
+                                              .copyWith(
+                                                  described:
+                                                      widget.post.content,
+                                                  images: value
+                                                      .map((e) =>
+                                                          ImagePayloadDTO(
+                                                              id: '',
+                                                              url: '',
+                                                              bytes: Uint8List
+                                                                  .fromList(e
+                                                                          .data
+                                                                      as List<
+                                                                          int>)))
+                                                      .toList())));
+                                        });
+                                        store.dispatch(SetSelectedPostAction(
+                                            store.state.postState.selected
+                                                .copyWith(
+                                          described: widget.post.content,
+                                        )));
+                                        context.go('/create-post',
+                                            extra: widget.post.id);
+                                        break;
+                                      }
+                                    case 'Báo cáo':
+                                      {
+                                        context.push('/post/$postId/report');
+                                      }
+                                  }
+                                  Navigator.pop(
+                                      context); // Close the bottom sheet after action
+                                },
+                              );
+                            }).toList(),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            RichText(
+              text: TextSpan(children: widget.post.displayedText),
+            ),
+            const SizedBox(height: 10),
+            GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+              ),
+              itemCount: widget.post.imageURL.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (contextImage, imageIndex) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      contextImage,
+                      MaterialPageRoute(
+                        builder: (contextImage) => Scaffold(
+                          body: PhotoViewGallery.builder(
+                            itemCount: widget.post.imageURL.length,
+                            builder: (contextImage, indexImage) {
+                              return PhotoViewGalleryPageOptions(
+                                imageProvider: NetworkImage(
+                                  widget.post.imageURL[indexImage],
+                                ),
+                                minScale: PhotoViewComputedScale.contained,
+                                maxScale: PhotoViewComputedScale.covered * 2,
+                                initialScale: PhotoViewComputedScale.contained,
+                                heroAttributes: PhotoViewHeroAttributes(
+                                  tag: widget.post.imageURL[indexImage],
+                                ),
+                              );
+                            },
+                            backgroundDecoration: const BoxDecoration(
+                              color: Colors.black,
+                            ),
+                            scrollPhysics: const BouncingScrollPhysics(),
+                            pageController:
+                                PageController(initialPage: imageIndex),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  child: Image.network(
+                    widget.post.imageURL[imageIndex],
+                    fit: BoxFit.cover,
                   ),
                 );
               },
-          ),
-        );
-      }
-    }
-    return Container(
-      color: Colors.white,
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              if (widget.post.userAvatar != '')
-                GestureDetector(
-                  onTap: () {
-                    context.go(
-                      '/profile/${widget.post.userId}',
-                    );
-                  },
-                  child: CircleAvatar(
-                    radius: 20,
-                    backgroundImage: NetworkImage(widget.post.userAvatar),
-                  ),
-                )
-              else
-                const CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.deepPurple,
-                ),
-              const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.post.userName,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        '${widget.post.timeAgo} • ',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 10,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      const Icon(
-                        Icons.public_rounded,
-                        size: 10,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const Spacer(),
-              IconButton(
-                key: menuButtonKeys,
-                icon: const Icon(Icons.more_horiz),
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (BuildContext context) {
-                      List<Map<String, dynamic>> modifiedOptions =
-                          widget.post.userId ==
-                                  Plugins.antiFakeBookStore?.state.userState
-                                      .userInfo.id
-                              ? menuOptions
-                              : menuOptions.sublist(0, 2);
-                      return Container(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: modifiedOptions.map((option) {
-                            return ListTile(
-                              leading: Icon(option['icon']),
-                              title: Text(option['title']),
-                              onTap: () {
-                                final String postId = widget.post.id;
-                                switch (option['title']) {
-                                  case "Xóa":
-                                    {
-                                      Plugins.antiFakeBookStore!.dispatch(
-                                          DeletePostAction(
-                                              postId, {'postId': postId}));
-                                      break;
-                                    }
-                                  case "Chỉnh sửa bài viết":
-                                    {
-                                      //                                       var response =  cachedRequest.get(widget.url,
-                                      //     options: Options(responseType: ResponseType.bytes));
-                                      // return Uint8List.fromList(response.data as List<int>);
-
-                                      var listFuture = widget.post.imageURL
-                                          .map((e) => cachedRequest.get(e,
-                                              options: Options(
-                                                  responseType:
-                                                      ResponseType.bytes)))
-                                          .toList();
-                                      var store = Plugins.antiFakeBookStore!;
-                                      Future.wait(listFuture).then((value) {
-                                        store.dispatch(SetSelectedPostAction(store
-                                            .state.postState.selected
-                                            .copyWith(
-                                                described: widget.post.content,
-                                                images: value
-                                                    .map((e) => ImagePayloadDTO(
-                                                        id: '',
-                                                        url: '',
-                                                        bytes:
-                                                            Uint8List.fromList(e
-                                                                    .data
-                                                                as List<int>)))
-                                                    .toList())));
-                                      });
-                                      store.dispatch(SetSelectedPostAction(store
-                                          .state.postState.selected
-                                          .copyWith(
-                                        described: widget.post.content,
-                                      )));
-                                      context.go('/create-post',
-                                          extra: widget.post.id);
-                                      break;
-                                    }
-                                  case 'Báo cáo':
-                                    {
-                                      context.push('/post/$postId/report');
-                                    }
-                                }
-                                Navigator.pop(
-                                    context); // Close the bottom sheet after action
-                              },
-                            );
-                          }).toList(),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          RichText(
-            text: TextSpan(children: widget.post.displayedText),
-          ),
-          const SizedBox(height: 10),
-          GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
             ),
-            itemCount: widget.post.imageURL.length,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (contextImage, imageIndex) {
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    contextImage,
-                    MaterialPageRoute(
-                      builder: (contextImage) => Scaffold(
-                        body: PhotoViewGallery.builder(
-                          itemCount: widget.post.imageURL.length,
-                          builder: (contextImage, indexImage) {
-                            return PhotoViewGalleryPageOptions(
-                              imageProvider: NetworkImage(
-                                widget.post.imageURL[indexImage],
-                              ),
-                              minScale: PhotoViewComputedScale.contained,
-                              maxScale: PhotoViewComputedScale.covered * 2,
-                              initialScale: PhotoViewComputedScale.contained,
-                              heroAttributes: PhotoViewHeroAttributes(
-                                tag: widget.post.imageURL[indexImage],
-                              ),
-                            );
-                          },
-                          backgroundDecoration: const BoxDecoration(
-                            color: Colors.black,
-                          ),
-                          scrollPhysics: const BouncingScrollPhysics(),
-                          pageController:
-                              PageController(initialPage: imageIndex),
-                        ),
+            widget.post.loadedVideo,
+            Row(
+              children: [
+                Container(width: 5), // 5px-width box
+                Expanded(
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      backgroundColor: widget.post.is_felt == "1"
+                          ? Colors.blue
+                          : Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
-                  );
-                },
-                child: Image.network(
-                  widget.post.imageURL[imageIndex],
-                  fit: BoxFit.cover,
-                ),
-              );
-            },
-          ),
-          widget.post.loadedVideo,
-          Row(
-            children: [
-              Container(width: 5), // 5px-width box
-              Expanded(
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.black,
-                    backgroundColor:
-                        widget.post.is_felt == "0" ? Colors.blue : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                  onPressed: () {
-                    Plugins.antiFakeBookStore!.dispatch(FeelPostAction(
-                        widget.post.id,
-                        widget.post.is_felt == "0" ? true : false,
-                        {'postId': widget.post.id}));
-                    setState(() {
-                      handleLikeButtonPress();
-                    });
-                  },
-                  icon: Icon(
-                    Icons.thumb_up,
-                    color:
-                        widget.post.is_felt == "0" ? Colors.white : Colors.blue,
-                  ),
-                  label: Text(
-                    formatCount(widget.post.kudosCount),
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: widget.post.is_felt == "0"
+                    onPressed: () {
+                      Plugins.antiFakeBookStore!.dispatch(FeelPostAction(
+                          widget.post.id,
+                          widget.post.is_felt == "1" ? true : false,
+                          {'postId': widget.post.id}));
+                      setState(() {
+                        handleLikeButtonPress();
+                      });
+                    },
+                    icon: Icon(
+                      Icons.thumb_up,
+                      color: widget.post.is_felt == "1"
                           ? Colors.white
                           : Colors.blue,
                     ),
-                  ),
-                ),
-              ),
-              Container(width: 5), // 5px-width box
-              Expanded(
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.green,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
+                    label: Text(
+                      formatCount(widget.post.kudosCount),
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: widget.post.is_felt == "1"
+                            ? Colors.white
+                            : Colors.blue,
+                      ),
                     ),
                   ),
-                  onPressed: () {
-                    String postId = widget.post.id;
-                    context.push('/post/$postId/comment');
-                  },
-                  icon: const Icon(Icons.message),
-                  label: Text(
-                    formatCount(widget.post.commentCount),
-                    style: const TextStyle(fontSize: 16),
+                ),
+                Container(width: 5), // 5px-width box
+                Expanded(
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    onPressed: () {
+                      String postId = widget.post.id;
+                      context.push('/post/$postId/comment');
+                    },
+                    icon: const Icon(Icons.message),
+                    label: Text(
+                      formatCount(widget.post.commentCount),
+                      style: const TextStyle(fontSize: 16),
+                    ),
                   ),
                 ),
-              ),
-              Container(width: 5), // 5px-width box
-            ],
-          ),
-        ],
-      ),
-    );
+                Container(width: 5), // 5px-width box
+              ],
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Container();
+    }
   }
 }
 

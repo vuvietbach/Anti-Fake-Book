@@ -8,7 +8,7 @@ import '../state/index.dart';
 
 AntiFakeBookState onGetListPostsPending(
     AntiFakeBookState preState, PendingGetListPostsAction action) {
-  print('onGetListPostsPending');
+  // print('onGetListPostsPending');
   AntiFakeBookState newState = preState.copyWith.listPostsState();
   // print(newState.listPostsState.message);
   return newState;
@@ -18,7 +18,7 @@ AntiFakeBookState onGetListPostsSuccess(
     AntiFakeBookState preState, SuccessGetListPostsAction action) {
   action.extras['onSuccess']!();
   late ListPostsState listPostsState;
-  print(action.payload.code);
+  // print(action.payload.code);
   // print(action.payload.data.toJson());
   // print(action.payload.toJson());
   // print('ok');

@@ -7,7 +7,7 @@ import '../state/requested_friends.dart';
 
 AntiFakeBookState onGetRequestedFriendsPending(
     AntiFakeBookState preState, PendingGetRequestedFriendsAction action) {
-  print('onGetRequestedFriendsPending');
+  // print('onGetRequestedFriendsPending');
   AntiFakeBookState newState = preState.copyWith.requestedFriendsState();
   return newState;
 }
@@ -16,13 +16,13 @@ AntiFakeBookState onGetRequestedFriendsSuccess(
     AntiFakeBookState preState, SuccessGetRequestedFriendsAction action) {
   action.extras['onSuccess']!();
   late RequestedFriendsState requestedFriendsState;
-  print(action.payload.code);
-  print(action.payload.data);
+  // print(action.payload.code);
+  // print(action.payload.data);
   if (action.payload.code == "1000") {
     Map<String, dynamic> rawData = action.payload.data.toJson();
     List<Map<String, dynamic>> result = [];
     int requestFriendsLength = rawData['requests'].length;
-    print(requestFriendsLength);
+    // print(requestFriendsLength);
     // for (int i = 0; i < requestFriendsLength; i++) {
     //   print(rawData['requests'][i]);
     //   Map<String, dynamic> thisRequest = rawData['requests'][i].toJson();

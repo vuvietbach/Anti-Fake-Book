@@ -9,7 +9,7 @@ import '../state/recommended_friends.dart';
 
 AntiFakeBookState onGetRecommendedFriendsPending(
     AntiFakeBookState preState, PendingGetRecommendedFriendsAction action) {
-  print('onGetRecommendedFriendsPending');
+  // print('onGetRecommendedFriendsPending');
   AntiFakeBookState newState = preState.copyWith.recommendedFriendsState();
   return newState;
 }
@@ -18,7 +18,7 @@ AntiFakeBookState onGetRecommendedFriendsSuccess(
     AntiFakeBookState preState, SuccessGetRecommendedFriendsAction action) {
   action.extras['onSuccess']!();
   late RecommendedFriendsState recommendedFriendsState;
-  print(action.payload.code);
+  // print(action.payload.code);
   // print(action.payload.data);
   if (action.payload.code == "1000") {
     int len = action.payload.data.length;
