@@ -19,5 +19,8 @@ void onPendingGetListBlocksAction(
 AntiFakeBookState onSuccessSetBlockAction(
     AntiFakeBookState preState, SuccessSetBlockAction action) {
   Plugins.antiFakeBookStore!.dispatch(GetListBlocksAction(0, 5, action.extras));
-  return preState;
+  final oldFriendState = preState.friendState;
+  final newFriendState =
+      oldFriendState.removeFriend(action.extras['userId'] ?? "");
+  return preState.copyWith(friendState: newFriendState);
 }

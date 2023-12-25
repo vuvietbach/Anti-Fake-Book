@@ -7,16 +7,12 @@ import 'package:redux_future_middleware/redux_future_middleware.dart';
 class GetUserFriendsAction
     extends FutureAction<GetUserFriendsAction, GetUserFriendsResponse> {
   final GetUserFriendsRequest data;
-  final BuildContext context;
   final Function(GetUserFriendsResponse)? onSuccess;
 
-  GetUserFriendsAction(
-      {required this.data, required this.context, this.onSuccess})
-      : super(future: ApiModel.api.getUserFriends(data), extras: {
-          'context': context,
-          'request': data,
-          'onSuccess': onSuccess
-        });
+  GetUserFriendsAction({required this.data, this.onSuccess})
+      : super(
+            future: ApiModel.api.getUserFriends(data),
+            extras: {'request': data, 'onSuccess': onSuccess});
 }
 
 typedef SuccessGetUserFriendsAction

@@ -37,13 +37,13 @@ AntiFakeBookState onSuccessGetUserInfo(
 
 AntiFakeBookState onPendingSetUserInfo(
     AntiFakeBookState state, PendingSetUserInfoAction action) {
-  showLoadingDialog(action.extras['context']);
+  // showLoadingDialog(action.extras['context']);
   return state;
 }
 
 AntiFakeBookState onSuccessSetUserInfo(
     AntiFakeBookState state, SuccessSetUserInfoAction action) {
-  Navigator.pop(action.extras['context']);
+  // Navigator.pop(action.extras['context']);
   if (isSuccessCode(action.payload.code)) {
     if (action.extras['onSuccess'] != null) {
       action.extras['onSuccess']!(action.payload);

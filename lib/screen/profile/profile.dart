@@ -282,7 +282,6 @@ class _ProfilePageUiState extends State<ProfilePageUi> {
   }
 
   void _loadMorePosts(BuildContext context) {
-    print("hello");
     widget.postState.loadMorePosts(context);
   }
 

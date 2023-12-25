@@ -64,8 +64,7 @@ class FriendState {
     final request = GetUserFriendsRequest(
         index: 0, count: NUM_QUERY_PER_REQUEST, userId: userId);
     if (isOwner) {
-      Plugins.antiFakeBookStore!
-          .dispatch(GetUserFriendsAction(data: request, context: context));
+      Plugins.antiFakeBookStore!.dispatch(GetUserFriendsAction(data: request));
     } else {
       callAPI(context, () async {
         final response = await ApiModel.api.getUserFriends(request);
@@ -95,8 +94,7 @@ class FriendState {
     final request = GetUserFriendsRequest(
         index: friends.length, count: NUM_QUERY_PER_REQUEST, userId: userId);
     if (isOwner) {
-      Plugins.antiFakeBookStore!
-          .dispatch(GetUserFriendsAction(data: request, context: context));
+      Plugins.antiFakeBookStore!.dispatch(GetUserFriendsAction(data: request));
     } else {
       callAPI(context, () async {
         final response = await ApiModel.api.getUserFriends(request);
@@ -110,7 +108,7 @@ class FriendState {
     }
   }
 
-  get recentFriends => sortedByDateFriends;
+  get recentFriends => friends;
   get alphabeticalFriends => sortedByNameFriends;
   get topRecentFriends => sortedByDateFriends.take(6).toList();
 }

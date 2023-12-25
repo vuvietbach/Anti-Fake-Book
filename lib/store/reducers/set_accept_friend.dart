@@ -1,3 +1,8 @@
+import 'package:anti_fake_book/models/base_apis/dto/request/friend.dto.dart';
+import 'package:anti_fake_book/models/base_apis/dto/request/get_requested_friends.dart';
+import 'package:anti_fake_book/plugins/index.dart';
+import 'package:anti_fake_book/store/actions/friends.dart';
+
 import '../../constants/constants.dart';
 import '../../models/base_apis/dto/response/response.dto.dart';
 import '../actions/requested_friends.dart';
@@ -14,9 +19,9 @@ AntiFakeBookState onSetAcceptFriendPending(
 
 AntiFakeBookState onSetAcceptFriendSuccess(
     AntiFakeBookState state, SuccessSetAcceptFriendAction action) {
-  action.extras['onSuccess']!();
-  // print(action.payload.code);
-  // print(action.payload.message);
-  action.extras['onSuccess']?.call(action.payload);
+  // action.extras['onSuccess']!();
+  Plugins.antiFakeBookStore!.dispatch(GetUserFriendsAction(
+      data: GetUserFriendsRequest(index: 0, count: NUM_QUERY_PER_REQUEST)));
+  // action.extras['onSuccess']?.call(action.payload);
   return state;
 }

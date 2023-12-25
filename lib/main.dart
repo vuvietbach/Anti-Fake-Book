@@ -1,6 +1,7 @@
 //Lib
 import 'package:anti_fake_book/app_state_observer.dart';
 import 'package:anti_fake_book/models/base_apis/apis.dart';
+import 'package:anti_fake_book/services/notification_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -19,7 +20,7 @@ void main() async {
   await DiskStore.init();
   final initialState =
       await DiskStore.loadAndMergeState(AntiFakeBookState.initState());
-  // await NotificationService.init();
+  await NotificationService.init();
   await initCached();
   Plugins.antiFakeBookStore = Store<AntiFakeBookState>(antiFakeBookReducers,
       initialState: initialState, middleware: [futureMiddleware]);

@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:anti_fake_book/layout/default_layer.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/index.dart';
-import 'package:anti_fake_book/screen/profile/change_profile_after_signup_page.dart';
 import 'package:anti_fake_book/screen/sign_up/redux_actions.dart';
 import 'package:anti_fake_book/screen/sign_up/widget.dart';
 import 'package:anti_fake_book/store/state/index.dart';
@@ -11,7 +10,6 @@ import 'package:anti_fake_book/widgets/buttons.dart';
 import 'package:anti_fake_book/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:redux/redux.dart';
 import '../../styles.dart';

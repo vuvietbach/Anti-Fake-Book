@@ -36,7 +36,7 @@ void checkVerifyCode(BuildContext context, CheckVerifyCodeRequest data,
   store.dispatch(CheckVerifyCodeAction(
     data: data,
     onSuccess: (CheckVerifyCodeResponse response) {
-      signIn(
+      signIn1(
           context,
           SignInRequest(
               email: store.state.authState.email,

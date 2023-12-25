@@ -7,13 +7,14 @@ import 'package:flutter/material.dart';
 
 AntiFakeBookState onSignInPending(
     AntiFakeBookState state, PendingSignInAction action) {
-  showLoadingDialog(action.extras['context']);
+  action.extras['onPending']?.call();
+  // showLoadingDialog(action.extras['context']);
   return state;
 }
 
 AntiFakeBookState onSignInSuccess(
     AntiFakeBookState state, SuccessSignInAction action) {
-  Navigator.of(action.extras['context']).pop();
+  // Navigator.of(action.extras['context']).pop();
   if (isSuccessCode(action.payload.code)) {
     action.extras['onSuccess']?.call(action.payload);
     ApiModel.token = action.payload.data.token;
@@ -47,7 +48,7 @@ AntiFakeBookState onSignInSuccess(
 
 AntiFakeBookState onSignUpSuccess(
     AntiFakeBookState state, SuccessSignUpAction action) {
-  Navigator.of(action.extras['context']).pop();
+  // Navigator.of(action.extras['context']).pop();
   if (isSuccessCode(action.payload.code)) {
     action.extras['onSuccess']?.call(action.payload);
     return state.copyWith(
@@ -64,7 +65,7 @@ AntiFakeBookState onSignUpSuccess(
 
 AntiFakeBookState onSignUpPending(
     AntiFakeBookState state, PendingSignUpAction action) {
-  showLoadingDialog(action.extras['context']);
+  // showLoadingDialog(action.extras['context']);
   return state;
 }
 

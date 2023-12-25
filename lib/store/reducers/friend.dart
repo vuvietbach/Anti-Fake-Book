@@ -1,4 +1,5 @@
 import 'package:anti_fake_book/helper/helper.dart';
+import 'package:anti_fake_book/models/base_apis/dto/request/friend.dto.dart';
 import 'package:anti_fake_book/models/base_apis/dto/response/friend.dto.dart';
 import 'package:anti_fake_book/store/actions/friends.dart';
 import 'package:anti_fake_book/store/state/index.dart';
@@ -15,18 +16,10 @@ AntiFakeBookState onSuccessGetUserFriends(
 
   bool isOwner = isAccountOwner(action.extras['request'].userId, state);
   if (isOwner) {
-    var friendList = state.friendState.userFriends;
-    if (action.extras['request'].index == 0) {
-      friendList = action.payload.friends;
-    } else {
-      friendList.addAll(action.payload.friends);
-    }
-    return state.copyWith(
-      friendState: state.friendState.copyWith(
-        userFriends: friendList,
-        userTotalNumFriend: action.payload.total,
-      ),
-    );
+    final oldFriendState = state.friendState;
+    final newFriendState = oldFriendState.addFriends(
+        action.payload, action.extras['request'] as GetUserFriendsRequest);
+    return state.copyWith(friendState: newFriendState);
   } else {
     return state;
   }
@@ -35,16 +28,8 @@ AntiFakeBookState onSuccessGetUserFriends(
 AntiFakeBookState onUnfriendSuccess(
     AntiFakeBookState state, SuccessUnfriendAction action) {
   action.extras['onSuccess']?.call();
-  final oldLen = state.friendState.userFriends.length;
-  final newFriendList = state.friendState.userFriends
-      .where((element) => element.id != action.extras['request'].userId)
-      .toList();
-  final newTotal =
-      state.friendState.userTotalNumFriend - (oldLen - newFriendList.length);
-  return state.copyWith(
-    friendState: state.friendState.copyWith(
-      userFriends: newFriendList,
-      userTotalNumFriend: newTotal,
-    ),
-  );
+  final oldFriendState = state.friendState;
+  final newFriendState =
+      oldFriendState.removeFriend(action.extras['request'].userId);
+  return state.copyWith(friendState: newFriendState);
 }

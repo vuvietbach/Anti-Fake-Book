@@ -117,22 +117,7 @@ class _ChangeProfilePageState extends State<ChangeProfileAfterSignUpPage> {
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Stack(children: [
-                Column(
-                  children: [
-                    _backgroundImage(),
-                    Container(
-                      height: 80,
-                    ),
-                  ],
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Center(child: _avatar()),
-                ),
-              ]),
+              _avatar(),
               _username(),
               _submitButton(),
             ],
