@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:anti_fake_book/layout/default_layer.dart';
 import 'package:anti_fake_book/models/base_apis/dto/request/get_requested_friends.dart';
 import 'package:anti_fake_book/screen/HomePage/friend_subtab/recommended_friends.dart';
 import 'package:flutter/material.dart';
@@ -192,8 +193,8 @@ class _FriendPageContentState extends State<FriendPageContent> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      const RecommendedFriends(),
+                                  builder: (context) => const EmptyLayout(
+                                      child: RecommendedFriends()),
                                 ),
                               );
                             },

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:anti_fake_book/layout/default_layer.dart';
 import 'package:anti_fake_book/screen/HomePage/watch_tab_subtab/detailed_video.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:battery/battery.dart';
@@ -380,7 +381,8 @@ class _VideoWidgetState extends State<VideoWidget> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DetailedVideo(post: widget.post),
+                    builder: (context) =>
+                        EmptyLayout(child: DetailedVideo(post: widget.post)),
                   ),
                 );
               },
@@ -583,7 +585,8 @@ class ListVideo extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => DetailedVideo(post: listVideo[index]),
+                  builder: (context) =>
+                      EmptyLayout(child: DetailedVideo(post: listVideo[index])),
                 ),
               );
             },

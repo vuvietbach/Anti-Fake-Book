@@ -122,7 +122,7 @@ final GoRouter router = GoRouter(routes: [
         GoRoute(
           path: 'home',
           builder: (BuildContext context, GoRouterState state) =>
-              const HomePage(),
+              const EmptyLayout(child: HomePage()),
         ),
         GoRoute(
           path: 'sign-in',
