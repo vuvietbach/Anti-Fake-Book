@@ -26,6 +26,7 @@ import '../../plugins/index.dart';
 import '../../store/actions/listposts.dart';
 import '../../store/state/index.dart';
 import '../../widgets/loading_widget.dart';
+import '../sign_in/sign_in.dart';
 
 final List<String> imageAssets = [
   "https://it4788.catan.io.vn/files/image-1703013217511-26499064.jpg",
@@ -809,6 +810,7 @@ class _PostHomePageContentState extends State<PostHomePageContent>
   bool isLoading = false;
 
   List<Post> listPost = [];
+  late Timer loadingTimer;
 
   @override
   void initState() {
@@ -825,6 +827,18 @@ class _PostHomePageContentState extends State<PostHomePageContent>
     reloadContainers();
   }
 
+  void handleTimeout() {
+    // Timeout logic, navigate back to login screen
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (context) => SignIn()));
+  }
+
+  void cancelLoadingTimer() {
+    if (loadingTimer != null && loadingTimer.isActive) {
+      loadingTimer.cancel();
+    }
+  }
+
   void loadMoreContainers() {
     if (isLoading) return;
 
@@ -837,6 +851,8 @@ class _PostHomePageContentState extends State<PostHomePageContent>
     setState(() {
       isLoading = true;
     });
+
+    loadingTimer = Timer(Duration(seconds: 10), handleTimeout);
 
     // GetListPostsRequestDTO getListPosts = GetListPostsRequestDTO(
     //     token: store.state.token,
@@ -873,6 +889,7 @@ class _PostHomePageContentState extends State<PostHomePageContent>
     for (int i = numberOfContainers - 10; i < numberOfContainers; i++) {
       listPost.add(getPostState(i));
     }
+    cancelLoadingTimer();
   }
 
   void reloadContainers() {
@@ -887,6 +904,8 @@ class _PostHomePageContentState extends State<PostHomePageContent>
     setState(() {
       isLoading = true;
     });
+
+    loadingTimer = Timer(Duration(seconds: 10), handleTimeout);
 
     final getListPosts = GetListPostsRequest(index: 0, count: 10);
 
@@ -914,6 +933,7 @@ class _PostHomePageContentState extends State<PostHomePageContent>
     for (int i = 0; i < numberOfContainers; i++) {
       listPost.add(getPostState(i));
     }
+    cancelLoadingTimer();
   }
 
   String formatCount(int count) {
@@ -961,7 +981,8 @@ class _PostHomePageContentState extends State<PostHomePageContent>
                   ),
                 ],
               ),
-              if (isLoading) const LoadingWidget(),
+              // if (isLoading) EmptyLayoutState.of(context).touchLoading(true),
+              if (isLoading) LoadingWidget()
             ],
           ),
         );
