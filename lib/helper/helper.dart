@@ -255,6 +255,7 @@ Post convertToPost(SearchResultItem item) {
       item.feel,
       item.markComment,
       DateTime.parse(item.created),
+      "0", // banned field
       item.author.avatar,
       item.isFelt.toString());
 }
@@ -283,5 +284,5 @@ Post convertToPostFromPostPayload(EachPostPayloadDTO item) {
   String? isFelt = post.isFelt;
 
   return Post(id, userId, username, content, imageURL, videoURL ?? '',
-      kudosCount, commentCount, postDate, userAvatar, isFelt ?? "-1");
+      kudosCount, commentCount, postDate, "0", userAvatar, isFelt ?? "-1");
 }
