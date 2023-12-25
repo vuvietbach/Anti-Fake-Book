@@ -20,7 +20,7 @@ typedef SuccessGetListBlocksAction
 class SetBlockAction extends FutureAction<SetBlockAction, ResponseDTO>
     implements BlockAction {
   SetBlockAction(String userId, bool isBlock, Map<String, dynamic> extras)
-      : super(future: ApiModel.api.setBlock(userId, isBlock), extras: extras);
+      : super(future: ApiModel.api.setBlock(userId, isBlock), extras: {...extras, "userId": userId});
 }
 
 typedef PendingSetBlockAction = FuturePendingAction<SetBlockAction>;

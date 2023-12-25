@@ -91,63 +91,10 @@ class _OtherFriendListPageState extends State<OtherFriendListPage> {
 
   @override
   Widget build(BuildContext context) {
-    //   return Scaffold(
-    //       appBar: AppBar(
-    //         leading: IconButton(
-    //           icon: const Icon(color: Colors.black, Icons.arrow_back),
-    //           onPressed: () {
-    //             Navigator.pop(context); // Quay lại màn hình trước đó
-    //           },
-    //         ),
-    //         title: Text(widget.username,
-    //             style: const TextStyle(color: Colors.black)),
-    //         actions: [
-    //           IconButton(
-    //             icon: const Icon(Icons.search),
-    //             onPressed: () {},
-    //           ),
-    //         ],
-    //         backgroundColor: Colors.transparent,
-    //         elevation: 0,
-    //       ),
-    //       body: Padding(
-    //         padding: const EdgeInsets.all(10.0),
-    //         child:
-    //             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    //           const CustomSearchBar(),
-    //           const SizedBox(
-    //             height: 15.0,
-    //           ),
-    //           Expanded(
-    //               child: ListView.builder(
-    //             itemCount: friendState.friends.length + 1,
-    //             itemBuilder: (BuildContext context, int index) {
-    //               if (index == 0) {
-    //                 return _numFriendText(friendState.total);
-    //               } else {
-    //                 return FriendListTile(
-    //                     info: friendState.friends[index - 1],
-    //                     isOwnersFriend: isOwner,
-    //                     onUnfriend: (String? text) {});
-    //               }
-    //             },
-    //           ))
-    //         ]),
-    //       ));
-    // }
     return FriendListUI(
         friendState: friendState, username: widget.username, isOwner: false);
   }
 
-  // Widget _numFriendText(int numFriend) {
-  //   return Padding(
-  //     padding: const EdgeInsets.only(bottom: 10.0),
-  //     child: Text(
-  //       "$numFriend người bạn",
-  //       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-  //     ),
-  //   );
-  // }
 }
 
 class FriendListTile extends StatelessWidget {
@@ -245,7 +192,7 @@ class FriendListTile extends StatelessWidget {
                   onPressed: () {
                     Navigator.pop(context);
                     Navigator.pop(context);
-                    // onBlockUser?.call(info.id);
+                    onBlockUser?.call(info.id);
                   },
                   child: const Text("Xác nhận"))
             ],
@@ -283,7 +230,7 @@ class FriendListTile extends StatelessWidget {
                                 title: Text("Chặn $username"),
                                 subtitle: Text(
                                     "$username sẽ không nhìn thấy bạn hoặc liên hệ với bạn trên Anti Fake Book."),
-                                onTap: () => {},
+                                onTap: () => _blockUser(context),
                               )
                             : const SizedBox(),
                         isOwnersFriend

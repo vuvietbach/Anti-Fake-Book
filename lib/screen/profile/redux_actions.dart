@@ -38,7 +38,6 @@ void getUserFriends(BuildContext context, GetUserFriendsRequest data,
     Function? onPending,
     Function? onError}) {
   StoreProvider.of<AntiFakeBookState>(context).dispatch(GetUserFriendsAction(
-    context: context,
     data: data,
     onSuccess: onSuccess,
   ));

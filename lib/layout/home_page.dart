@@ -8,7 +8,7 @@ import '../screen/HomePage/notification_tab.dart';
 import '../screen/HomePage/watch_tab.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key});
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class HomePage extends StatelessWidget {
             actions: [
               IconButton(
                 onPressed: () {
-                  context.go('/search');
+                  context.push('/search');
                 },
                 icon: const Icon(Icons.search, color: Colors.black),
               ),
@@ -55,11 +55,11 @@ class HomePage extends StatelessWidget {
             color: Colors.grey[300],
             child: TabBarView(
               children: [
-                PostHomePageContent(),
+                const PostHomePageContent(),
                 FriendPageContent(),
-                WatchTabContent(),
+                const WatchTabContent(),
                 NotificationContent(),
-                MenuContent(),
+                const MenuContent(),
               ],
             ),
           ),

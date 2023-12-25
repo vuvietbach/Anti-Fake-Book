@@ -227,7 +227,7 @@ class _FriendPageContentState extends State<FriendPageContent> {
                               // print('here');
                               // context.go(
                               //     '/friend_list?username=username&userId=1');
-                              context.go(
+                              context.push(
                                   '/friend_list?username=${store.state.userState.userInfo.username}&userId=${store.state.userState.userInfo.id}');
                             },
                             style: ElevatedButton.styleFrom(

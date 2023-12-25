@@ -1,7 +1,10 @@
+
 import 'package:anti_fake_book/helper/helper.dart';
+import 'package:anti_fake_book/plugins/index.dart';
 import 'package:anti_fake_book/screen/profile/redux_actions.dart';
 import 'package:anti_fake_book/screen/profile/state.dart';
 import 'package:anti_fake_book/screen/search_page/profile_search_page.dart';
+import 'package:anti_fake_book/store/actions/block.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/widgets/common/divider.dart';
 import 'package:flutter/material.dart';
@@ -103,7 +106,32 @@ class ProfileSettingPage extends StatelessWidget {
         : Option(
             icon: const Icon(Icons.block),
             title: "chặn",
-            callback: () => blockUser());
+            callback: () => _blockUser(context));
+  }
+
+  void _blockUser(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Chặn ${userState.userInfo.username}"),
+            // content: Text("Chặn ${info.username}"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Đóng")),
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Plugins.antiFakeBookStore!.dispatch(SetBlockAction(
+                        userState.userInfo.id, true, {'context': context}));
+                  },
+                  child: const Text("Xác nhận"))
+            ],
+          );
+        });
   }
 }
 
