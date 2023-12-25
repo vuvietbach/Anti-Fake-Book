@@ -301,7 +301,7 @@ class _VideoWidgetState extends State<VideoWidget> {
   }
 
   void handleLikeButtonPress() {
-    if (widget.post.is_felt == "0") {
+    if (widget.post.is_felt == "1") {
       setState(() {
         widget.post.kudosCount -= 1;
         widget.post.is_felt = "-1";
@@ -309,7 +309,7 @@ class _VideoWidgetState extends State<VideoWidget> {
     } else {
       setState(() {
         widget.post.kudosCount += 1;
-        widget.post.is_felt = "0";
+        widget.post.is_felt = "1";
       });
     }
   }
@@ -492,7 +492,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.black,
                     backgroundColor:
-                        widget.post.is_felt == "0" ? Colors.blue : Colors.white,
+                        widget.post.is_felt == "1" ? Colors.blue : Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -505,13 +505,13 @@ class _VideoWidgetState extends State<VideoWidget> {
                   icon: Icon(
                     Icons.thumb_up,
                     color:
-                        widget.post.is_felt == "0" ? Colors.white : Colors.blue,
+                        widget.post.is_felt == "1" ? Colors.white : Colors.blue,
                   ),
                   label: Text(
                     formatCount(widget.post.kudosCount),
                     style: TextStyle(
                       fontSize: 16,
-                      color: widget.post.is_felt == "0"
+                      color: widget.post.is_felt == "1"
                           ? Colors.white
                           : Colors.blue,
                     ),

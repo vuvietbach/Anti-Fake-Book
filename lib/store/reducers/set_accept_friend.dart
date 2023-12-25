@@ -8,15 +8,15 @@ import '../state/requested_friends.dart';
 
 AntiFakeBookState onSetAcceptFriendPending(
     AntiFakeBookState state, PendingSetAcceptFriendAction action) {
-  print('onSetAcceptFriendPending');
+  // print('onSetAcceptFriendPending');
   return state;
 }
 
 AntiFakeBookState onSetAcceptFriendSuccess(
     AntiFakeBookState state, SuccessSetAcceptFriendAction action) {
   action.extras['onSuccess']!();
-  print(action.payload.code);
-  print(action.payload.message);
+  // print(action.payload.code);
+  // print(action.payload.message);
   action.extras['onSuccess']?.call(action.payload);
   return state;
 }
