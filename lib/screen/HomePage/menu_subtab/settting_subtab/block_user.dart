@@ -27,7 +27,10 @@ class BlockUsersScreen extends StatelessWidget {
           const Text(
               'Một khi bạn đã chặn ai đó, họ sẽ không xem được nội dung bạn tự đăng trên dòng thời gian mình, gắn thẻ bạn, mời bạn tham gia sự kiện hoặc nhóm, bắt đầu cuộc trò chuyện với bạn hay thêm bạn làm bạn bè. Điều này không bao gồm các ứng dụng, trò chơi hay nhóm mà cả bạn và người này đều tham gia.'),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Plugins.antiFakeBookStore!
+                  .dispatch(SetBlockAction('12', true, {'context': context}));
+            },
             child: _RowBlockUser(
               title: 'Thêm vào danh sách chặn',
               textColor: Colors.blue,

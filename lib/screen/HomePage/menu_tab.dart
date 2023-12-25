@@ -1,3 +1,4 @@
+import 'package:anti_fake_book/store/actions/auth.dart';
 import 'package:anti_fake_book/store/state/index.dart';
 import 'package:anti_fake_book/widgets/common/app_drop_down_menu.dart';
 import 'package:anti_fake_book/widgets/common/cached_image.dart';
@@ -138,6 +139,10 @@ class MenuContent extends StatelessWidget {
                 AppDropdownMenu(
                   icon: const Icon(Icons.logout, color: Colors.cyan),
                   title: 'Đăng xuất',
+                  onPressed: () {
+                    store.dispatch(DeleteTokenAction());
+                    context.go('/welcome');
+                  },
                   isShowLeading: false,
                 ),
                 AppDropdownMenu(
