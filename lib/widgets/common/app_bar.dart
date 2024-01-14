@@ -6,17 +6,26 @@ class CommonAppBar extends AppBar {
       required String title,
       required BuildContext context,
       List<Widget> actions = const [],
-      bool isShowLeading = true})
+      bool isShowLeading = true,
+      onPressedLeading})
       : super(
           title: Text(title),
           leading: isShowLeading
               ? IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
+                  onPressed: onPressedLeading ??
+                      () {
+                        Navigator.pop(context);
+                      },
                   icon: const Icon(Icons.arrow_back))
               : null,
           centerTitle: false,
           actions: actions,
+          bottom: const PreferredSize(
+            preferredSize: Size.fromHeight(1),
+            child: Divider(
+              height: 1,
+              thickness: 1,
+            ),
+          ),
         );
 }

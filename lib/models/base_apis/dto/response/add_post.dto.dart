@@ -5,7 +5,7 @@ part 'add_post.dto.g.dart';
 
 @customJsonSerializable
 class AddPostResponseDTO extends ResponseDTO {
-  DataAddPostResponse data;
+  DataAddPostResponse? data;
   AddPostResponseDTO(this.data) : super();
   factory AddPostResponseDTO.fromJson(Map<String, dynamic> json) =>
       _$AddPostResponseDTOFromJson(json);

@@ -7,9 +7,9 @@ part 'post.freezed.dart';
 @unfreezed
 class PostState extends BundleState<PostPayloadDTO> with _$PostState {
   factory PostState({
-    @Default(PostPayloadDTO()) PostPayloadDTO? selected,
-    @Default([]) List<PostPayloadDTO>? listSelections,
-    @Default(0) int? totalSelections,
+    @Default(PostPayloadDTO()) PostPayloadDTO selected,
+    @Default([]) List<PostPayloadDTO> listSelections,
+    @Default(0) int totalSelections,
     @Default(false) bool isPosting,
   }) = _PostState;
 

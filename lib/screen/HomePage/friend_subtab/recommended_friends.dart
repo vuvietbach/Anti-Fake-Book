@@ -1,46 +1,127 @@
+import 'dart:async';
+
+import 'package:anti_fake_book/models/base_apis/dto/request/get_recommended_friends.dto.dart';
+import 'package:anti_fake_book/models/base_apis/dto/request/set_request_friend.dto.dart';
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'dart:math';
 
+import 'package:redux/redux.dart';
+
+import '../../../models/base_apis/dto/response/get_recommended_friends.dto.dart';
+import '../../../plugins/index.dart';
+import '../../../store/actions/recommended_friends.dart';
+import '../../../store/actions/set_request_friend.dart';
+import '../../../store/state/index.dart';
+
 class Friend {
+  final String id;
   final String name;
   final String imageUrl;
+  final String sameFriends;
 
-  Friend(this.name, this.imageUrl);
+  Friend(this.id, this.name, this.imageUrl, this.sameFriends);
 }
 
 class RecommendedFriends extends StatefulWidget {
+  const RecommendedFriends({super.key});
+
   @override
   _RecommendedFriendsState createState() => _RecommendedFriendsState();
 }
 
+Friend getRecommendedFriendState(int listRecommendedFriendId) {
+  listRecommendedFriendId = min(
+      listRecommendedFriendId,
+      (Plugins.antiFakeBookStore?.state.recommendedFriendsState.requests
+                  .length ??
+              0) -
+          1);
+  RecommendedFriendsPayloadDTO? user = Plugins.antiFakeBookStore?.state
+      .recommendedFriendsState.requests[listRecommendedFriendId];
+
+  print('here');
+  print(user);
+
+  String userId = user?.id ?? "";
+  String username = user?.username ?? "";
+  String avatar = user?.avatar ?? "";
+  String sameFriends = user?.sameFriends ?? "";
+
+  return Friend(userId, username, avatar, sameFriends);
+}
+
 class _RecommendedFriendsState extends State<RecommendedFriends> {
+  List<Friend> recommendedFriends = [];
+  int numberOfContainers = 100;
+  late Store<AntiFakeBookState> store;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    store = StoreProvider.of<AntiFakeBookState>(context);
+    reloadListRecommendedFriend();
+  }
+
   List<bool> sendRequest = List.generate(100, (index) => false);
   List<bool> cancelRequest = List.generate(100, (index) => false);
 
-  final List<Friend> recommendedFriends = List.generate(100, (index) {
-    final faker = Faker();
-    final name = faker.person.name();
+  Future<void> reloadListRecommendedFriend() async {
+    GetRecommendedFriendsRequestDTO getRecommendedFriends =
+        GetRecommendedFriendsRequestDTO(
+            token: store.state.token, index: "0", count: "100");
 
-    final random = Random();
-    final imageIndex = random.nextInt(4);
+    Completer<void> completer = Completer<void>();
 
-    final imagePaths = [
-      'assets/images/PostImage_01.jpeg',
-      'assets/images/PostImage_02.jpeg',
-      'assets/images/PostImage_03.jpeg',
-      'assets/images/PostImage_04.jpeg',
-    ];
+    // Dispatch the action and listen for completion
+    store.dispatch(
+      GetRecommendedFriendsAction(
+        listUsers: getRecommendedFriends,
+        onSuccess: () {
+          completer.complete();
+        },
+        onPending: () {},
+      ),
+    );
 
-    final imageUrl = imagePaths[imageIndex];
-    return Friend(name, imageUrl);
-  });
+    await completer.future;
+
+    setState(() {
+      numberOfContainers = store.state.recommendedFriendsState.requests.length;
+    });
+    recommendedFriends = [];
+
+    for (int i = 0; i < numberOfContainers; i++) {
+      recommendedFriends.add(getRecommendedFriendState(i));
+    }
+  }
+
+  Future<void> sendRequestFriend(userId) async {
+    SetRequestFriendRequestDTO setRequestFriends =
+        SetRequestFriendRequestDTO(token: store.state.token, user_id: userId);
+
+    Completer<void> completer = Completer<void>();
+
+    // Dispatch the action and listen for completion
+    store.dispatch(
+      SetRequestInviteAction(
+        requestInfo: setRequestFriends,
+        onSuccess: () {
+          completer.complete();
+        },
+        onPending: () {},
+      ),
+    );
+
+    await completer.future;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(
+          title: const Text(
             'Gợi ý',
             style: TextStyle(
               color: Colors.black,
@@ -51,7 +132,7 @@ class _RecommendedFriendsState extends State<RecommendedFriends> {
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: Icon(Icons.arrow_back, color: Colors.black),
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
           ),
           actions: [
             IconButton(
@@ -66,13 +147,11 @@ class _RecommendedFriendsState extends State<RecommendedFriends> {
               children: [
                 Expanded(
                   child: ListView.builder(
-                    itemCount: recommendedFriends.length +
-                        1, // 1 item là phần text trên cùng
-                    itemBuilder:
-                        (BuildContext context, int index_of_list_view) {
-                      int index = index_of_list_view - 1;
+                    itemCount: recommendedFriends.length + 1,
+                    itemBuilder: (BuildContext context, int indexOfListView) {
+                      int index = indexOfListView - 1;
                       if (index == -1) {
-                        return Column(
+                        return const Column(
                           children: [
                             SizedBox(height: 10),
                             Row(
@@ -93,7 +172,7 @@ class _RecommendedFriendsState extends State<RecommendedFriends> {
                         if (!sendRequest[index]) {
                           return Container(
                               color: Colors.white,
-                              margin: EdgeInsets.only(
+                              margin: const EdgeInsets.only(
                                 top: 10,
                                 left: 10,
                                 right: 10,
@@ -106,25 +185,25 @@ class _RecommendedFriendsState extends State<RecommendedFriends> {
                                     children: [
                                       CircleAvatar(
                                         radius: 48,
-                                        backgroundImage: AssetImage(
+                                        backgroundImage: NetworkImage(
                                             recommendedFriends[index].imageUrl),
                                       ),
-                                      SizedBox(width: 14),
+                                      const SizedBox(width: 14),
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          SizedBox(height: 16),
+                                          const SizedBox(height: 16),
                                           Row(children: [
                                             Text(
                                               recommendedFriends[index].name,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold),
                                             ),
                                           ]),
                                           (cancelRequest[index])
-                                              ? Row(children: [
+                                              ? const Row(children: [
                                                   Text(
                                                     'Đã hủy lời mời kết bạn',
                                                     style: TextStyle(
@@ -142,14 +221,19 @@ class _RecommendedFriendsState extends State<RecommendedFriends> {
                                                     builder:
                                                         (BuildContext context) {
                                                       return AlertDialog(
-                                                        title: Text("Xác nhận"),
+                                                        title: const Text(
+                                                            "Xác nhận"),
                                                         content: Text(
                                                             "Bạn có đồng ý gửi lời mời kết bạn tới ${recommendedFriends[index].name} không?"),
                                                         actions: [
                                                           TextButton(
-                                                            child: Text(
+                                                            child: const Text(
                                                                 "Xác nhận"),
                                                             onPressed: () {
+                                                              sendRequestFriend(
+                                                                  recommendedFriends[
+                                                                          index]
+                                                                      .id);
                                                               setState(() {
                                                                 sendRequest[
                                                                         index] =
@@ -161,7 +245,8 @@ class _RecommendedFriendsState extends State<RecommendedFriends> {
                                                             },
                                                           ),
                                                           TextButton(
-                                                            child: Text("Hủy"),
+                                                            child: const Text(
+                                                                "Hủy"),
                                                             onPressed: () {
                                                               // Xử lý hủy
                                                               Navigator.of(
@@ -175,16 +260,17 @@ class _RecommendedFriendsState extends State<RecommendedFriends> {
                                                   );
                                                 },
                                                 style: ElevatedButton.styleFrom(
-                                                  minimumSize: Size(130, 38),
+                                                  minimumSize:
+                                                      const Size(130, 38),
                                                 ),
-                                                child: Text(
+                                                child: const Text(
                                                   'Chấp nhận',
                                                   style: TextStyle(
                                                     fontSize: 14,
                                                   ),
                                                 ),
                                               ),
-                                              SizedBox(width: 10),
+                                              const SizedBox(width: 10),
                                               ElevatedButton(
                                                 onPressed: () {
                                                   showDialog(
@@ -192,12 +278,13 @@ class _RecommendedFriendsState extends State<RecommendedFriends> {
                                                     builder:
                                                         (BuildContext context) {
                                                       return AlertDialog(
-                                                        title: Text("Xác nhận"),
+                                                        title: const Text(
+                                                            "Xác nhận"),
                                                         content: Text(
                                                             "Bạn có muốn không đề xuất kết bạn với ${recommendedFriends[index].name} nữa không?"),
                                                         actions: [
                                                           TextButton(
-                                                            child: Text(
+                                                            child: const Text(
                                                                 "Xác nhận"),
                                                             onPressed: () {
                                                               setState(() {
@@ -211,7 +298,8 @@ class _RecommendedFriendsState extends State<RecommendedFriends> {
                                                             },
                                                           ),
                                                           TextButton(
-                                                            child: Text("Hủy"),
+                                                            child: const Text(
+                                                                "Hủy"),
                                                             onPressed: () {
                                                               Navigator.of(
                                                                       context)
@@ -224,11 +312,12 @@ class _RecommendedFriendsState extends State<RecommendedFriends> {
                                                   );
                                                 },
                                                 style: ElevatedButton.styleFrom(
-                                                  minimumSize: Size(130, 38),
+                                                  minimumSize:
+                                                      const Size(130, 38),
                                                   backgroundColor:
                                                       Colors.grey[300],
                                                 ),
-                                                child: Text(
+                                                child: const Text(
                                                   'Xóa',
                                                   style: TextStyle(
                                                     fontSize: 14,
@@ -247,7 +336,7 @@ class _RecommendedFriendsState extends State<RecommendedFriends> {
                         } else if (sendRequest[index]) {
                           return Container(
                               color: Colors.white,
-                              margin: EdgeInsets.only(
+                              margin: const EdgeInsets.only(
                                 top: 10,
                                 left: 10,
                                 right: 10,
@@ -260,24 +349,24 @@ class _RecommendedFriendsState extends State<RecommendedFriends> {
                                     children: [
                                       CircleAvatar(
                                         radius: 48,
-                                        backgroundImage: AssetImage(
+                                        backgroundImage: NetworkImage(
                                             recommendedFriends[index].imageUrl),
                                       ),
-                                      SizedBox(width: 14),
+                                      const SizedBox(width: 14),
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          SizedBox(height: 16),
+                                          const SizedBox(height: 16),
                                           Row(children: [
                                             Text(
                                               recommendedFriends[index].name,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold),
                                             ),
                                           ]),
-                                          Row(
+                                          const Row(
                                             children: [
                                               Text(
                                                 'Đã gửi lời mời kết bạn',
@@ -297,12 +386,13 @@ class _RecommendedFriendsState extends State<RecommendedFriends> {
                                                     builder:
                                                         (BuildContext context) {
                                                       return AlertDialog(
-                                                        title: Text("Xác nhận"),
+                                                        title: const Text(
+                                                            "Xác nhận"),
                                                         content: Text(
                                                             "Bạn có đồng ý hủy lời mời kết bạn tới ${recommendedFriends[index].name} không?"),
                                                         actions: [
                                                           TextButton(
-                                                            child: Text(
+                                                            child: const Text(
                                                                 "Xác nhận"),
                                                             onPressed: () {
                                                               setState(() {
@@ -319,7 +409,8 @@ class _RecommendedFriendsState extends State<RecommendedFriends> {
                                                             },
                                                           ),
                                                           TextButton(
-                                                            child: Text("Hủy"),
+                                                            child: const Text(
+                                                                "Hủy"),
                                                             onPressed: () {
                                                               // Xử lý hủy
                                                               Navigator.of(
@@ -333,11 +424,12 @@ class _RecommendedFriendsState extends State<RecommendedFriends> {
                                                   );
                                                 },
                                                 style: ElevatedButton.styleFrom(
-                                                  minimumSize: Size(270, 38),
+                                                  minimumSize:
+                                                      const Size(270, 38),
                                                   backgroundColor:
                                                       Colors.grey[300],
                                                 ),
-                                                child: Text(
+                                                child: const Text(
                                                   'Hủy',
                                                   style: TextStyle(
                                                     color: Colors.black,
@@ -355,6 +447,7 @@ class _RecommendedFriendsState extends State<RecommendedFriends> {
                               ));
                         }
                       }
+                      return null;
                     },
                   ),
                 ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../screen/HomePage/news_feed_tab.dart';
 import '../screen/HomePage/friend_tab.dart';
@@ -7,7 +8,7 @@ import '../screen/HomePage/notification_tab.dart';
 import '../screen/HomePage/watch_tab.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key});
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,9 @@ class HomePage extends StatelessWidget {
             backgroundColor: Colors.white,
             actions: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.push('/search');
+                },
                 icon: const Icon(Icons.search, color: Colors.black),
               ),
               IconButton(
@@ -52,11 +55,11 @@ class HomePage extends StatelessWidget {
             color: Colors.grey[300],
             child: TabBarView(
               children: [
-                PostHomePageContent(),
+                const PostHomePageContent(),
                 FriendPageContent(),
-                VideoPageContent(),
+                const WatchTabContent(),
                 NotificationContent(),
-                MenuContent(),
+                const MenuContent(),
               ],
             ),
           ),

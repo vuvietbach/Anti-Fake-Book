@@ -1,5 +1,5 @@
-import 'package:anti_fake_book/global_type/user/user_summary.entity.dart';
-import 'package:anti_fake_book/models/base_apis/dto/response/response.dto.dart';
+import 'dart:typed_data';
+
 import 'package:anti_fake_book/utils.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'get_post.dto.g.dart';
@@ -23,6 +23,7 @@ class PostPayloadDTO with _$PostPayloadDTO {
     String? id,
     String? name,
     DateTime? created,
+    @Default('') String described,
     DateTime? modified,
     int? fake,
     int? trust,
@@ -42,6 +43,7 @@ class PostPayloadDTO with _$PostPayloadDTO {
     int? canRate,
     String? url,
     String? messages,
+    String? status,
   }) = _PostPayloadDTO;
 
   factory PostPayloadDTO.fromJson(Map<String, dynamic> json) =>
@@ -79,8 +81,9 @@ class AuthorPostPayloadDTO with _$AuthorPostPayloadDTO {
 class ImagePayloadDTO with _$ImagePayloadDTO {
   @customJsonSerializable
   factory ImagePayloadDTO({
-    required String id,
-    required String url,
+    @Default('') String id,
+    @Default('') String url,
+    Uint8List? bytes,
   }) = _ImagePayloadDTO;
 
   factory ImagePayloadDTO.fromJson(Map<String, dynamic> json) =>

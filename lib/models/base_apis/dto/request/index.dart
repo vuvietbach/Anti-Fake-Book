@@ -1,1 +1,17 @@
 export 'add_post.dto.dart';
+export 'edit_post.dto.dart';
+export 'get_mark_comment.dto.dart';
+export 'report_post.dto.dart';
+export 'set_push_settings.dto.dart';
+export 'set_mark_comment.dto.dart';
+export 'auth.dto.dart';
+export 'conversation.dto.dart';
+export 'user_info.dto.dart';
+export 'notification.dto.dart';
+export 'search.dto.dart';
+export 'device.dto.dart';
+export 'get_list_posts.dart';
+export 'get_requested_friends.dart';
+export 'get_list_videos.dart';
+export 'get_recommended_friends.dto.dart';
+export 'set_accept_friend.dto.dart';
